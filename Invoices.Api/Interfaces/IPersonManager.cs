@@ -42,13 +42,15 @@ namespace Invoices.Api.Interfaces
         /// <param name="dto">Objekt <see cref="PersonDto"/> s daty nové osoby.</param>
         /// <returns>Nově vytvořená osoba ve formě <see cref="PersonDto"/>.</returns>
         PersonDto AddPerson(PersonDto dto);
-       
+
         /// <summary>
-        /// Retrieves a person by their unique identifier.
+        /// Vrátí osobu podle jejího jedinečného identifikátoru.
         /// </summary>
-        /// <param name="id">The unique identifier of the person to retrieve.</param>
-        /// <returns>A <see cref="PersonDto"/> object representing the person with the specified identifier,  or <see
-        /// langword="null"/> if no person with the given identifier exists.</returns>
+        /// <param name="id">Jedinečné ID osoby, kterou chceme získat.</param>
+        /// <returns>
+        /// Objekt <see cref="PersonDto"/> reprezentující osobu s daným ID,
+        /// nebo <see langword="null"/>, pokud osoba s tímto ID neexistuje.
+        /// </returns>
         PersonDto GetPersonById(int id);
 
         /// <summary>
