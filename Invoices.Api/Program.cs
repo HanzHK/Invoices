@@ -19,18 +19,19 @@
  * našich členů. Je určen pouze pro osobní užití a nesmí být šířen.
  * Více informací na http://www.itnetwork.cz/licence
  */
-using Invoices.Data.Repositories;
-using System.Text.Json;
 using Invoices.Api;
+using Invoices.Api.Converters;
+using Invoices.Api.Interfaces;
 using Invoices.Api.Managers;
 using Invoices.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
-using Invoices.Data.Entities.Enums;
 using Invoices.Data.Entities;
-using System.Reflection;
-using Invoices.Api.Interfaces;
+using Invoices.Data.Entities.Enums;
 using Invoices.Data.Interfaces;
+using Invoices.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -52,9 +53,19 @@ builder.Services.AddControllers()
         // Enumy budou serializovány jako řetězce
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+    });
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonManager, PersonManager>();
+
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
+
+
 
 builder.Services.AddAutoMapper(cfg =>
 {

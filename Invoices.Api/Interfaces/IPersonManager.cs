@@ -62,5 +62,7 @@ namespace Invoices.Api.Interfaces
         /// nebo <c>false</c>, pokud osoba s daným ID neexistuje.
         /// </returns>
         bool DeletePerson(int id);
+
+        PersonDto ReplacePerson(int id, PersonDto dto);
     }
 }

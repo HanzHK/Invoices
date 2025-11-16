@@ -28,19 +28,20 @@ namespace Invoices.Api.Controllers
         /// Vrátí seznam všech faktur v systému.
         /// </summary>
         [HttpGet]
-        public ActionResult<IEnumerable<InvoiceDto>> GetAllInvoices()
+        public ActionResult<IEnumerable<InvoiceGetDto>> GetAllInvoices()
         {
-            IEnumerable<InvoiceDto> invoices = invoiceManager.GetAllInvoices();
+            var invoices = invoiceManager.GetAllInvoices();
             return Ok(invoices);
         }
+
 
         /// <summary>
         /// Vrátí detail faktury podle ID.
         /// </summary>
         [HttpGet("{id}")]
-        public ActionResult<InvoiceDto> GetInvoiceById(int id)
+        public ActionResult<InvoiceGetDto> GetInvoiceById(int id)
         {
-            InvoiceDto? invoiceDto = invoiceManager.GetInvoiceById(id);
+            InvoiceGetDto? invoiceDto = invoiceManager.GetInvoiceById(id);
             if (invoiceDto == null)
                 return NotFound();
             return Ok(invoiceDto);
@@ -50,9 +51,9 @@ namespace Invoices.Api.Controllers
         /// Vytvoří novou fakturu.
         /// </summary>
         [HttpPost]
-        public ActionResult<InvoiceDto> AddInvoice([FromBody] InvoiceDto dto)
+        public ActionResult<InvoiceGetDto> AddInvoice([FromBody] InvoicePostDto dto)
         {
-            InvoiceDto createdInvoice = invoiceManager.AddInvoice(dto);
+            InvoiceGetDto createdInvoice = invoiceManager.AddInvoice(dto);
             return Created(string.Empty, createdInvoice);
         }
 
@@ -60,9 +61,9 @@ namespace Invoices.Api.Controllers
         /// Aktualizuje existující fakturu.
         /// </summary>
         [HttpPut]
-        public ActionResult<InvoiceDto> UpdateInvoice([FromBody] InvoiceDto dto)
+        public ActionResult<InvoiceGetDto> UpdateInvoice([FromBody] InvoicePostDto dto)
         {
-            InvoiceDto updatedInvoice = invoiceManager.UpdateInvoice(dto);
+            InvoiceGetDto updatedInvoice = invoiceManager.UpdateInvoice(dto);
             return Ok(updatedInvoice);
         }
 
@@ -84,9 +85,9 @@ namespace Invoices.Api.Controllers
         /// Vrátí seznam faktur podle kritéria.
         /// </summary>
         [HttpGet("filter/{criteria}")]
-        public ActionResult<IEnumerable<InvoiceDto>> FilterInvoices(string criteria)
+        public ActionResult<IEnumerable<InvoiceGetDto>> FilterInvoices(string criteria)
         {
-            IEnumerable<InvoiceDto> invoices = invoiceManager.FilterInvoices(criteria);
+            IEnumerable<InvoiceGetDto> invoices = invoiceManager.FilterInvoices(criteria);
             return Ok(invoices);
         }
     }

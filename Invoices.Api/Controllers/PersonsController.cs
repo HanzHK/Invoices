@@ -76,6 +76,19 @@ namespace Invoices.Api.Controllers
 
             return Created(string.Empty, createdPerson);
         }
+        /// <summary>
+        /// Nahradí osobu: původní skryje (Hidden = true) a vytvoří novou s upravenými hodnotami.
+        /// </summary>
+        /// <param name="id">ID původní osoby, která má být nahrazena.</param>
+        /// <param name="dto">Nová data osoby zaslaná klientem v JSONu.</param>
+        /// <returns>Nově vytvořená osoba s novým ID.</returns>
+        [HttpPut("{id}")]
+        public ActionResult<PersonDto> ReplacePerson(int id, [FromBody] PersonDto dto)
+        {
+            var replaced = personManager.ReplacePerson(id, dto);
+            return Ok(replaced);
+        }
+
 
         /// <summary>
         /// Smaže osobu podle jejího ID.

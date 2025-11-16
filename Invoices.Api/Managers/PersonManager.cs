@@ -83,12 +83,7 @@ namespace Invoices.Api.Managers
             person.Hidden = true;
             return personRepository.Update(person);
         }
-        // TODO: Ořidat dokumentaci
-        /// <summary>
-        ///     
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+
         public PersonDto? GetPersonById(int id)
         {
             Person? person = personRepository.FindById(id);
@@ -98,5 +93,29 @@ namespace Invoices.Api.Managers
             PersonDto personDto = mapper.Map<PersonDto>(person);
             return personDto;
         }
+
+        public PersonDto ReplacePerson(int id, PersonDto dto)
+        {
+            // Nejdřív podle id a přiřadím správnou osobu
+            var original = personRepository.FindById(id);
+
+            // Kontrola jestli osoba s takovým id existuje
+            if (original is null)
+                throw new KeyNotFoundException($"Osoba s id {id} nebyla nalezena.");
+
+            // Nastaví se na hidden
+            original.Hidden = true;
+
+            var replacement = mapper.Map<Person>(dto);
+            replacement.Hidden = false;
+
+            personRepository.Add(replacement);
+            personRepository.SaveChanges();
+
+            return mapper.Map<PersonDto>(replacement);
+        }
+
+
+
     }
 }

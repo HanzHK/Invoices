@@ -5,7 +5,7 @@
 namespace Invoices.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateInvoice : Migration
+    public partial class InvoiceBugfix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

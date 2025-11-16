@@ -47,9 +47,15 @@ namespace Invoices.Data.Entities
         // Enum Country je v databázi uložen jako string (viz konfigurace v AppDbContext)
         public required Country Country { get; set; }
 
-        public required string Note { get; set; }
 
         // Označení záznamu jako "skrytého" místo fyzického smazání (tzv. soft delete)
         public bool Hidden { get; set; }
+
+        public required string Note { get; set; }
+
+        // Faktury prodejů a nákupů
+        public List<Invoice>? Purchases;
+        public List<Invoice>? Sales;
+
     }
 }

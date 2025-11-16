@@ -33,8 +33,20 @@ namespace Invoices.Api
     {
         public AutoMapperProfile()
         {
-            // ReverseMap() vytvoří i opačné mapování (DTO -> Entity i Entity -> DTO)
+            // Person ↔ PersonDto
             CreateMap<Person, PersonDto>().ReverseMap();
+
+            // POST DTO → Entity
+            CreateMap<InvoicePostDto, Invoice>()
+                .ForMember(dest => dest.SellerId, opt => opt.MapFrom(src => src.Seller.Id))
+                .ForMember(dest => dest.BuyerId, opt => opt.MapFrom(src => src.Buyer.Id))
+                .ForMember(dest => dest.Seller, opt => opt.Ignore())
+                .ForMember(dest => dest.Buyer, opt => opt.Ignore());
+
+            // Entity → GET DTO
+            CreateMap<Invoice, InvoiceGetDto>();
         }
     }
+
+
 }

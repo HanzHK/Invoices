@@ -12,25 +12,25 @@ namespace Invoices.Api.Interfaces
         /// <summary>
         /// Vrátí seznam všech faktur uložených v systému.
         /// </summary>
-        /// <returns>Kolekce <see cref="InvoiceDto"/> reprezentující všechny faktury.</returns>
-        IEnumerable<InvoiceDto> GetAllInvoices();
+        /// <returns>Kolekce <see cref="InvoiceGetDto"/> reprezentující všechny faktury.</returns>
+        IEnumerable<InvoiceGetDto> GetAllInvoices();
 
         /// <summary>
         /// Vrátí detail faktury podle jejího jedinečného identifikátoru.
         /// </summary>
         /// <param name="id">Jedinečné ID faktury, kterou chceme získat.</param>
         /// <returns>
-        /// Objekt <see cref="InvoiceDto"/> reprezentující fakturu s daným ID,
+        /// Objekt <see cref="InvoiceGetDto"/> reprezentující fakturu s daným ID,
         /// nebo <see langword="null"/>, pokud faktura s tímto ID neexistuje.
         /// </returns>
-        InvoiceDto GetInvoiceById(int id);
+        InvoiceGetDto GetInvoiceById(int id);
 
         /// <summary>
         /// Vytvoří novou fakturu na základě dodaného datového objektu.
         /// </summary>
-        /// <param name="dto">Objekt <see cref="InvoiceDto"/> s daty nové faktury.</param>
-        /// <returns>Nově vytvořená faktura ve formě <see cref="InvoiceDto"/>.</returns>
-        InvoiceDto AddInvoice(InvoiceDto dto);
+        /// <param name="dto">Objekt <see cref="InvoicePostDto"/> s daty nové faktury.</param>
+        /// <returns>Nově vytvořená faktura ve formě <see cref="InvoicePostDto"/>.</returns>
+        InvoiceGetDto AddInvoice(InvoicePostDto dto);
 
         /// <summary>
         /// Smaže fakturu podle jejího ID.
@@ -46,15 +46,17 @@ namespace Invoices.Api.Interfaces
         /// Vyhledá a vrátí faktury podle zadaného filtru.
         /// </summary>
         /// <param name="criteria">Řetězec určující kritéria filtrování (např. číslo faktury, datum, kupující).</param>
-        /// <returns>Kolekce <see cref="InvoiceDto"/> odpovídající zadanému filtru.</returns>
-        IEnumerable<InvoiceDto> FilterInvoices(string criteria);
+        /// <returns>Kolekce <see cref="InvoiceGetDto"/> odpovídající zadanému filtru.</returns>
+        IEnumerable<InvoiceGetDto> FilterInvoices(string criteria);
 
         /// <summary>
         /// Aktualizuje existující fakturu na základě dodaného datového objektu.
         /// </summary>
-        /// <param name="dto">Objekt <see cref="InvoiceDto"/> s upravenými daty faktury.</param>
-        /// <returns>Aktualizovaná faktura ve formě <see cref="InvoiceDto"/>.</returns>
-        InvoiceDto UpdateInvoice(InvoiceDto dto);
+        /// <param name="dto">Objekt <see cref="InvoiceGetDto"/> s upravenými daty faktury.</param>
+        /// <returns>Aktualizovaná faktura ve formě <see cref="InvoiceGetDto"/>.</returns>
+        InvoiceGetDto UpdateInvoice(InvoicePostDto dto);
+
+
     }
 }
 

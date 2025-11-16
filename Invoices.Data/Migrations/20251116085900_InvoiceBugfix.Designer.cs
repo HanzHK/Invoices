@@ -4,6 +4,7 @@ using Invoices.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoices.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251116085900_InvoiceBugfix")]
+    partial class InvoiceBugfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,17 +33,17 @@ namespace Invoices.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"));
 
-                    b.Property<int>("BuyerId")
+                    b.Property<int>("BuyerPersonId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("DueDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("InvoiceNumber")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("Issued")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Issued")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
                         .IsRequired()
@@ -54,7 +57,7 @@ namespace Invoices.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SellerId")
+                    b.Property<int>("SellerPersonId")
                         .HasColumnType("int");
 
                     b.Property<int>("Vat")
@@ -62,11 +65,11 @@ namespace Invoices.Data.Migrations
 
                     b.HasKey("InvoiceId");
 
-                    b.HasIndex("BuyerId");
+                    b.HasIndex("BuyerPersonId");
 
                     b.HasIndex("InvoiceNumber");
 
-                    b.HasIndex("SellerId");
+                    b.HasIndex("SellerPersonId");
 
                     b.ToTable("Invoices");
                 });
@@ -147,13 +150,13 @@ namespace Invoices.Data.Migrations
                 {
                     b.HasOne("Invoices.Data.Entities.Person", "Buyer")
                         .WithMany()
-                        .HasForeignKey("BuyerId")
+                        .HasForeignKey("BuyerPersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Invoices.Data.Entities.Person", "Seller")
                         .WithMany()
-                        .HasForeignKey("SellerId")
+                        .HasForeignKey("SellerPersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

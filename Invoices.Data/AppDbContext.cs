@@ -1,66 +1,52 @@
-﻿/*  _____ _______         _                      _
- * |_   _|__   __|       | |                    | |
- *   | |    | |_ __   ___| |___      _____  _ __| | __  ___ ____
- *   | |    | | '_ \ / _ \ __\ \ /\ / / _ \| '__| |/ / / __|_  /
- *  _| |_   | | | | |  __/ |_ \ V  V / (_) | |  |   < | (__ / /
- * |_____|  |_|_| |_|\___|\__| \_/\_/ \___/|_|  |_|\_(_)___/___|
- *
- *                      ___ ___ ___
- *                     | . |  _| . |  LICENCE
- *                     |  _|_| |___|
- *                     |_|
- *
- *    REKVALIFIKAČNÍ KURZY  <>  PROGRAMOVÁNÍ  <>  IT KARIÉRA
- *
- * Tento zdrojový kód je součástí profesionálních IT kurzů na
- * WWW.ITNETWORK.CZ
- *
- * Kód spadá pod licenci PRO obsahu a vznikl díky podpoře
- * našich členů. Je určen pouze pro osobní užití a nesmí být šířen.
- * Více informací na http://www.itnetwork.cz/licence
- */
-using Invoices.Data.Entities;
+﻿using Invoices.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Invoices.Data
 {
-    /// <summary>
-    /// Hlavní třída pro práci s databází pomocí Entity Framework Core
-    /// Obsahuje definice tabulek a konfigurace entit
-    /// </summary>
     public class AppDbContext : DbContext
     {
-        /// <summary>
-        /// Konstruktor, který přijímá možnosti konfigurace databáze
-        /// Tuto třídu zaregistrujeme v Program.cs pro Dependency Injection
-        /// </summary>
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        /// <summary>
-        /// Tabulka osob (pojištěnců).
-        /// DbSet představuje kolekci entit v databázi
-        /// </summary>
+        // Tabulka osob
         public DbSet<Person> Persons { get; set; }
 
-        /// <summary>
-        /// Místo, kde se definují specifické konfigurace pro jednotlivé entity
-        /// Volá se automaticky při vytváření modelu
-        /// </summary>
+        // Nová tabulka faktur
+        public DbSet<Invoice> Invoices { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Konfigurace entity Person:
+            // Konfigurace entity Person
             modelBuilder.Entity<Person>(builder =>
             {
-                // Enum Country se ukládá do databáze jako řetězec místo číselné hodnoty
                 builder.Property(p => p.Country)
                        .HasConversion<string>();
 
                 builder.HasIndex(p => p.IdentificationNumber);
-
-                // Přidáme index na sloupec Hidden – zrychlí filtrování skrytých osob
                 builder.HasIndex(p => p.Hidden);
+            });
+
+            // Konfigurace entity Invoice
+            modelBuilder.Entity<Invoice>(builder =>
+            {
+                // Pokud máš enumy (např. stav faktury), můžeš je převést na string
+                // builder.Property(i => i.Status).HasConversion<string>();
+
+                // Vztahy: faktura má prodávajícího a kupujícího
+                builder.HasOne(i => i.Seller)
+                       .WithMany()
+                       .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasOne(i => i.Buyer)
+                       .WithMany()
+                       .OnDelete(DeleteBehavior.Restrict);
+
+                // Index na číslo faktury
+                builder.HasIndex(i => i.InvoiceNumber);
+                
+                builder.Property(i => i.Price)
+                        .HasPrecision(18, 2); // 18 číslic celkem, 2 desetinná místa
             });
         }
     }
