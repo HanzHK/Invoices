@@ -22,7 +22,7 @@ namespace Invoices.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Invoices.Data.Entities.Invoice", b =>
+            modelBuilder.Entity("Invoice", b =>
                 {
                     b.Property<int>("InvoiceId")
                         .ValueGeneratedOnAdd()
@@ -33,13 +33,13 @@ namespace Invoices.Data.Migrations
                     b.Property<int>("BuyerId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("DueDate")
+                    b.Property<DateTime>("DueDate")
                         .HasColumnType("date");
 
                     b.Property<int>("InvoiceNumber")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("Issued")
+                    b.Property<DateTime>("Issued")
                         .HasColumnType("date");
 
                     b.Property<string>("Note")
@@ -143,7 +143,7 @@ namespace Invoices.Data.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("Invoices.Data.Entities.Invoice", b =>
+            modelBuilder.Entity("Invoice", b =>
                 {
                     b.HasOne("Invoices.Data.Entities.Person", "Buyer")
                         .WithMany()

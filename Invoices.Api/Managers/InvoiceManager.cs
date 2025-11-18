@@ -16,11 +16,6 @@ namespace Invoices.Api.Managers
         private readonly IInvoiceRepository invoiceRepository;
         private readonly IMapper mapper;
 
-        /// <summary>
-        /// Vytváří instanci manageru pro práci s fakturami.
-        /// </summary>
-        /// <param name="invoiceRepository">Repozitář pro přístup k datům faktur.</param>
-        /// <param name="mapper">Automapper pro převod mezi entitami a DTO.</param>
         public InvoiceManager(IInvoiceRepository invoiceRepository, IMapper mapper)
         {
             this.invoiceRepository = invoiceRepository;
@@ -32,9 +27,7 @@ namespace Invoices.Api.Managers
         /// </summary>
         public IEnumerable<InvoiceGetDto> GetAllInvoices()
         {
-            // Repository musí používat Include(i => i.Seller).Include(i => i.Buyer),
-            // jinak budou navigační vlastnosti null.
-            IEnumerable<Invoice> invoices = invoiceRepository.GetAll();
+            var invoices = invoiceRepository.GetAll();
             return mapper.Map<IEnumerable<InvoiceGetDto>>(invoices);
         }
 
@@ -43,7 +36,7 @@ namespace Invoices.Api.Managers
         /// </summary>
         public InvoiceGetDto? GetInvoiceById(int id)
         {
-            Invoice? invoice = invoiceRepository.FindById(id);
+            var invoice = invoiceRepository.FindById(id);
             if (invoice is null)
                 return null;
 
@@ -55,12 +48,30 @@ namespace Invoices.Api.Managers
         /// </summary>
         public InvoiceGetDto AddInvoice(InvoicePostDto dto)
         {
-            Invoice invoice = mapper.Map<Invoice>(dto);
-            Invoice addedInvoice = invoiceRepository.Add(invoice);
+            var invoice = mapper.Map<Invoice>(dto);
+            invoiceRepository.Add(invoice);
             invoiceRepository.SaveChanges();
 
-            // Vracíme GetDto, aby odpověď obsahovala celé objekty seller/buyer
-            return mapper.Map<InvoiceGetDto>(addedInvoice);
+            // znovu načteme fakturu i s navigačními vlastnostmi
+            var createdInvoice = invoiceRepository.FindById(invoice.InvoiceId);
+            return mapper.Map<InvoiceGetDto>(createdInvoice);
+        }
+
+        /// <summary>
+        /// Aktualizuje existující fakturu.
+        /// </summary>
+        public InvoiceGetDto? UpdateInvoice(InvoicePostDto dto)
+        {
+            var invoice = mapper.Map<Invoice>(dto);
+            var updatedInvoice = invoiceRepository.Update(invoice);
+            invoiceRepository.SaveChanges();
+
+            if (updatedInvoice == null)
+                return null;
+
+            // znovu načteme fakturu i s navigačními vlastnostmi
+            var refreshedInvoice = invoiceRepository.FindById(updatedInvoice.InvoiceId);
+            return mapper.Map<InvoiceGetDto>(refreshedInvoice);
         }
 
         /// <summary>
@@ -68,7 +79,7 @@ namespace Invoices.Api.Managers
         /// </summary>
         public bool DeleteInvoice(int id)
         {
-            Invoice? invoice = invoiceRepository.FindById(id);
+            var invoice = invoiceRepository.FindById(id);
             if (invoice is null)
                 return false;
 
@@ -82,21 +93,17 @@ namespace Invoices.Api.Managers
         /// </summary>
         public IEnumerable<InvoiceGetDto> FilterInvoices(string criteria)
         {
-            IEnumerable<Invoice> invoices = invoiceRepository.Filter(criteria);
+            var invoices = invoiceRepository.Filter(criteria);
             return mapper.Map<IEnumerable<InvoiceGetDto>>(invoices);
         }
 
-        /// <summary>
-        /// Aktualizuje existující fakturu.
-        /// </summary>
-        public InvoiceGetDto UpdateInvoice(InvoicePostDto dto)
+        public IEnumerable<InvoiceGetDto> GetInvoicesBySeller(int sellerId)
         {
-            Invoice invoice = mapper.Map<Invoice>(dto);
-            Invoice updatedInvoice = invoiceRepository.Update(invoice);
-            invoiceRepository.SaveChanges();
+            var invoices = invoiceRepository.GetAll()
+                .Where(i => i.SellerId == sellerId);
 
-            // Vracíme GetDto, aby odpověď obsahovala celé objekty seller/buyer
-            return mapper.Map<InvoiceGetDto>(updatedInvoice);
+            return mapper.Map<IEnumerable<InvoiceGetDto>>(invoices);
         }
+
     }
 }

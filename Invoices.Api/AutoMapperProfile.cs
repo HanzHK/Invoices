@@ -44,7 +44,10 @@ namespace Invoices.Api
                 .ForMember(dest => dest.Buyer, opt => opt.Ignore());
 
             // Entity → GET DTO
-            CreateMap<Invoice, InvoiceGetDto>();
+            CreateMap<Invoice, InvoiceGetDto>()
+                .ForMember(dest => dest.Seller, opt => opt.MapFrom(src => src.Seller))
+                .ForMember(dest => dest.Buyer, opt => opt.MapFrom(src => src.Buyer));
+
         }
     }
 

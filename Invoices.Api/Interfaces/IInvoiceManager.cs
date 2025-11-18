@@ -56,6 +56,13 @@ namespace Invoices.Api.Interfaces
         /// <returns>Aktualizovaná faktura ve formě <see cref="InvoiceGetDto"/>.</returns>
         InvoiceGetDto UpdateInvoice(InvoicePostDto dto);
 
+        /// <summary>
+        /// Vrátí seznam faktur podle ID dodavatele (Seller).
+        /// </summary>
+        /// <param name="sellerId">Jedinečné ID dodavatele, jehož faktury chceme získat.</param>
+        /// <returns>Kolekce <see cref="InvoiceGetDto"/> odpovídající zadanému dodavateli.</returns>
+        IEnumerable<InvoiceGetDto> GetInvoicesBySeller(int sellerId);
+
 
     }
 }

@@ -90,5 +90,16 @@ namespace Invoices.Api.Controllers
             IEnumerable<InvoiceGetDto> invoices = invoiceManager.FilterInvoices(criteria);
             return Ok(invoices);
         }
+        /// <summary>
+        /// Vrátí seznam faktur podle ID dodavatele (Seller).
+        /// </summary>
+        [HttpGet("sellerID")]
+        public ActionResult<IEnumerable<InvoiceGetDto>> GetInvoicesBySeller([FromQuery] int sellerId)
+        {
+            var invoices = invoiceManager.GetInvoicesBySeller(sellerId);
+            return Ok(invoices);
+        }
+
+
     }
 }

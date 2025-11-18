@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Invoices.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251116110326_Datefix")]
-    partial class Datefix
+    [Migration("20251118110339_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Invoices.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Invoices.Data.Entities.Invoice", b =>
+            modelBuilder.Entity("Invoice", b =>
                 {
                     b.Property<int>("InvoiceId")
                         .ValueGeneratedOnAdd()
@@ -33,16 +33,16 @@ namespace Invoices.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"));
 
-                    b.Property<int>("BuyerPersonId")
+                    b.Property<int>("BuyerId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("DueDate")
+                    b.Property<DateTime>("DueDate")
                         .HasColumnType("date");
 
                     b.Property<int>("InvoiceNumber")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("Issued")
+                    b.Property<DateTime>("Issued")
                         .HasColumnType("date");
 
                     b.Property<string>("Note")
@@ -57,7 +57,7 @@ namespace Invoices.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SellerPersonId")
+                    b.Property<int>("SellerId")
                         .HasColumnType("int");
 
                     b.Property<int>("Vat")
@@ -65,11 +65,11 @@ namespace Invoices.Data.Migrations
 
                     b.HasKey("InvoiceId");
 
-                    b.HasIndex("BuyerPersonId");
+                    b.HasIndex("BuyerId");
 
                     b.HasIndex("InvoiceNumber");
 
-                    b.HasIndex("SellerPersonId");
+                    b.HasIndex("SellerId");
 
                     b.ToTable("Invoices");
                 });
@@ -146,17 +146,17 @@ namespace Invoices.Data.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("Invoices.Data.Entities.Invoice", b =>
+            modelBuilder.Entity("Invoice", b =>
                 {
                     b.HasOne("Invoices.Data.Entities.Person", "Buyer")
                         .WithMany()
-                        .HasForeignKey("BuyerPersonId")
+                        .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Invoices.Data.Entities.Person", "Seller")
                         .WithMany()
-                        .HasForeignKey("SellerPersonId")
+                        .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

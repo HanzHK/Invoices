@@ -10,7 +10,7 @@ namespace Invoices.Data
         // Tabulka osob
         public DbSet<Person> Persons { get; set; }
 
-        // Nová tabulka faktur
+        // Tabulka faktur
         public DbSet<Invoice> Invoices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,10 +30,6 @@ namespace Invoices.Data
             // Konfigurace entity Invoice
             modelBuilder.Entity<Invoice>(builder =>
             {
-                // Pokud máš enumy (např. stav faktury), můžeš je převést na string
-                // builder.Property(i => i.Status).HasConversion<string>();
-
-                // Vztahy: faktura má prodávajícího a kupujícího
                 builder.HasOne(i => i.Seller)
                        .WithMany()
                        .OnDelete(DeleteBehavior.Restrict);
@@ -42,11 +38,22 @@ namespace Invoices.Data
                        .WithMany()
                        .OnDelete(DeleteBehavior.Restrict);
 
-                // Index na číslo faktury
                 builder.HasIndex(i => i.InvoiceNumber);
-                
+
                 builder.Property(i => i.Price)
-                        .HasPrecision(18, 2); // 18 číslic celkem, 2 desetinná místa
+                       .HasPrecision(18, 2);
+
+                builder.Property(i => i.Issued)
+                       .HasColumnType("date")  
+                       .HasConversion(
+                           v => v.ToDateTime(TimeOnly.MinValue),
+                           v => DateOnly.FromDateTime(v));
+
+                builder.Property(i => i.DueDate)
+                       .HasColumnType("date") 
+                       .HasConversion(
+                           v => v.ToDateTime(TimeOnly.MinValue),
+                           v => DateOnly.FromDateTime(v));
             });
         }
     }
