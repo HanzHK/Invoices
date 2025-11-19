@@ -63,6 +63,21 @@ namespace Invoices.Api.Interfaces
         /// <returns>Kolekce <see cref="InvoiceGetDto"/> odpovídající zadanému dodavateli.</returns>
         IEnumerable<InvoiceGetDto> GetInvoicesBySeller(int sellerId);
 
+        /// <summary>
+        /// Vrátí seznam faktur vystavených firmou s daným IČO.
+        /// </summary>
+        /// <param name="ico">Identifikační číslo organizace (IČO), jejíž vystavené faktury chceme získat.</param>
+        /// <returns>Kolekce <see cref="InvoiceGetDto"/> odpovídající vystaveným fakturám.</returns>
+        IEnumerable<InvoiceGetDto> GetIssuedInvoicesByIco(string ico);
+
+        /// <summary>
+        /// Vrátí seznam faktur přijatých firmou s daným IČO.
+        /// </summary>
+        /// <param name="ico">Identifikační číslo organizace (IČO), jejíž přijaté faktury chceme získat.</param>
+        /// <returns>Kolekce <see cref="InvoiceGetDto"/> odpovídající přijatým fakturám.</returns>
+        IEnumerable<InvoiceGetDto> GetReceivedInvoicesByIco(string ico);
+
+
 
     }
 }

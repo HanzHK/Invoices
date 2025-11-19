@@ -104,6 +104,23 @@ namespace Invoices.Api.Managers
 
             return mapper.Map<IEnumerable<InvoiceGetDto>>(invoices);
         }
+        public IEnumerable<InvoiceGetDto> GetIssuedInvoicesByIco(string ico)
+        {
+            var invoices = invoiceRepository.GetAll()
+                .Where(i => i.Seller.IdentificationNumber == ico);
+
+            return mapper.Map<IEnumerable<InvoiceGetDto>>(invoices);
+        }
+
+        public IEnumerable<InvoiceGetDto> GetReceivedInvoicesByIco(string ico)
+        {
+            var invoices = invoiceRepository.GetAll()
+                .Where(i => i.Buyer.IdentificationNumber == ico);
+
+            return mapper.Map<IEnumerable<InvoiceGetDto>>(invoices);
+        }
+
+
 
     }
 }

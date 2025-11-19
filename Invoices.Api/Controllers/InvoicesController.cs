@@ -99,6 +99,38 @@ namespace Invoices.Api.Controllers
             var invoices = invoiceManager.GetInvoicesBySeller(sellerId);
             return Ok(invoices);
         }
+        /// <summary>
+        /// Vrátí seznam faktur, které byly vystaveny firmou s daným IČO.
+        /// </summary>
+        /// <param name="ico">
+        /// Identifikační číslo organizace (IČO), podle kterého se vyhledají vystavené faktury.
+        /// </param>
+        /// <returns>
+        /// HTTP 200 s kolekcí <see cref="InvoiceGetDto"/> odpovídající vystaveným fakturám.
+        /// </returns>
+        [HttpGet("issued")]
+        public ActionResult<IEnumerable<InvoiceGetDto>> GetIssuedInvoices([FromQuery] string ico)
+        {
+            var invoices = invoiceManager.GetIssuedInvoicesByIco(ico);
+            return Ok(invoices);
+        }
+
+        /// <summary>
+        /// Vrátí seznam faktur, které byly přijaty firmou s daným IČO.
+        /// </summary>
+        /// <param name="ico">
+        /// Identifikační číslo organizace (IČO), podle kterého se vyhledají přijaté faktury.
+        /// </param>
+        /// <returns>
+        /// HTTP 200 s kolekcí <see cref="InvoiceGetDto"/> odpovídající přijatým fakturám.
+        /// </returns>
+        [HttpGet("received")]
+        public ActionResult<IEnumerable<InvoiceGetDto>> GetReceivedInvoices([FromQuery] string ico)
+        {
+            var invoices = invoiceManager.GetReceivedInvoicesByIco(ico);
+            return Ok(invoices);
+        }
+
 
 
     }
