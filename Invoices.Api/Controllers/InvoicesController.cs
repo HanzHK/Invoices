@@ -1,4 +1,5 @@
-﻿using Invoices.Api.Interfaces;
+﻿using Azure.Identity;
+using Invoices.Api.Interfaces;
 using Invoices.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,21 +24,10 @@ namespace Invoices.Api.Controllers
         {
             this.invoiceManager = invoiceManager;
         }
-
-        /// <summary>
-        /// Vrátí seznam všech faktur v systému.
-        /// </summary>
-        [HttpGet]
-        public ActionResult<IEnumerable<InvoiceGetDto>> GetAllInvoices()
-        {
-            var invoices = invoiceManager.GetAllInvoices();
-            return Ok(invoices);
-        }
-
-
         /// <summary>
         /// Vrátí detail faktury podle ID.
         /// </summary>
+        /// <param name="id">ID faktury kterou chceme zobrazit (detail)</param>
         [HttpGet("{id}")]
         public ActionResult<InvoiceGetDto> GetInvoiceById(int id)
         {
@@ -50,6 +40,8 @@ namespace Invoices.Api.Controllers
         /// <summary>
         /// Vytvoří novou fakturu.
         /// </summary>
+        /// <param name="dto">Data nové faktury</param>
+        /// <returns> Vrátí 201 (Created) s nově vytvořenou fakturou.</returns>
         [HttpPost]
         public ActionResult<InvoiceGetDto> AddInvoice([FromBody] InvoicePostDto dto)
         {
@@ -60,6 +52,8 @@ namespace Invoices.Api.Controllers
         /// <summary>
         /// Aktualizuje existující fakturu.
         /// </summary>
+        /// <param name="dto">Nová aktualizovaná data faktury</param>
+        /// <returns> Vrátí 200 (OK) s nově vytvořenou fakturou.</returns>
         [HttpPut]
         public ActionResult<InvoiceGetDto> UpdateInvoice([FromBody] InvoicePostDto dto)
         {
@@ -70,6 +64,11 @@ namespace Invoices.Api.Controllers
         /// <summary>
         /// Smaže fakturu podle ID (hard delete).
         /// </summary>
+        /// <param name="id">ID gaktury ke smazání</param>
+        /// <returns>
+        /// HTTP 204 (No Content), pokud byla faktura úspěšně smazána,  
+        /// nebo HTTP 404 (Not Found), pokud faktura s daným ID neexistuje.
+        /// </returns> 
         [HttpDelete("{id}")]
         public IActionResult DeleteInvoice(int id)
         {
@@ -82,23 +81,21 @@ namespace Invoices.Api.Controllers
         }
 
         /// <summary>
-        /// Vrátí seznam faktur podle kritéria.
+        /// Vrátí seznam faktur podle zadaných query parametrů.
         /// </summary>
-        [HttpGet("filter/{criteria}")]
-        public ActionResult<IEnumerable<InvoiceGetDto>> FilterInvoices(string criteria)
+        /// <param name="filter">
+        /// Query parametry jako buyerId, sellerId, product, minPrice, maxPrice, limit.
+        /// </param>
+        /// <returns>
+        /// Vrátí 200 (OK) s kolekcí <see cref="InvoiceGetDto"/> odpovídající zadanému filtru
+        /// </returns>
+        [HttpGet]
+        public ActionResult<IEnumerable<InvoiceGetDto>> GetInvoices([FromQuery] InvoiceFilterDto filter)
         {
-            IEnumerable<InvoiceGetDto> invoices = invoiceManager.FilterInvoices(criteria);
+            var invoices = invoiceManager.FilterInvoices(filter);
             return Ok(invoices);
         }
-        /// <summary>
-        /// Vrátí seznam faktur podle ID dodavatele (Seller).
-        /// </summary>
-        [HttpGet("sellerID")]
-        public ActionResult<IEnumerable<InvoiceGetDto>> GetInvoicesBySeller([FromQuery] int sellerId)
-        {
-            var invoices = invoiceManager.GetInvoicesBySeller(sellerId);
-            return Ok(invoices);
-        }
+
         /// <summary>
         /// Vrátí seznam faktur, které byly vystaveny firmou s daným IČO.
         /// </summary>
@@ -106,7 +103,7 @@ namespace Invoices.Api.Controllers
         /// Identifikační číslo organizace (IČO), podle kterého se vyhledají vystavené faktury.
         /// </param>
         /// <returns>
-        /// HTTP 200 s kolekcí <see cref="InvoiceGetDto"/> odpovídající vystaveným fakturám.
+        /// Vrátí 200 (OK) s kolekcí <see cref="InvoiceGetDto"/> odpovídající vystaveným fakturám.
         /// </returns>
         [HttpGet("issued")]
         public ActionResult<IEnumerable<InvoiceGetDto>> GetIssuedInvoices([FromQuery] string ico)
@@ -122,7 +119,7 @@ namespace Invoices.Api.Controllers
         /// Identifikační číslo organizace (IČO), podle kterého se vyhledají přijaté faktury.
         /// </param>
         /// <returns>
-        /// HTTP 200 s kolekcí <see cref="InvoiceGetDto"/> odpovídající přijatým fakturám.
+        /// Vrátí 200 (OK) s kolekcí <see cref="InvoiceGetDto"/> odpovídající přijatým fakturám.
         /// </returns>
         [HttpGet("received")]
         public ActionResult<IEnumerable<InvoiceGetDto>> GetReceivedInvoices([FromQuery] string ico)
