@@ -108,12 +108,16 @@ namespace Invoices.Api.Controllers
 
             return NoContent(); // HTTP 204 – smazáno, server nic dále nevrací
         }
-        //TODO: Přidat dokumentaci
         /// <summary>
-        /// 
+        /// Vrátí detail osoby podle jejího ID.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">
+        /// ID osoby, kterou chceme zobrazit (detail).
+        /// </param>
+        /// <returns>
+        /// HTTP 200 (OK) s objektem <see cref="PersonDto"/>, pokud osoba s daným ID existuje.  
+        /// HTTP 404 (NotFound), pokud osoba s daným ID nebyla nalezena.
+        /// </returns>
         [HttpGet("{id}")]
         public ActionResult<PersonDto> GetPersonById(int id)
         {
@@ -121,6 +125,21 @@ namespace Invoices.Api.Controllers
             if(personDto == null)
                 return NotFound();
             return Ok(personDto);
+        }
+        /// <summary>
+        /// Vrátí statistiky fakturovaných příjmů pro jednotlivé osoby/společnosti.
+        /// </summary>
+        /// <returns>
+        /// HTTP 200 (OK) s kolekcí <see cref="PersonStatisticsDto"/>, kde každý záznam obsahuje:
+        /// - identifikátor osoby v databázi (PersonId),
+        /// - název nebo jméno osoby/společnosti (PersonName),
+        /// - celkový fakturovaný příjem (Revenue).
+        /// </returns>
+        [HttpGet("statistics")]
+        public ActionResult<IEnumerable<PersonStatisticsDto>> GetPersonStatistics([FromServices] IStatisticsManager statisticsManager)
+        {
+            var stats = statisticsManager.GetPersonStatistics();
+            return Ok(stats);
         }
 
     }

@@ -128,6 +128,22 @@ namespace Invoices.Api.Controllers
             return Ok(invoices);
         }
 
+        /// <summary>
+        /// Vrátí souhrnné statistiky pro všechny faktury v databázi.
+        /// </summary>
+        /// <returns>
+        /// HTTP 200 (OK) s objektem <see cref="InvoiceStatisticsDto"/>, který obsahuje:
+        /// - součet cen všech faktur vystavených v aktuálním roce (CurrentYearSum),
+        /// - součet cen všech faktur napříč všemi roky (AllTimeSum),
+        /// - celkový počet faktur v databázi (InvoicesCount).
+        /// </returns>
+        [HttpGet("statistics")]
+        public ActionResult<InvoiceStatisticsDto> GetInvoiceStatistics([FromServices] IStatisticsManager statisticsManager)
+        {
+            var stats = statisticsManager.GetInvoiceStatistics();
+            return Ok(stats);
+        }
+
 
 
     }
