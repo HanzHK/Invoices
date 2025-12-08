@@ -1,7 +1,136 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Dashboard - Fakturace</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudText Typo="Typo.h4" GutterBottom="true" Class="mb-4">
+    <MudIcon Icon="@Icons.Material.Filled.Dashboard" Class="mr-2" />
+    Dashboard
+</MudText>
 
-Welcome to your new app.
+<MudGrid>
+    <!-- Přehled statistik -->
+    <MudItem xs="12" md="4">
+        <MudCard Elevation="3">
+            <MudCardContent>
+                <div class="d-flex align-center mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.Receipt" Color="Color.Primary" Size="Size.Large" Class="mr-3" />
+                    <div>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Celkem faktur</MudText>
+                        <MudText Typo="Typo.h5">24</MudText>
+                    </div>
+                </div>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <MudItem xs="12" md="4">
+        <MudCard Elevation="3">
+            <MudCardContent>
+                <div class="d-flex align-center mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Success" Size="Size.Large" Class="mr-3" />
+                    <div>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Tržby tento rok</MudText>
+                        <MudText Typo="Typo.h5">1 400 Kč</MudText>
+                    </div>
+                </div>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <MudItem xs="12" md="4">
+        <MudCard Elevation="3">
+            <MudCardContent>
+                <div class="d-flex align-center mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Info" Size="Size.Large" Class="mr-3" />
+                    <div>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">Registrované osoby</MudText>
+                        <MudText Typo="Typo.h5">12</MudText>
+                    </div>
+                </div>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <!-- Rychlé akce -->
+    <MudItem xs="12" Class="mt-4">
+        <MudText Typo="Typo.h6" GutterBottom="true">Rychlé akce</MudText>
+        <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+            <MudButton StartIcon="@Icons.Material.Filled.Add" Href="/invoices/new">
+                Nová faktura
+            </MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.PersonAdd" Href="/persons/new">
+                Nová osoba
+            </MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Search" Href="/invoices">
+                Vyhledat fakturu
+            </MudButton>
+        </MudButtonGroup>
+    </MudItem>
+
+    <!-- Nedávné faktury -->
+    <MudItem xs="12" Class="mt-4">
+        <MudCard Elevation="3">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Nedávné faktury</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default" />
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTable Items="@_recentInvoices" Hover="true" Dense="true" Elevation="0">
+                    <HeaderContent>
+                        <MudTh>Číslo</MudTh>
+                        <MudTh>Odběratel</MudTh>
+                        <MudTh>Částka</MudTh>
+                        <MudTh>Splatnost</MudTh>
+                        <MudTh>Status</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Číslo">@context.InvoiceNumber</MudTd>
+                        <MudTd DataLabel="Odběratel">@context.BuyerName</MudTd>
+                        <MudTd DataLabel="Částka">@context.Price Kč</MudTd>
+                        <MudTd DataLabel="Splatnost">@context.DueDate.ToString("dd.MM.yyyy")</MudTd>
+                        <MudTd DataLabel="Status">
+                            <MudChip Color="@GetStatusColor(context.Status)" Size="Size.Small" T="string">
+                                @context.Status
+                            </MudChip>
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    // Dočasná mock data - později nahradíš API callem
+    private List<RecentInvoice> _recentInvoices = new()
+    {
+        new RecentInvoice { InvoiceNumber = 2024001, BuyerName = "ITnetwork s.r.o.", Price = 1200, DueDate = DateTime.Now.AddDays(14), Status = "Nezaplaceno" },
+        new RecentInvoice { InvoiceNumber = 2024002, BuyerName = "ACME Corp", Price = 850, DueDate = DateTime.Now.AddDays(-3), Status = "Po splatnosti" },
+        new RecentInvoice { InvoiceNumber = 2024003, BuyerName = "WebDev Studio", Price = 2400, DueDate = DateTime.Now.AddDays(7), Status = "Zaplaceno" }
+    };
+
+    private Color GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "Zaplaceno" => Color.Success,
+            "Po splatnosti" => Color.Error,
+            "Nezaplaceno" => Color.Warning,
+            _ => Color.Default
+        };
+    }
+
+    // Dočasná třída - později použiješ InvoiceDto
+    private class RecentInvoice
+    {
+        public int InvoiceNumber { get; set; }
+        public string BuyerName { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public DateTime DueDate { get; set; }
+        public string Status { get; set; } = string.Empty;
+    }
+}

@@ -1,17 +1,34 @@
-﻿@inherits LayoutComponentBase
+﻿@using Invoices.Blazor.Layout.Drawer
+@using Invoices.Blazor.Layout.NavMenu
+@inherits LayoutComponentBase
+@inject DarkModeSwitchService DarkModeService
+@implements IDisposable
 
-
-
-<MudThemeProvider Theme="@StartTheme.Theme" IsDarkMode="_isDarkMode" />
+<MudThemeProvider @bind-IsDarkMode="@DarkModeService.IsDarkMode" Theme="@StartTheme.Theme" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MainAppbar />
-
+<MudLayout>
+    <MainAppbar />
+    
+    <MainDrawer/>
+    
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 @code {
+    protected override void OnInitialized()
+    {
+        DarkModeService.OnChange += StateHasChanged;
+    }
 
-    private bool _isDarkMode = false;
+    public void Dispose()
+    {
+        DarkModeService.OnChange -= StateHasChanged;
+    }
 }
-@Body

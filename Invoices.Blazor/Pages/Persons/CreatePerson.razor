@@ -1,0 +1,69 @@
+﻿@page "/subjekty/pridat"
+@using Invoices.Blazor.Models
+@using Invoices.Blazor.Services
+@inject PersonService PersonService
+
+<MudPaper Class="pa-16 ma-8">
+    <MudText Typo="Typo.h5">Vytvořit novou osobu</MudText>
+
+    <MudForm @ref="form" Model="person">
+        <MudStack Spacing="8">
+        <MudTextField @bind-Value="person.Name" Label="Název / Jméno" Required="true" />
+        <MudTextField @bind-Value="person.IdentificationNumber" Label="IČO" />
+        <MudTextField @bind-Value="person.TaxNumber" Label="DIČ" />
+        <MudTextField @bind-Value="person.AccountNumber" Label="Číslo účtu" />
+        <MudTextField @bind-Value="person.BankCode" Label="Kód banky" />
+        <MudTextField @bind-Value="person.Iban" Label="IBAN" />
+        <MudTextField @bind-Value="person.Telephone" Label="Telefon" />
+        <MudTextField @bind-Value="person.Mail" Label="E-mail" />
+        <MudTextField @bind-Value="person.Street" Label="Ulice" />
+        <MudTextField @bind-Value="person.Zip" Label="PSČ" />
+        <MudTextField @bind-Value="person.City" Label="Město" />
+
+        <MudSelect T="Country" Label="Stát" @bind-Value="person.Country">
+            @foreach (var country in Enum.GetValues<Country>())
+            {
+                <MudSelectItem Value="country">@GetCountryAlias(country)</MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudTextField @bind-Value="person.Note" Label="Poznámka" />
+
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OnSubmit">
+            Uložit
+        </MudButton>
+
+        </MudStack>
+    </MudForm>
+</MudPaper>
+
+@code {
+    private MudForm? form;
+    private PersonDto person = new();
+
+    private async Task OnSubmit()
+    {
+        if (form != null)
+        {
+            await form.Validate();
+            if (form.IsValid)
+            {
+                var created = await PersonService.CreateAsync(person);
+                if (created != null)
+                {
+                    // TODO: redirect na seznam nebo detail
+                }
+            }
+        }
+    }
+
+    private string GetCountryAlias(Country country)
+    {
+        return country switch
+        {
+            Country.CZECHIA => "Czech Republic",
+            Country.SLOVAKIA => "Slovakia",
+            _ => country.ToString()
+        };
+    }
+}

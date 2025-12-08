@@ -1,3 +1,4 @@
+using Invoices.Blazor.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services; 
@@ -16,6 +17,15 @@ namespace Invoices.Blazor
 
             // Add MudBlazor services
             builder.Services.AddMudServices();
+
+            // Register extension services
+            builder.Services.AddUiServices();
+
+            builder.Services.AddScoped(sp =>
+                new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+            // Register API services
+            builder.Services.AddApiServices();
 
             await builder.Build().RunAsync();
         }

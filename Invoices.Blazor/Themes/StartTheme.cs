@@ -8,30 +8,70 @@ public static class StartTheme
     {
         PaletteLight = new PaletteLight()
         {
-            Primary = "#1976d2",
-            Secondary = "#ff4081",
-            Background = "#f5f5f5",
-            Surface = "#ffffff",
-            AppbarBackground = "#1976d2",
-            DrawerBackground = "#eeeeee",
-            Success = "#4caf50",
-            Error = "#f44336",
-            Warning = "#ff9800",
-            Info = "#2196f3"
+            Primary = "#827717",          
+            Secondary = "#CDDC39",        
+            Background = "#F9FBE7",
+            Surface = "#FFFFFF",
+
+            TextPrimary = "#212121",
+            TextSecondary = "#424242",
+            PrimaryContrastText = "#212121",
+
+            AppbarBackground = "#CDDC39",
+            AppbarText = "#212121",
+
+            DrawerBackground = "#F0F4C3",
+            DrawerText = "#212121",
+            DrawerIcon = "#212121",
+
+            Success = "#689F38",              
+            Error = "#D32F2F",              
+            Warning = "#F9A825",              
+            Info = "#1976D2",           
+
+
+            SuccessContrastText = "#212121",
+            ErrorContrastText = "#212121",
+            WarningContrastText = "#212121",
+            InfoContrastText = "#212121"
         },
+
         PaletteDark = new PaletteDark()
         {
-            Primary = "#90caf9",
-            Secondary = "#f48fb1",
-            Background = "#121212",
-            Surface = "#1e1e1e",
-            AppbarBackground = "#333333",
-            DrawerBackground = "#252525",
-            Success = "#81c784",
-            Error = "#e57373",
-            Warning = "#ffb74d",
-            Info = "#64b5f6"
+            Primary = "#C6FF00",          
+            Secondary = "#AEEA00",        
+            Background = "#212121",
+            Surface = "#2E2E2E",
+
+            TextPrimary = "#FFFFFF",
+            TextSecondary = "#E0E0E0",
+            PrimaryContrastText = "#000000",
+
+            AppbarBackground = "#AFB42B",
+            AppbarText = "#212121",
+
+            DrawerBackground = "#424242",
+            DrawerText = "#FFFFFF",
+            DrawerIcon = "#FFFFFF",
+
+            Success = "#81C784",              
+            Error = "#EF5350",              
+            Warning = "#FFB74D",              
+            Info = "#64B5F6",              
+
+            SuccessContrastText = "#000000",
+            ErrorContrastText = "#000000",
+            WarningContrastText = "#000000",
+            InfoContrastText = "#000000"
+
         },
+        LayoutProperties = new LayoutProperties
+        {
+            AppbarHeight = "64px",          
+            DrawerWidthLeft = "250px",      
+            DefaultBorderRadius = "6px"     
+        },
+
         Typography = new Typography()
         {
             Default = new DefaultTypography()

@@ -1,0 +1,24 @@
+﻿@inject DarkModeSwitchService DarkModeService
+
+<MudPaper Width="250px" Class="py-3" Elevation="0">
+    <MudNavMenu>
+
+        <MudDivider Class="my-2" />
+        <MudNavGroup Title="Faktury" Expanded="true">
+            <MudNavLink Href="/faktury/prehled"
+                        Icon="@Icons.Material.Filled.Receipt">Přehled faktur</MudNavLink>
+            <MudNavLink Href="/faktury/pridat"
+                        Icon="@Icons.Material.Filled.AddCircle">Přidat fakturu</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavGroup Title="Odběratelé / Dodavatelé" Expanded="true">
+            <MudNavLink Href="/subjekty/pridat"
+                        Icon="@Icons.Material.Filled.PersonAdd">Přidat subjekt</MudNavLink>
+            <MudNavLink Href="/subjekty/seznam"
+                        Icon="@Icons.Material.Filled.People">Seznam subjektů</MudNavLink>
+        </MudNavGroup>
+
+        <MudNavLink Href="/statistiky"
+                    Icon="@Icons.Material.Filled.BarChart">Statistiky</MudNavLink>
+    </MudNavMenu>
+</MudPaper>
