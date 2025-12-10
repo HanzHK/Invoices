@@ -64,6 +64,7 @@ builder.Services.AddScoped<IPersonManager, PersonManager>();
 
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
+builder.Services.AddScoped<IStatisticsManager, StatisticsManager>();
 
 
 
