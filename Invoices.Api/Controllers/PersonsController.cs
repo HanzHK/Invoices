@@ -129,6 +129,12 @@ namespace Invoices.Api.Controllers
         /// <summary>
         /// Vrátí statistiky fakturovaných příjmů pro jednotlivé osoby/společnosti.
         /// </summary>
+        /// <param name="statisticsManager">
+        /// Služba, která zajišťuje výpočet statistik (vložená přes dependency injection).
+        /// </param>
+        /// <param name="personId">
+        /// Nepovinný query parametr – pokud je zadán, vrátí se jen statistika pro danou osobu.
+        /// </param>
         /// <returns>
         /// HTTP 200 (OK) s kolekcí <see cref="PersonStatisticsDto"/>, kde každý záznam obsahuje:
         /// - identifikátor osoby v databázi (PersonId),
@@ -136,11 +142,22 @@ namespace Invoices.Api.Controllers
         /// - celkový fakturovaný příjem (Revenue).
         /// </returns>
         [HttpGet("statistics")]
-        public ActionResult<IEnumerable<PersonStatisticsDto>> GetPersonStatistics([FromServices] IStatisticsManager statisticsManager)
+        public ActionResult<IEnumerable<PersonStatisticsDto>> GetPersonStatistics(
+            [FromServices] IStatisticsManager statisticsManager,
+            [FromQuery] int? personId
+        )
         {
             var stats = statisticsManager.GetPersonStatistics();
+
+            if (personId.HasValue)
+            {
+                stats = stats.Where(s => s.PersonId == personId.Value);
+            }
+
             return Ok(stats);
         }
+
+
 
     }
 }
