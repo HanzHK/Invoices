@@ -23,6 +23,7 @@ using Invoices.Api;
 using Invoices.Api.Converters;
 using Invoices.Api.Interfaces;
 using Invoices.Api.Managers;
+using Invoices.Api.Seeding;
 using Invoices.Data;
 using Invoices.Data.Entities;
 using Invoices.Data.Entities.Enums;
@@ -77,61 +78,26 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Seed na sample data
+builder.Services.AddTransient<SampleDataSeeder>();
+
+
 var app = builder.Build();
 
+// Pokude je aplikace ve vývojovém režimu, povolíme Swagger a vytvoříme vzorová data
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 
-    // Vytvoření vzorových dat v případě, že neexistují žádné osoby (pro testovací účely)
+    // Vytvoření vzorových dat
     using (var scope = app.Services.CreateScope())
     {
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        if (!db.Persons.Any())
-        {
-            db.Persons.AddRange(
-                new Person
-                {
-                    Name = "Jan Novák",
-                    IdentificationNumber = "12345678",
-                    TaxNumber = "CZ12345678",
-                    AccountNumber = "1234567890",
-                    BankCode = "0100",
-                    Iban = "CZ6501000000001234567890",
-                    Telephone = "+420123456789",
-                    Mail = "jan.novak@example.com",
-                    Street = "Ulice 1",
-                    Zip = "10000",
-                    City = "Praha",
-                    Country = Country.CZECHIA,
-                    Note = "Testovací osoba",
-                    Hidden = false
-                },
-                new Person
-                {
-                    Name = "Anna Horváthová",
-                    IdentificationNumber = "87654321",
-                    TaxNumber = "SK87654321",
-                    AccountNumber = "0987654321",
-                    BankCode = "0900",
-                    Iban = "SK8909000000000987654321",
-                    Telephone = "+421987654321",
-                    Mail = "anna.horvathova@example.sk",
-                    Street = "Cesta 5",
-                    Zip = "81101",
-                    City = "Bratislava",
-                    Country = Country.SLOVAKIA,
-                    Note = "Druhá osoba",
-                    Hidden = false
-                }
-            );
-
-            db.SaveChanges();
-        }
+        var seeder = scope.ServiceProvider.GetRequiredService<SampleDataSeeder>();
+        seeder.SeedPersons();
     }
+
 }
 
 app.UseHttpsRedirection();
