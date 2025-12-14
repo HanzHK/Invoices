@@ -27,7 +27,7 @@ namespace Invoices.Api
 {
     /// <summary>
     /// Profil pro AutoMapper – definuje, jak se mají převádět objekty mezi entitami a DTO třídami.
-    /// Pomáhá oddělit databázovou vrstvu (Entity) od API vrsty (DTO)
+    /// Pomáhá oddělit databázovou vrstvu (Entity) od API vrsty (DTO).
     /// </summary>
     public class AutoMapperProfile : Profile
     {
@@ -38,6 +38,7 @@ namespace Invoices.Api
 
             // POST DTO → Entity
             CreateMap<InvoicePostDto, Invoice>()
+                .ForMember(dest => dest.InvoiceId, opt => opt.MapFrom(src => src.InvoiceId)) 
                 .ForMember(dest => dest.SellerId, opt => opt.MapFrom(src => src.Seller.Id))
                 .ForMember(dest => dest.BuyerId, opt => opt.MapFrom(src => src.Buyer.Id))
                 .ForMember(dest => dest.Seller, opt => opt.Ignore())
@@ -47,9 +48,6 @@ namespace Invoices.Api
             CreateMap<Invoice, InvoiceGetDto>()
                 .ForMember(dest => dest.Seller, opt => opt.MapFrom(src => src.Seller))
                 .ForMember(dest => dest.Buyer, opt => opt.MapFrom(src => src.Buyer));
-
         }
     }
-
-
 }

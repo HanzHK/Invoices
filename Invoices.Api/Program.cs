@@ -62,7 +62,6 @@ builder.Services.AddControllers()
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonManager, PersonManager>();
-
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
 builder.Services.AddScoped<IStatisticsManager, StatisticsManager>();
@@ -79,7 +78,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Seed na sample data
-builder.Services.AddTransient<SampleDataSeeder>();
+// builder.Services.AddTransient<SampleDataSeeder>();
 
 
 var app = builder.Build();
@@ -90,14 +89,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
-
-    // Vytvoření vzorových dat
-    using (var scope = app.Services.CreateScope())
-    {
-        var seeder = scope.ServiceProvider.GetRequiredService<SampleDataSeeder>();
-        seeder.SeedPersons();
-    }
-
+    /*
+        // Vytvoření vzorových dat
+        using (var scope = app.Services.CreateScope())
+        {
+            var seeder = scope.ServiceProvider.GetRequiredService<SampleDataSeeder>();
+            seeder.SeedPersons();
+        }
+    */
 }
 
 app.UseHttpsRedirection();

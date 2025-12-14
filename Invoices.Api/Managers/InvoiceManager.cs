@@ -159,8 +159,5 @@ namespace Invoices.Api.Managers
 
             return mapper.Map<IEnumerable<InvoiceGetDto>>(invoices);
         }
-
-
-
     }
 }
