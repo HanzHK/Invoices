@@ -54,7 +54,7 @@ namespace Invoices.Api.Controllers
         /// </summary>
         /// <param name="dto">Nová aktualizovaná data faktury</param>
         /// <returns>Vrátí 200 (OK) s aktualizovanou fakturou nebo 404 pokud neexistuje.</returns>
-        [HttpPut]
+        [HttpPut("{id}")]
         public ActionResult<InvoiceGetDto> UpdateInvoice([FromBody] InvoicePostDto dto)
         {
             var updatedInvoice = invoiceManager.UpdateInvoice(dto);
