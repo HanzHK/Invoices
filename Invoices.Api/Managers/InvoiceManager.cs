@@ -63,6 +63,7 @@ namespace Invoices.Api.Managers
         public InvoiceGetDto? UpdateInvoice(InvoicePostDto dto)
         {
             var invoice = mapper.Map<Invoice>(dto);
+
             var updatedInvoice = invoiceRepository.Update(invoice);
             invoiceRepository.SaveChanges();
 
@@ -73,6 +74,7 @@ namespace Invoices.Api.Managers
             var refreshedInvoice = invoiceRepository.FindById(updatedInvoice.InvoiceId);
             return mapper.Map<InvoiceGetDto>(refreshedInvoice);
         }
+
 
         /// <summary>
         /// Smaže fakturu podle ID.

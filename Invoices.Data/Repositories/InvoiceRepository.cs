@@ -71,11 +71,15 @@ namespace Invoices.Data.Repositories
         /// <summary>
         /// Aktualizuje existující fakturu.
         /// </summary>
-        public Invoice Update(Invoice invoice)
+        public Invoice? Update(Invoice invoice)
         {
-            context.Invoices.Update(invoice);
-            return invoice;
+            var existing = context.Invoices.Find(invoice.InvoiceId);
+            if (existing == null) return null;
+
+            context.Entry(existing).CurrentValues.SetValues(invoice);
+            return existing;
         }
+
 
         /// <summary>
         /// Smaže fakturu.

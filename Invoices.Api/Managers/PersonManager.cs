@@ -115,7 +115,5 @@ namespace Invoices.Api.Managers
             return mapper.Map<PersonDto>(replacement);
         }
 
-
-
     }
 }
