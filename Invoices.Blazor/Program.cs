@@ -1,7 +1,10 @@
 using Invoices.Blazor.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using MudBlazor.Services; 
+using MudBlazor.Services;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Invoices.Blazor
 {
@@ -13,16 +16,30 @@ namespace Invoices.Blazor
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            // Configure HttpClient with custom JsonSerializerOptions
+            builder.Services.AddScoped(sp =>
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                options.Converters.Add(new JsonStringEnumConverter(namingPolicy: null, allowIntegerValues: false));
+
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri("https://localhost:7071/")
+                };
+
+                // attach options to client via extension
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                return client;
+            });
 
             // Add MudBlazor services
             builder.Services.AddMudServices();
 
             // Register extension services
             builder.Services.AddUiServices();
-
-            builder.Services.AddScoped(sp =>
-                new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             // Register API services
             builder.Services.AddApiServices();

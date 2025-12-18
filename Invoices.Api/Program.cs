@@ -53,12 +53,11 @@ builder.Services.AddControllers()
 
         // Enumy budou serializovány jako řetězce
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
+
+        // Přidání konvertoru pro DateOnly
         options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
     });
+
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonManager, PersonManager>();
@@ -66,6 +65,16 @@ builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
 builder.Services.AddScoped<IStatisticsManager, StatisticsManager>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient",
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:7024") // Adresa Blazor klienta
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 
 builder.Services.AddAutoMapper(cfg =>
@@ -98,8 +107,10 @@ if (app.Environment.IsDevelopment())
         }
     */
 }
-
+// CORS policy - povolení přístupu z Blazor klienta
 app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors("AllowBlazorClient");
 app.UseAuthorization();
 app.MapControllers();
 

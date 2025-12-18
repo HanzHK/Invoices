@@ -1,6 +1,8 @@
 ﻿@page "/subjekty/pridat"
-@using Invoices.Blazor.Models
+@using Invoices.Shared.Models
 @using Invoices.Blazor.Services
+@using Invoices.Shared.Models.Person
+@using Invoices.Shared.Models.Common
 @inject PersonService PersonService
 
 <MudPaper Class="pa-16 ma-8">
@@ -8,24 +10,46 @@
 
     <MudForm @ref="form" Model="person">
         <MudStack Spacing="8">
-        <MudTextField @bind-Value="person.Name" Label="Název / Jméno" Required="true" />
-        <MudTextField @bind-Value="person.IdentificationNumber" Label="IČO" />
-        <MudTextField @bind-Value="person.TaxNumber" Label="DIČ" />
-        <MudTextField @bind-Value="person.AccountNumber" Label="Číslo účtu" />
-        <MudTextField @bind-Value="person.BankCode" Label="Kód banky" />
-        <MudTextField @bind-Value="person.Iban" Label="IBAN" />
-        <MudTextField @bind-Value="person.Telephone" Label="Telefon" />
-        <MudTextField @bind-Value="person.Mail" Label="E-mail" />
-        <MudTextField @bind-Value="person.Street" Label="Ulice" />
-        <MudTextField @bind-Value="person.Zip" Label="PSČ" />
-        <MudTextField @bind-Value="person.City" Label="Město" />
+            <MudTextField @bind-Value="person.Name" Label="Jméno" Required="true" RequiredError="Je nutné vyplnit"
+                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Person" />
 
-        <MudSelect T="Country" Label="Stát" @bind-Value="person.Country">
-            @foreach (var country in Enum.GetValues<Country>())
-            {
-                <MudSelectItem Value="country">@GetCountryAlias(country)</MudSelectItem>
-            }
-        </MudSelect>
+            <MudTextField @bind-Value="person.IdentificationNumber" Label="IČO" Required="true"
+                          InputType="InputType.Number" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Badge" />
+
+            <MudTextField @bind-Value="person.TaxNumber" Label="DIČ" Required="true"
+                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Receipt" />
+
+            <MudTextField @bind-Value="person.AccountNumber" Label="Číslo účtu" Required="true"
+                          InputType="InputType.Number" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AccountBalance" />
+
+            <MudTextField @bind-Value="person.BankCode" Label="Kód banky" Required="true"
+                          InputType="InputType.Number" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Numbers" />
+
+            <MudTextField @bind-Value="person.Iban" Label="IBAN" Required="true"
+                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Language" />
+
+            <MudTextField @bind-Value="person.Telephone" Label="Telefon" Required="true"
+                          InputType="InputType.Telephone" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Phone" />
+
+            <MudTextField @bind-Value="person.Mail" Label="E-mail" Required="true"
+                          InputType="InputType.Email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Email" />
+
+            <MudTextField @bind-Value="person.Street" Label="Ulice" Required="true"
+                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Home" />
+
+            <MudTextField @bind-Value="person.Zip" Label="PSČ" Required="true"
+                          InputType="InputType.Number" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.MarkunreadMailbox" />
+
+            <MudTextField @bind-Value="person.City" Label="Město" Required="true"
+                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.LocationCity" />
+
+            <MudSelect T="Country ?" Label="Stát" @bind-Value="person.Country" Required="true">
+                <MudSelectItem T="Country ?" Value="null">Vyberte stát</MudSelectItem>
+                @foreach (var country in Enum.GetValues<Country>())
+                {
+                    <MudSelectItem T="Country ?" Value="country">@GetCountryAlias(country)</MudSelectItem>
+                }
+            </MudSelect>
 
         <MudTextField @bind-Value="person.Note" Label="Poznámka" />
 
@@ -61,8 +85,8 @@
     {
         return country switch
         {
-            Country.CZECHIA => "Czech Republic",
-            Country.SLOVAKIA => "Slovakia",
+            Country.Czechia => "Czech Republic", 
+            Country.Slovakia => "Slovakia",
             _ => country.ToString()
         };
     }
