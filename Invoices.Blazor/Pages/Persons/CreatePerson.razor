@@ -3,91 +3,27 @@
 @using Invoices.Blazor.Services
 @using Invoices.Shared.Models.Person
 @using Invoices.Shared.Models.Common
+@using Invoices.Blazor.Components.Forms
 @inject PersonService PersonService
 
 <MudPaper Class="pa-16 ma-8">
     <MudText Typo="Typo.h5">Vytvořit novou osobu</MudText>
 
-    <MudForm @ref="form" Model="person">
-        <MudStack Spacing="8">
-            <MudTextField @bind-Value="person.Name" Label="Jméno" Required="true" RequiredError="Je nutné vyplnit"
-                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Person" />
+    <PersonForm Person="person" IsEdit="false" OnSubmit="CreatePersonAsync" />
 
-            <MudTextField @bind-Value="person.IdentificationNumber" Label="IČO" Required="true"
-                          InputType="InputType.Number" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Badge" />
-
-            <MudTextField @bind-Value="person.TaxNumber" Label="DIČ" Required="true"
-                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Receipt" />
-
-            <MudTextField @bind-Value="person.AccountNumber" Label="Číslo účtu" Required="true"
-                          InputType="InputType.Number" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AccountBalance" />
-
-            <MudTextField @bind-Value="person.BankCode" Label="Kód banky" Required="true"
-                          InputType="InputType.Number" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Numbers" />
-
-            <MudTextField @bind-Value="person.Iban" Label="IBAN" Required="true"
-                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Language" />
-
-            <MudTextField @bind-Value="person.Telephone" Label="Telefon" Required="true"
-                          InputType="InputType.Telephone" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Phone" />
-
-            <MudTextField @bind-Value="person.Mail" Label="E-mail" Required="true"
-                          InputType="InputType.Email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Email" />
-
-            <MudTextField @bind-Value="person.Street" Label="Ulice" Required="true"
-                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Home" />
-
-            <MudTextField @bind-Value="person.Zip" Label="PSČ" Required="true"
-                          InputType="InputType.Number" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.MarkunreadMailbox" />
-
-            <MudTextField @bind-Value="person.City" Label="Město" Required="true"
-                          InputType="InputType.Text" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.LocationCity" />
-
-            <MudSelect T="Country ?" Label="Stát" @bind-Value="person.Country" Required="true">
-                <MudSelectItem T="Country ?" Value="null">Vyberte stát</MudSelectItem>
-                @foreach (var country in Enum.GetValues<Country>())
-                {
-                    <MudSelectItem T="Country ?" Value="country">@GetCountryAlias(country)</MudSelectItem>
-                }
-            </MudSelect>
-
-        <MudTextField @bind-Value="person.Note" Label="Poznámka" />
-
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OnSubmit">
-            Uložit
-        </MudButton>
-
-        </MudStack>
-    </MudForm>
 </MudPaper>
 
 @code {
-    private MudForm? form;
     private PersonDto person = new();
 
-    private async Task OnSubmit()
+    private async Task CreatePersonAsync (PersonDto model)
     {
-        if (form != null)
+        var created = await PersonService.CreateAsync(model);
+
+        if (created != null)
         {
-            await form.Validate();
-            if (form.IsValid)
-            {
-                var created = await PersonService.CreateAsync(person);
-                if (created != null)
-                {
-                    // TODO: redirect na seznam nebo detail
-                }
-            }
+            // TODO: redirect na seznam nebo detail
         }
     }
 
-    private string GetCountryAlias(Country country)
-    {
-        return country switch
-        {
-            Country.Czechia => "Czech Republic", 
-            Country.Slovakia => "Slovakia",
-            _ => country.ToString()
-        };
-    }
 }

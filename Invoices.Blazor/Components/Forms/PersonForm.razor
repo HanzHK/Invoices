@@ -1,0 +1,175 @@
+﻿@using Invoices.Blazor.Services
+@using Invoices.Shared.Models.Person
+@using Invoices.Shared.Models.Common
+@using Invoices.Blazor.Components.Validators
+@using Microsoft.Extensions.Localization
+@inject PersonFormValidator Validator
+@inject IStringLocalizer<PersonForm> L
+@inject LanguageService Lang
+<MudForm @ref="form" Model="Person">
+    <MudStack Spacing="8">
+
+        <MudTextField T="string"
+                      @bind-Value="Person.Name"
+                      Label="@L["Name"]"
+                      Immediate="true"
+                      Required="true"
+                      Validation=@Validator.Required("Name")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Person" />
+
+
+        <MudTextField @bind-Value="Person.IdentificationNumber"
+                      Label="@L["IdentificationNumber"]"
+                      Required="true"
+                      Immediate="true"
+                      InputType="InputType.Number"
+                      Validation=@Validator.Required("IdentificationNumber")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Badge"
+                      Disabled="IsEdit" />
+
+        <MudTextField @bind-Value="Person.TaxNumber"
+                      Label="@L["TaxNumber"]"
+                      Required="true"
+                      Immediate="true"
+                      Validation=@Validator.Required("TaxNumber")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Receipt" />
+
+        <MudTextField @bind-Value="Person.AccountNumber"
+                      Label="@L["AccountNumber"]"
+                      Required="true"
+                      Immediate="true"
+                      InputType="InputType.Number"
+                      Validation=@Validator.Required("AccountNumber")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.AccountBalance" />
+
+        <MudTextField @bind-Value="Person.BankCode"
+                      Label="@L["BankCode"]"
+                      Required="true"
+                      Immediate="true"
+                      InputType="InputType.Number"
+                      Validation=@Validator.Required("BankCode")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Numbers" />
+
+        <MudTextField @bind-Value="Person.Iban"
+                      Label="@L["Iban"]"
+                      Required="true"
+                      Immediate="true"
+                      Validation=@Validator.Required("Iban")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Language" />
+
+        <MudTextField @bind-Value="Person.Telephone"
+                      Label="@L["Telephone"]"
+                      Required="true"
+                      Immediate="true"
+                      InputType="InputType.Telephone"
+                      Validation=@Validator.Required("Telephone")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Phone" />
+
+        <MudTextField @bind-Value="Person.Mail"
+                      Label="@L["Mail"]"
+                      Required="true"
+                      Immediate="true"
+                      InputType="InputType.Email"
+                      Validation=@Validator.Required("Mail")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Email" />
+
+        <MudTextField @bind-Value="Person.Street"
+                      Label="@L["Street"]"
+                      Required="true"
+                      Immediate="true"
+                      Validation=@Validator.Required("Street")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Home" />
+
+        <MudTextField @bind-Value="Person.Zip"
+                      Label="@L["Zip"]"
+                      Required="true"
+                      Immediate="true"
+                      InputType="InputType.Number"
+                      Validation=@Validator.Required("Zip")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.MarkunreadMailbox" />
+
+        <MudTextField @bind-Value="Person.City"
+                      Label="@L["City"]"
+                      Required="true"
+                      Immediate="true"
+                      Validation=@Validator.Required("City")
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.LocationCity" />
+
+        <MudSelect T="Country ?"
+                   Label="@L["Country"]"
+                   @bind-Value="Person.Country"
+                   Required="true"
+                   Immediate="true"
+                   Validation=@Validator.RequiredCountry("Country")
+                   Adornment="Adornment.Start"
+                   AdornmentIcon="@Icons.Material.Filled.Public">
+            <MudSelectItem T="Country ?" Value="@(null)">Vyberte stát</MudSelectItem>
+            @foreach (var country in Enum.GetValues<Country>())
+            {
+                <MudSelectItem T="Country ?" Value="country">@GetCountryAlias(country)</MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudTextField @bind-Value="Person.Note"
+                      Label="@L["Note"]"
+                      Immediate="true"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Note" />
+
+        <MudButton Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   OnClick="SubmitInternal">
+            @(IsEdit ? "Uložit změny" : "Vytvořit")
+        </MudButton>
+
+    </MudStack>
+</MudForm>
+
+@code {
+    private MudForm? form;
+
+    [Parameter] public PersonDto Person { get; set; } = new();
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public EventCallback<PersonDto> OnSubmit { get; set; }
+
+    private async Task SubmitInternal()
+    {
+        await form.Validate();
+
+        if (!form.IsValid)
+            return;
+
+        await OnSubmit.InvokeAsync(Person);
+    }
+
+    private string GetCountryAlias(Country country)
+    {
+        return L[country.ToString()];
+    }
+    protected override void OnInitialized()
+    {
+        Lang.OnChange += Refresh;
+    }
+
+    private void Refresh()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Lang.OnChange -= Refresh;
+    }
+
+}
