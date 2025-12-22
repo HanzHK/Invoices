@@ -11,9 +11,18 @@
 
 <MudLayout>
     <MainAppbar />
-    
-    <MainDrawer/>
-    
+    <MudDrawer @bind-Open="DarkModeService.DrawerOpen"
+               Elevation="2"
+               Variant="DrawerVariant.Responsive"
+               Breakpoint="Breakpoint.Md">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h5" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.Receipt" Class="mr-2" />
+                Správa faktur
+            </MudText>
+        </MudDrawerHeader>
+        <MainNavMenu />
+    </MudDrawer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-4">
             @Body
