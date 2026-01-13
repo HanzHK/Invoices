@@ -132,8 +132,8 @@
   <data name="IbanRequired" xml:space="preserve">
     <value>Vyplňte prosím IBAN</value>
   </data>
-  <data name="IcoRequired" xml:space="preserve">
-    <value>Vyplňte prosím PSČ</value>
+  <data name="IdentificationNumberLength" xml:space="preserve">
+    <value>IČO musí mít {0} znaků.</value>
   </data>
   <data name="IdentificationNumberRequired" xml:space="preserve">
     <value>Vyplňte prosím IČO</value>
@@ -149,6 +149,9 @@
   </data>
   <data name="TaxNumberRequired" xml:space="preserve">
     <value>Vyplňte prosím DIČ</value>
+  </data>
+  <data name="TelephoneLength" xml:space="preserve">
+    <value>Telefon musí mít {0} znaků.</value>
   </data>
   <data name="TelephoneRequired" xml:space="preserve">
     <value>Vyplňte prosím číslo telefonu</value>

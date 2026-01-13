@@ -2,6 +2,7 @@
 @using Invoices.Shared.Models.Person
 @using Invoices.Shared.Models.Common
 @using Invoices.Blazor.Components.Validators
+@using Invoices.Blazor.Components.Formatters
 @using Microsoft.Extensions.Localization
 @inject PersonFormValidator Validator
 @inject IStringLocalizer<PersonForm> L
@@ -18,13 +19,17 @@
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Person" />
 
+        //TODO Real-time validation for lenght of IdentificationNumber
 
         <MudTextField @bind-Value="Person.IdentificationNumber"
                       Label="@L["IdentificationNumber"]"
                       Required="true"
                       Immediate="true"
                       InputType="InputType.Number"
-                      Validation=@Validator.Required("IdentificationNumber")
+                      Validation="@Validator.ValidateAll(
+                          Validator.Required("IdentificationNumber"),
+                          Validator.Length("IdentificationNumber", 8)
+                      )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Badge"
                       Disabled="IsEdit" />
@@ -50,6 +55,7 @@
                       Label="@L["BankCode"]"
                       Required="true"
                       Immediate="true"
+                      MaxLength="4"
                       InputType="InputType.Number"
                       Validation=@Validator.Required("BankCode")
                       Adornment="Adornment.Start"
@@ -67,8 +73,13 @@
                       Label="@L["Telephone"]"
                       Required="true"
                       Immediate="true"
+
+                      OnInput="HandleTelephoneInput"
                       InputType="InputType.Telephone"
-                      Validation=@Validator.Required("Telephone")
+                      Validation="@Validator.ValidateAll(
+                                                Validator.Required("Telephone"),
+                                                Validator.Format("Telephone", @"^\d{3}\s?\d{3}\s?\d{3}$")
+                                    )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Phone" />
 
@@ -171,5 +182,13 @@
     {
         Lang.OnChange -= Refresh;
     }
+    private async Task HandleTelephoneInput(string value)
+    {
+        Person.Telephone = InputFormatter.FormatTelephone(value);
+
+        if (form is not null)
+            await form.Validate();
+    }
+
 
 }
