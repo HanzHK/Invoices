@@ -56,13 +56,20 @@ namespace Invoices.Blazor.Components.Validators
         /// <returns>A function that takes a string value and returns null if the value is null, empty, or matches the specified pattern;
         /// otherwise, returns a localized error message indicating an invalid format.
         /// </returns>
-        public Func<string, string?> Format(string fieldKey, string pattern)
+        public Func<string, string?> Format(string fieldKey, string pattern, int requiredLength)
         {
             return value =>
             {
                 if (string.IsNullOrWhiteSpace(value))
+                    return null; // Prázdné = nechám projít (pokryje Required)
+
+                var digitsOnly = new string(value.Where(char.IsDigit).ToArray());
+
+                // Pokud ještě nedopsal, nevypisuj chybu
+                if (digitsOnly.Length < requiredLength)
                     return null;
 
+                // Teď už má dost číslic, zkontroluj formát
                 if (!System.Text.RegularExpressions.Regex.IsMatch(value, pattern))
                     return L[$"{fieldKey}Format"];
 
@@ -93,6 +100,29 @@ namespace Invoices.Blazor.Components.Validators
                 return null; 
             };
         }
+        public Func<string, string?> DigitsLength(string fieldKey, int requiredDigits)
+        {
+            return value =>
+            {
+                // nic nevaliduj, dokud uživatel nepřestal psát
+                if (string.IsNullOrWhiteSpace(value))
+                    return null;
+
+                var digits = new string(value.Where(char.IsDigit).ToArray());
+
+                // méně než requiredDigits → chyba
+                if (digits.Length < requiredDigits)
+                    return L[$"{fieldKey}Length"];
+
+                // více než requiredDigits → chyba
+                if (digits.Length > requiredDigits)
+                    return L[$"{fieldKey}Length"];
+
+                return null;
+            };
+        }
+
+
 
 
         public Func<Country?, string?> RequiredCountry(string fieldKey)

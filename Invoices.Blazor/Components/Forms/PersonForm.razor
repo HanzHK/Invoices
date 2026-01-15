@@ -3,6 +3,7 @@
 @using Invoices.Shared.Models.Common
 @using Invoices.Blazor.Components.Validators
 @using Invoices.Blazor.Components.Formatters
+@using Invoices.Blazor.Components.InputHandlers
 @using Microsoft.Extensions.Localization
 @inject PersonFormValidator Validator
 @inject IStringLocalizer<PersonForm> L
@@ -18,8 +19,6 @@
                       Validation=@Validator.Required("Name")
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Person" />
-
-        //TODO Real-time validation for lenght of IdentificationNumber
 
         <MudTextField @bind-Value="Person.IdentificationNumber"
                       Label="@L["IdentificationNumber"]"
@@ -69,16 +68,15 @@
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Language" />
 
-        <MudTextField @bind-Value="Person.Telephone"
+        <MudTextField Value="@Person.Telephone"
+                      ValueChanged="@((string v) => Person.Telephone = NumbersInputHandler.Handle(v, new[] { 3, 3, 3 }))"
                       Label="@L["Telephone"]"
                       Required="true"
                       Immediate="true"
-
-                      OnInput="HandleTelephoneInput"
-                      InputType="InputType.Telephone"
+                      InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
-                                                Validator.Required("Telephone"),
-                                                Validator.Format("Telephone", @"^\d{3}\s?\d{3}\s?\d{3}$")
+                                        Validator.Required("Telephone"),
+                                        Validator.Format("Telephone", @"^\d{3}\s\d{3}\s\d{3}$", 9)
                                     )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Phone" />
@@ -182,13 +180,5 @@
     {
         Lang.OnChange -= Refresh;
     }
-    private async Task HandleTelephoneInput(string value)
-    {
-        Person.Telephone = InputFormatter.FormatTelephone(value);
-
-        if (form is not null)
-            await form.Validate();
-    }
-
 
 }
