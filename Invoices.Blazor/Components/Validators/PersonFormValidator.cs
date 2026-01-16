@@ -1,145 +1,212 @@
-﻿using Invoices.Shared.Models.Common;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
+﻿using Invoices.Blazor.Services.Validation;
+using Invoices.Shared.Models.Common;
 using Microsoft.Extensions.Localization;
-using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
-using System.Net.NetworkInformation;
-using static MudBlazor.CategoryTypes;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Invoices.Blazor.Components.Validators
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PersonFormValidator"/> class,
+    /// providing access to localized validation messages and blur‑tracking logic
+    /// used by validators that depend on field focus state.
+    /// </summary>
+    /// <param name="localizer">
+    /// Localizer used to resolve validation message resources.
+    /// </param>
+    /// <param name="blurTracker">
+    /// Service responsible for tracking whether individual form fields
+    /// have been blurred, enabling validators that should only run after
+    /// the user leaves a field.
+    /// </param>
     public class PersonFormValidator
     {
         private readonly IStringLocalizer<PersonFormValidator> L;
+        private readonly FormFieldBlurTracker _blurTracker;
 
-        public PersonFormValidator(IStringLocalizer<PersonFormValidator> localizer)
+        public PersonFormValidator(
+            IStringLocalizer<PersonFormValidator> localizer,
+            FormFieldBlurTracker blurTracker)
         {
-            L = localizer;
+            L = localizer ?? throw new ArgumentNullException(nameof(localizer));
+            _blurTracker = blurTracker ?? throw new ArgumentNullException(nameof(blurTracker));
         }
 
-        private string? ValidateRequired(string value, string fieldKey)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return L[$"{fieldKey}Required"];
-
-            return null;
-        }
-        public Func<string, string?> Required(string fieldKey)
-        {
-            return value => ValidateRequired(value, fieldKey);
-        }
+        // Refactor to use generic required validator
         /// <summary>
-        /// Creates a validation function that checks whether the input string has the specified length.
+        /// Creates an asynchronous validator that ensures the input value is not null,
+        /// empty, or whitespace-only.
         /// </summary>
-        /// <param name="fieldKey">The key that identifies the field being validated. Used to generate error messages if validation fails.</param>
-        /// <param name="length">The required length that the input string must have. Must be non-negative.</param>
-        /// <returns>A function that takes a string value and returns null if the value is null, empty, or has the specified
-        /// length; otherwise, returns a localized error message.</returns>
-        public Func<string, string?> Length(string fieldKey, int length)
+        /// <param name="fieldKey">
+        /// Resource key prefix used to resolve the localized error message
+        /// (e.g. "Name" → "NameRequired").
+        /// </param>
+        /// <returns>
+        /// A function that returns an asynchronous sequence of validation errors.
+        /// If the value is null, empty, or consists solely of whitespace, a single
+        /// localized error message is returned; otherwise an empty sequence.
+        /// </returns>
+        public Func<string?, Task<IEnumerable<string>>> Required(string fieldKey)
         {
             return value =>
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    return null; 
-                if (value.Length != length)
-                    return L[$"{fieldKey}Length", length];
-
-                return null;
-            };
-        }
-        /// <summary>
-        /// Creates a validation function that checks whether the input string matches a specified format pattern.
-        /// </summary>
-        /// <param name="fieldKey">The key that identifies the field being validated. Used to generate localized error messages if validation fails.  </param>
-        /// <param name="pattern">The regular expression pattern that defines the required format of the input string.  </param>
-        /// <returns>A function that takes a string value and returns null if the value is null, empty, or matches the specified pattern;
-        /// otherwise, returns a localized error message indicating an invalid format.
-        /// </returns>
-        public Func<string, string?> Format(string fieldKey, string pattern, int requiredLength)
-        {
-            return value =>
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    return null; // Prázdné = nechám projít (pokryje Required)
-
-                var digitsOnly = new string(value.Where(char.IsDigit).ToArray());
-
-                // Pokud ještě nedopsal, nevypisuj chybu
-                if (digitsOnly.Length < requiredLength)
-                    return null;
-
-                // Teď už má dost číslic, zkontroluj formát
-                if (!System.Text.RegularExpressions.Regex.IsMatch(value, pattern))
-                    return L[$"{fieldKey}Format"];
-
-                return null;
-            };
-        }
-
-
-        /// <summary>
-        /// Creates a composite validation function that executes multiple validation rules in sequence. (required by MudBlazor)
-        /// </summary>
-        /// <param name="validators">One or more validation functions that each accept a string value and return either null (if valid) or a localized error message.</param>
-        /// <returns>A single validation function that runs all provided validators in order and returns the first error encountered;
-        /// returns null if all validation rules pass successfully.
-        /// </returns>
-
-        public Func<string, string?> ValidateAll(params Func<string, string?>[] validators)
-        {
-            return value =>
-            {
-                foreach (var validator in validators)
                 {
-                    var result = validator(value);
-                    if (result is not null)
-                        return result; 
+                    string error = L[$"{fieldKey}Required"].Value ?? $"{fieldKey} is required";
+                    return Task.FromResult<IEnumerable<string>>(new List<string> { error });
                 }
 
-                return null; 
+                return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
             };
         }
-        public Func<string, string?> DigitsLength(string fieldKey, int requiredDigits)
+
+        /// <summary>
+        /// Creates an asynchronous validator that checks whether the input value has
+        /// exactly the specified length.
+        /// </summary>
+        /// <param name="fieldKey">
+        /// Resource key prefix used to resolve the localized error message
+        /// (e.g. "PostalCode" → "PostalCodeLength").
+        /// </param>
+        /// <param name="length">
+        /// Required number of characters the input must contain.
+        /// </param>
+        /// <returns>
+        /// A function that returns an asynchronous sequence of validation errors.
+        /// If the value is null, empty, or already matches the required length,
+        /// the validator yields no errors. Otherwise, it returns a single localized
+        /// error message indicating the expected length.
+        /// </returns>
+        public Func<string?, Task<IEnumerable<string>>> Length(string fieldKey, int length)
         {
             return value =>
             {
-                // nic nevaliduj, dokud uživatel nepřestal psát
+                if (string.IsNullOrWhiteSpace(value) || (value?.Length ?? 0) == length)
+                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
+
+                string error = L[$"{fieldKey}Length", length].Value ?? $"Length must be {length}";
+                return Task.FromResult<IEnumerable<string>>(new List<string> { error });
+            };
+        }
+
+        /// <summary>
+        /// Creates an asynchronous validator that checks whether the input matches a specified
+        /// formatting pattern once the required number of digits has been entered.
+        /// </summary>
+        /// <param name="fieldKey">
+        /// Resource key prefix used to resolve the localized error message
+        /// (e.g. "Telephone" → "TelephoneFormat").
+        /// </param>
+        /// <param name="pattern">
+        /// Regular expression pattern the formatted value must satisfy once validation is triggered.
+        /// </param>
+        /// <param name="requiredLength">
+        /// Minimum number of digits (ignoring formatting characters) required before the pattern check is applied.
+        /// </param>
+        /// <returns>
+        /// A function that returns an asynchronous sequence of validation errors.
+        /// If the value is empty or contains fewer digits than required, no errors are returned.
+        /// Once the digit threshold is met, the validator checks the pattern and yields a single
+        /// localized error message if the format is invalid; otherwise an empty sequence.
+        /// </returns>
+        public Func<string?, Task<IEnumerable<string>>> Format(string fieldKey, string pattern, int requiredLength)
+        {
+            return value =>
+            {
                 if (string.IsNullOrWhiteSpace(value))
-                    return null;
+                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
 
-                var digits = new string(value.Where(char.IsDigit).ToArray());
+                var digitsOnly = new string(value!.Where(char.IsDigit).ToArray());
 
-                // méně než requiredDigits → chyba
-                if (digits.Length < requiredDigits)
-                    return L[$"{fieldKey}Length"];
+                if (digitsOnly.Length < requiredLength)
+                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
 
-                // více než requiredDigits → chyba
-                if (digits.Length > requiredDigits)
-                    return L[$"{fieldKey}Length"];
+                if (!Regex.IsMatch(value, pattern))
+                {
+                    string error = L[$"{fieldKey}Format"].Value ?? "Invalid format";
+                    return Task.FromResult<IEnumerable<string>>(new List<string> { error });
+                }
 
-                return null;
+                return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
+            };
+        }
+
+        /// <summary>
+        /// Combines multiple asynchronous validators into a single validator that executes them in order.
+        /// </summary>
+        /// <param name="validators">
+        /// A sequence of asynchronous validation functions to be evaluated.
+        /// Each validator receives the same input value and returns zero or more error messages.
+        /// </param>
+        /// <returns>
+        /// A composed validator that runs each provided validator sequentially.
+        /// It aggregates all returned error messages, but stops execution as soon as the first validator
+        /// produces any errors. If no validator reports an error, an empty sequence is returned.
+        /// </returns>
+        public Func<string?, Task<IEnumerable<string>>> ValidateAll(
+            params Func<string?, Task<IEnumerable<string>>>[] validators)
+        {
+            return async value =>
+            {
+                var errors = new List<string>();
+
+                foreach (var validator in validators)
+                {
+                    var result = await validator(value);
+                    errors.AddRange(result);
+                    if (errors.Count > 0) break; 
+                }
+
+                return errors;
+            };
+        }
+
+        /// <summary>
+        /// Creates an asynchronous validator that checks whether the input contains
+        /// exactly the specified number of digits, but only after the field has been blurred.
+        /// </summary>
+        /// <param name="fieldIdentifier">
+        /// Key used to resolve the localized error message (e.g. "Telephone" → "TelephoneDigitsExactLength").
+        /// </param>
+        /// <param name="exactDigits">
+        /// Required number of digits the input must contain after formatting is removed.
+        /// </param>
+        /// <returns>
+        /// A function that returns an asynchronous sequence of validation errors.
+        /// If the field has not been blurred yet, or the value is empty, the validator yields no errors.
+        /// Once blurred, it returns a single localized error message when the digit count does not match,
+        /// otherwise an empty sequence.
+        /// </returns>
+        public Func<string?, Task<IEnumerable<string>>> DigitsExactLengthAfterBlurAsync(string fieldIdentifier, int exactDigits)
+        {
+            return value =>
+            {
+                if (_blurTracker == null || !_blurTracker.IsBlurred(fieldIdentifier))
+                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
+
+                if (string.IsNullOrWhiteSpace(value))
+                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
+
+                var digitsOnly = new string(value!.Where(char.IsDigit).ToArray());
+
+                if (digitsOnly.Length != exactDigits)
+                {
+                    string msg = L[$"{fieldIdentifier}DigitsExactLength", exactDigits].Value
+                                 ?? $"Must contain exactly {exactDigits} digits";
+
+                    return Task.FromResult<IEnumerable<string>>(new List<string> { msg });
+                }
+
+                return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
             };
         }
 
 
-
-
+        // TODO: Delete this and  use generic required validator
         public Func<Country?, string?> RequiredCountry(string fieldKey)
         {
-            return value =>
-            {
-                if (value is null)
-                    return L[$"{fieldKey}Required"];
-
-                return null;
-            };
+            return value => value is null ? L[$"{fieldKey}Required"].Value : null;
         }
-
-
-
-
-
     }
-
 }

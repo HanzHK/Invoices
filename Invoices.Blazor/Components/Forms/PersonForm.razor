@@ -1,4 +1,5 @@
 ﻿@using Invoices.Blazor.Services
+@using Invoices.Blazor.Services.Validation
 @using Invoices.Shared.Models.Person
 @using Invoices.Shared.Models.Common
 @using Invoices.Blazor.Components.Validators
@@ -8,6 +9,9 @@
 @inject PersonFormValidator Validator
 @inject IStringLocalizer<PersonForm> L
 @inject LanguageService Lang
+@inject FormFieldBlurTracker BlurTracker
+
+
 <MudForm @ref="form" Model="Person">
     <MudStack Spacing="8">
 
@@ -75,11 +79,14 @@
                       Immediate="true"
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
-                                        Validator.Required("Telephone"),
-                                        Validator.Format("Telephone", @"^\d{3}\s\d{3}\s\d{3}$", 9)
-                                    )"
+                              Validator.Required("Telephone"),
+                              Validator.DigitsExactLengthAfterBlurAsync("Telephone", 9),
+                              Validator.Format("Telephone", @"^\d{3}\s\d{3}\s\d{3}$", 9)      
+                          )"
                       Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Phone" />
+                      AdornmentIcon="@Icons.Material.Filled.Phone"
+                      OnFocus="@(() => BlurTracker.MarkFocused("Telephone"))"
+                      OnBlur="@(() => BlurTracker.MarkBlurred("Telephone"))" />
 
         <MudTextField @bind-Value="Person.Mail"
                       Label="@L["Mail"]"
