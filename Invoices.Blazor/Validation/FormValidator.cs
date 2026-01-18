@@ -8,11 +8,12 @@ namespace Invoices.Blazor.Validation
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FormValidator"/> class,
-    /// providing access to localized validation messages and blur‑tracking logic
-    /// used by validators that depend on field focus state.
+    /// providing access to localized validation messages and optional blur‑tracking
+    /// logic used by validators that depend on field focus state.
     /// </summary>
     /// <param name="localizer">
-    /// Localizer used to resolve validation message resources.
+    /// Localizer used to resolve validation message resources for the form
+    /// that owns this validator.
     /// </param>
     /// <param name="blurTracker">
     /// Service responsible for tracking whether individual form fields
@@ -21,14 +22,14 @@ namespace Invoices.Blazor.Validation
     /// </param>
     public class FormValidator
     {
-        private readonly IStringLocalizer<FormValidator> L;
+        private readonly IStringLocalizer _localizer;
         private readonly FormFieldBlurTracker _blurTracker;
 
         public FormValidator(
-            IStringLocalizer<FormValidator> localizer,
+            IStringLocalizer localizer,
             FormFieldBlurTracker blurTracker)
         {
-            L = localizer ?? throw new ArgumentNullException(nameof(localizer));
+            _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             _blurTracker = blurTracker ?? throw new ArgumentNullException(nameof(blurTracker));
         }
 
@@ -58,7 +59,7 @@ namespace Invoices.Blazor.Validation
 
                 if (isInvalid)
                 {
-                    string error = L[$"{fieldKey}Required"].Value
+                    string error = _localizer[$"{fieldKey}Required"].Value
                                    ?? $"{fieldKey} is required";
 
                     return Task.FromResult<IEnumerable<string>>(
@@ -114,7 +115,7 @@ namespace Invoices.Blazor.Validation
                 if (string.IsNullOrWhiteSpace(value) || (value?.Length ?? 0) == length)
                     return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
 
-                string error = L[$"{fieldKey}Length", length].Value ?? $"Length must be {length}";
+                string error = _localizer[$"{fieldKey}Length", length].Value ?? $"Length must be {length}";
                 return Task.FromResult<IEnumerable<string>>(new List<string> { error });
             };
         }
@@ -153,7 +154,7 @@ namespace Invoices.Blazor.Validation
 
                 if (!Regex.IsMatch(value, pattern))
                 {
-                    string error = L[$"{fieldKey}Format"].Value ?? "Invalid format";
+                    string error = _localizer[$"{fieldKey}Format"].Value ?? "Invalid format";
                     return Task.FromResult<IEnumerable<string>>(new List<string> { error });
                 }
 
@@ -221,7 +222,7 @@ namespace Invoices.Blazor.Validation
 
                 if (digitsOnly.Length != exactDigits)
                 {
-                    string msg = L[$"{fieldIdentifier}DigitsExactLength", exactDigits].Value
+                    string msg = _localizer[$"{fieldIdentifier}DigitsExactLength", exactDigits].Value
                                  ?? $"Must contain exactly {exactDigits} digits";
 
                     return Task.FromResult<IEnumerable<string>>(new List<string> { msg });

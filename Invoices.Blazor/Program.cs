@@ -40,9 +40,6 @@ namespace Invoices.Blazor
             // Register LanguageService
             builder.Services.AddScoped<LanguageService>();
 
-            // Register PersonForm Validator
-            builder.Services.AddScoped<FormValidator>();
-
             // Register FormFieldBlurTracker
             builder.Services.AddScoped<FormFieldBlurTracker>();
 

@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Invoices.Shared\Invoices.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Validation\" />
-  </ItemGroup>
-
 </Project>

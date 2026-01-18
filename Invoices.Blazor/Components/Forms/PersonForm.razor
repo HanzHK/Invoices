@@ -4,7 +4,6 @@
 @using Invoices.Blazor.Validation
 @using Invoices.Blazor.InputHandlers
 @using Microsoft.Extensions.Localization
-@inject FormValidator Validator
 @inject IStringLocalizer<PersonForm> L
 @inject LanguageService Lang
 @inject FormFieldBlurTracker BlurTracker
@@ -155,10 +154,17 @@
 
 @code {
     private MudForm? form;
+    private FormValidator Validator;
 
     [Parameter] public PersonDto Person { get; set; } = new();
     [Parameter] public bool IsEdit { get; set; }
     [Parameter] public EventCallback<PersonDto> OnSubmit { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Validator = new FormValidator(L, BlurTracker);
+        Lang.OnChange += Refresh;
+    }
 
     private async Task SubmitInternal()
     {
@@ -174,10 +180,6 @@
     {
         return L[country.ToString()];
     }
-    protected override void OnInitialized()
-    {
-        Lang.OnChange += Refresh;
-    }
 
     private void Refresh()
     {
@@ -188,5 +190,4 @@
     {
         Lang.OnChange -= Refresh;
     }
-
 }

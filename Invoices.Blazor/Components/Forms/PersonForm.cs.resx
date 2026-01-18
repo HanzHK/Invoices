@@ -162,4 +162,52 @@
   <data name="Slovakia" xml:space="preserve">
     <value>Slovensko</value>
   </data>
+  <data name="ZipRequired" xml:space="preserve">
+    <value>Vyplňte prosím PSČ</value>
+  </data>
+  <data name="TelephoneRequired" xml:space="preserve">
+    <value>Vyplňte prosím číslo telefonu</value>
+  </data>
+  <data name="TelephoneLength" xml:space="preserve">
+    <value>Telefon musí mít {0} znaků.</value>
+  </data>
+  <data name="TelephoneFormat" xml:space="preserve">
+    <value>Neplatný formát telefonního čísla</value>
+  </data>
+  <data name="TelephoneDigitsExactLength" xml:space="preserve">
+    <value>Zadejte telefonní číslo o délce 9 číslic</value>
+  </data>
+  <data name="TaxNumberRequired" xml:space="preserve">
+    <value>Vyplňte prosím DIČ</value>
+  </data>
+  <data name="StreetRequired" xml:space="preserve">
+    <value>Vyplňte prosím ulici</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Vyplňte prosím jméno</value>
+  </data>
+  <data name="MailRequired" xml:space="preserve">
+    <value>Vyplňte prosím e-mailovou adresu</value>
+  </data>
+  <data name="IdentificationNumberRequired" xml:space="preserve">
+    <value>Vyplňte prosím IČO</value>
+  </data>
+  <data name="IdentificationNumberLength" xml:space="preserve">
+    <value>IČO musí mít {0} znaků</value>
+  </data>
+  <data name="IbanRequired" xml:space="preserve">
+    <value>Vyplňte prosím IBAN</value>
+  </data>
+  <data name="CountryRequired" xml:space="preserve">
+    <value>Vyberte prosím z výběru zemí</value>
+  </data>
+  <data name="CityRequired" xml:space="preserve">
+    <value>Vyplňte prosím město/obec</value>
+  </data>
+  <data name="BankCodeRequired" xml:space="preserve">
+    <value>Vyplňte prosím kód banky</value>
+  </data>
+  <data name="AccountNumberRequired" xml:space="preserve">
+    <value>Vyplňte prosím číslo účtu</value>
+  </data>
 </root>
