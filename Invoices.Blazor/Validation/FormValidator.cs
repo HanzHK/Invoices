@@ -1,14 +1,13 @@
-﻿using Invoices.Blazor.Services.Validation;
-using Invoices.Shared.Models.Common;
+﻿using Invoices.Shared.Models.Common;
 using Microsoft.Extensions.Localization;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Invoices.Blazor.Components.Validators
+namespace Invoices.Blazor.Validation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="PersonFormValidator"/> class,
+    /// Initializes a new instance of the <see cref="FormValidator"/> class,
     /// providing access to localized validation messages and blur‑tracking logic
     /// used by validators that depend on field focus state.
     /// </summary>
@@ -20,23 +19,24 @@ namespace Invoices.Blazor.Components.Validators
     /// have been blurred, enabling validators that should only run after
     /// the user leaves a field.
     /// </param>
-    public class PersonFormValidator
+    public class FormValidator
     {
-        private readonly IStringLocalizer<PersonFormValidator> L;
+        private readonly IStringLocalizer<FormValidator> L;
         private readonly FormFieldBlurTracker _blurTracker;
 
-        public PersonFormValidator(
-            IStringLocalizer<PersonFormValidator> localizer,
+        public FormValidator(
+            IStringLocalizer<FormValidator> localizer,
             FormFieldBlurTracker blurTracker)
         {
             L = localizer ?? throw new ArgumentNullException(nameof(localizer));
             _blurTracker = blurTracker ?? throw new ArgumentNullException(nameof(blurTracker));
         }
 
-        // Refactor to use generic required validator
         /// <summary>
-        /// Creates an asynchronous validator that ensures the input value is not null,
-        /// empty, or whitespace-only.
+        /// Creates an asynchronous validator that ensures the input value is present.
+        /// For reference types and nullable value types, the value must not be <c>null</c>.
+        /// When <typeparamref name="T"/> is <see cref="string"/>, the value must also not be
+        /// empty or consist solely of whitespace.
         /// </summary>
         /// <param name="fieldKey">
         /// Resource key prefix used to resolve the localized error message
@@ -44,22 +44,51 @@ namespace Invoices.Blazor.Components.Validators
         /// </param>
         /// <returns>
         /// A function that returns an asynchronous sequence of validation errors.
-        /// If the value is null, empty, or consists solely of whitespace, a single
+        /// If the value is considered missing according to the rules above, a single
         /// localized error message is returned; otherwise an empty sequence.
         /// </returns>
-        public Func<string?, Task<IEnumerable<string>>> Required(string fieldKey)
+
+        public Func<T?, Task<IEnumerable<string>>> Required<T>(string fieldKey)
         {
             return value =>
             {
-                if (string.IsNullOrWhiteSpace(value))
+                bool isInvalid =
+                    value is null ||
+                    (value is string s && string.IsNullOrWhiteSpace(s));
+
+                if (isInvalid)
                 {
-                    string error = L[$"{fieldKey}Required"].Value ?? $"{fieldKey} is required";
-                    return Task.FromResult<IEnumerable<string>>(new List<string> { error });
+                    string error = L[$"{fieldKey}Required"].Value
+                                   ?? $"{fieldKey} is required";
+
+                    return Task.FromResult<IEnumerable<string>>(
+                        new List<string> { error }
+                    );
                 }
 
-                return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
+                return Task.FromResult<IEnumerable<string>>(
+                    Enumerable.Empty<string>()
+                );
             };
         }
+
+        /// <summary>
+        /// Convenience overload for validating string fields.
+        /// This method simply forwards the call to the generic
+        /// <see cref="Required{T}(string)"/> implementation with
+        /// <typeparamref name="T"/> set to <see cref="string"/>.
+        /// </summary>
+        /// <param name="fieldKey">
+        /// Resource key prefix used to resolve the localized error message
+        /// (e.g. "Name" → "NameRequired").
+        /// </param>
+        /// <returns>
+        /// A validator function equivalent to calling
+        /// <c>Required&lt;string&gt;(fieldKey)</c>.
+        /// </returns>
+        public Func<string?, Task<IEnumerable<string>>> Required(string fieldKey)
+            => Required<string>(fieldKey);
+
 
         /// <summary>
         /// Creates an asynchronous validator that checks whether the input value has
@@ -202,11 +231,5 @@ namespace Invoices.Blazor.Components.Validators
             };
         }
 
-
-        // TODO: Delete this and  use generic required validator
-        public Func<Country?, string?> RequiredCountry(string fieldKey)
-        {
-            return value => value is null ? L[$"{fieldKey}Required"].Value : null;
-        }
     }
 }

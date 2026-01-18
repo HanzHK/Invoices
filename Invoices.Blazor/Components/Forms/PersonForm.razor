@@ -1,12 +1,10 @@
 ﻿@using Invoices.Blazor.Services
-@using Invoices.Blazor.Services.Validation
 @using Invoices.Shared.Models.Person
 @using Invoices.Shared.Models.Common
-@using Invoices.Blazor.Components.Validators
-@using Invoices.Blazor.Components.Formatters
-@using Invoices.Blazor.Components.InputHandlers
+@using Invoices.Blazor.Validation
+@using Invoices.Blazor.InputHandlers
 @using Microsoft.Extensions.Localization
-@inject PersonFormValidator Validator
+@inject FormValidator Validator
 @inject IStringLocalizer<PersonForm> L
 @inject LanguageService Lang
 @inject FormFieldBlurTracker BlurTracker
@@ -20,7 +18,10 @@
                       Label="@L["Name"]"
                       Immediate="true"
                       Required="true"
-                      Validation=@Validator.Required("Name")
+                      Validation="@Validator.ValidateAll(
+                          Validator.Required("Name"),
+                          Validator.Length("Name",  50)
+                                              )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Person" />
 
@@ -127,7 +128,7 @@
                    @bind-Value="Person.Country"
                    Required="true"
                    Immediate="true"
-                   Validation=@Validator.RequiredCountry("Country")
+                   Validation="@(Validator.Required<Country?>("Country"))"
                    Adornment="Adornment.Start"
                    AdornmentIcon="@Icons.Material.Filled.Public">
             <MudSelectItem T="Country ?" Value="@(null)">Vyberte stát</MudSelectItem>

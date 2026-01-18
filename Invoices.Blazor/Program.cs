@@ -1,6 +1,5 @@
-using Invoices.Blazor.Components.Validators;
 using Invoices.Blazor.Services;
-using Invoices.Blazor.Services.Validation;
+using Invoices.Blazor.Validation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -42,7 +41,7 @@ namespace Invoices.Blazor
             builder.Services.AddScoped<LanguageService>();
 
             // Register PersonForm Validator
-            builder.Services.AddScoped<PersonFormValidator>();
+            builder.Services.AddScoped<FormValidator>();
 
             // Register FormFieldBlurTracker
             builder.Services.AddScoped<FormFieldBlurTracker>();

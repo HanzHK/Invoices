@@ -133,7 +133,7 @@
     <value>Vyplňte prosím IBAN</value>
   </data>
   <data name="IdentificationNumberLength" xml:space="preserve">
-    <value>IČO musí mít {0} znaků.</value>
+    <value>IČO musí mít {0} znaků</value>
   </data>
   <data name="IdentificationNumberRequired" xml:space="preserve">
     <value>Vyplňte prosím IČO</value>
@@ -149,6 +149,12 @@
   </data>
   <data name="TaxNumberRequired" xml:space="preserve">
     <value>Vyplňte prosím DIČ</value>
+  </data>
+  <data name="TelephoneDigitsExactLength" xml:space="preserve">
+    <value>Zadejte telefonní číslo o délce 9 číslic</value>
+  </data>
+  <data name="TelephoneFormat" xml:space="preserve">
+    <value>Neplatný formát telefonního čísla</value>
   </data>
   <data name="TelephoneLength" xml:space="preserve">
     <value>Telefon musí mít {0} znaků.</value>

@@ -1,4 +1,4 @@
-﻿namespace Invoices.Blazor.Services.Validation
+﻿namespace Invoices.Blazor.Validation
 {
     /// <summary>
     /// Tracks blur and focus state for individual form fields, allowing validators
