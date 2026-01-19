@@ -210,4 +210,7 @@
   <data name="AccountNumberRequired" xml:space="preserve">
     <value>Vyplňte prosím číslo účtu</value>
   </data>
+  <data name="AccountNumberInvalidModulo11" xml:space="preserve">
+    <value>Číslo účtu není platné</value>
+  </data>
 </root>

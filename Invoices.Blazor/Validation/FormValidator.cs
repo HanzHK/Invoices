@@ -231,6 +231,79 @@ namespace Invoices.Blazor.Validation
                 return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
             };
         }
+        /// <summary>
+        /// Creates an asynchronous validation rule ensuring that the input value
+        /// does not exceed the specified maximum length. Empty or null values are
+        /// considered valid; use <c>Required</c> to enforce non‑emptiness.
+        /// </summary>
+        /// <param name="fieldName">
+        /// Name of the field used to construct the localization key
+        /// (<c>{fieldName}MaxLength</c>).
+        /// </param>
+        /// <param name="maxLength">
+        /// Maximum allowed number of characters. Values longer than this limit
+        /// produce a single localized error message.
+        /// </param>
+        /// <returns>
+        /// A validation function returning an empty sequence when valid, or a
+        /// sequence containing one localized error message when the value exceeds
+        /// the allowed length.
+        /// </returns>
+        public Func<string?, Task<IEnumerable<string>>> MaxLength(string fieldName, int maxLength)
+        {
+            return value =>
+            {
+                if (string.IsNullOrEmpty(value))
+                    return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
+
+                if (value.Length > maxLength)
+                {
+                    var message = _localizer[$"{fieldName}MaxLength", maxLength].Value;
+                    return Task.FromResult<IEnumerable<string>>(new[] { message });
+                }
+
+                return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
+            };
+        }
+        /// <summary>
+        /// Creates an asynchronous validation rule ensuring that the input value
+        /// contains at least the specified minimum number of characters. Empty or
+        /// null values are considered valid; use <c>Required</c> to enforce
+        /// non‑emptiness.
+        /// </summary>
+        /// <param name="fieldName">
+        /// Name of the field used to construct the localization key
+        /// (<c>{fieldName}MinLength</c>).
+        /// </param>
+        /// <param name="minLength">
+        /// Minimum allowed number of characters. Values shorter than this limit
+        /// produce a single localized error message.
+        /// </param>
+        /// <returns>
+        /// A validation function returning an empty sequence when valid, or a
+        /// sequence containing one localized error message when the value is
+        /// shorter than the required minimum length.
+        /// </returns>
+
+        public Func<string?, Task<IEnumerable<string>>> MinLength(string fieldName, int minLength)
+        {
+            return value =>
+            {
+                if (string.IsNullOrEmpty(value))
+                    return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
+
+                if (value.Length < minLength)
+                {
+                    var message = _localizer[$"{fieldName}MinLength", minLength].Value;
+                    return Task.FromResult<IEnumerable<string>>(new[] { message });
+                }
+
+                return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
+            };
+        }
+
+
+
 
     }
 }

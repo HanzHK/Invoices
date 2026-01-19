@@ -2,39 +2,48 @@
 @using Invoices.Shared.Models.Person
 @using Invoices.Shared.Models.Common
 @using Invoices.Blazor.Validation
+@using Invoices.Blazor.Validation.Domain
 @using Invoices.Blazor.InputHandlers
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<PersonForm> L
 @inject LanguageService Lang
 @inject FormFieldBlurTracker BlurTracker
 
-
 <MudForm @ref="form" Model="Person">
     <MudStack Spacing="8">
 
-        <MudTextField T="string"
-                      @bind-Value="Person.Name"
+        <MudTextField Value="@Person.Name"
+                      ValueChanged="@((string v) => 
+                            Person.Name = TextInputHandler.Handle(v, new TextInputOptions {
+                                Trim = true,
+                                CollapseWhitespace = true,
+                                Casing = TextCasing.Title,
+                                MaxLength = 50
+                            }))"
                       Label="@L["Name"]"
-                      Immediate="true"
                       Required="true"
+                      Immediate="true"
                       Validation="@Validator.ValidateAll(
-                          Validator.Required("Name"),
-                          Validator.Length("Name",  50)
-                                              )"
-                      Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Person" />
+                            Validator.Required("Name"),
+                            Validator.MaxLength("Name", 50)
+                      )" />
 
-        <MudTextField @bind-Value="Person.IdentificationNumber"
+        <MudTextField Value="@Person.IdentificationNumber"
+                      ValueChanged="@((string v) => 
+                            Person.IdentificationNumber = NumbersInputHandler.Handle(v, new[] { 8 }))"
                       Label="@L["IdentificationNumber"]"
                       Required="true"
                       Immediate="true"
-                      InputType="InputType.Number"
+                      InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
-                          Validator.Required("IdentificationNumber"),
-                          Validator.Length("IdentificationNumber", 8)
-                      )"
+                              Validator.Required("IdentificationNumber"),
+                              Validator.DigitsExactLengthAfterBlurAsync("IdentificationNumber", 8),
+                              Validator.Format("IdentificationNumber", @"^\d{8}$", 8)
+                          )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Badge"
+                      OnFocus="@(() => BlurTracker.MarkFocused("IdentificationNumber"))"
+                      OnBlur="@(() => BlurTracker.MarkBlurred("IdentificationNumber"))"
                       Disabled="IsEdit" />
 
         <MudTextField @bind-Value="Person.TaxNumber"
@@ -45,14 +54,25 @@
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Receipt" />
 
-        <MudTextField @bind-Value="Person.AccountNumber"
-                      Label="@L["AccountNumber"]"
-                      Required="true"
-                      Immediate="true"
-                      InputType="InputType.Number"
-                      Validation=@Validator.Required("AccountNumber")
-                      Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.AccountBalance" />
+<MudTextField Value="@Person.AccountNumber"
+              ValueChanged="@((string v) =>
+                    Person.AccountNumber = NumbersInputHandler.Handle(v, new[] { 10 }))"
+              Label="@L["AccountNumber"]"
+              Required="true"
+              Immediate="true"
+              InputType="InputType.Text"
+              Validation="@Validator.ValidateAll(
+                      Validator.Required("AccountNumber"),
+                      Validator.MinLength("AccountNumber", 6),
+                      Validator.MaxLength("AccountNumber", 10),
+                      Validator.Format("AccountNumber", @"^\d{6,10}$", 10),
+                      AccountValidator.ValidateAfterBlur("AccountNumber")
+                  )"
+              Adornment="Adornment.Start"
+              AdornmentIcon="@Icons.Material.Filled.AccountBalance"
+              OnFocus="@(() => BlurTracker.MarkFocused("AccountNumber"))"
+              OnBlur="@(() => BlurTracker.MarkBlurred("AccountNumber"))" />
+
 
         <MudTextField @bind-Value="Person.BankCode"
                       Label="@L["BankCode"]"
@@ -155,6 +175,7 @@
 @code {
     private MudForm? form;
     private FormValidator Validator;
+    private AccountNumberModulo11Validator AccountValidator;
 
     [Parameter] public PersonDto Person { get; set; } = new();
     [Parameter] public bool IsEdit { get; set; }
@@ -163,6 +184,7 @@
     protected override void OnInitialized()
     {
         Validator = new FormValidator(L, BlurTracker);
+        AccountValidator = AccountNumberModulo11Validator.Create(L, BlurTracker);
         Lang.OnChange += Refresh;
     }
 

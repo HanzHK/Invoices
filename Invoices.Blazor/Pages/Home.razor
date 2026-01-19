@@ -55,13 +55,13 @@
     <MudItem xs="12" Class="mt-4">
         <MudText Typo="Typo.h6" GutterBottom="true">Rychlé akce</MudText>
         <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
-            <MudButton StartIcon="@Icons.Material.Filled.Add" Href="/invoices/new">
+            <MudButton StartIcon="@Icons.Material.Filled.Add" Href="">
                 Nová faktura
             </MudButton>
-            <MudButton StartIcon="@Icons.Material.Filled.PersonAdd" Href="/persons/new">
+            <MudButton StartIcon="@Icons.Material.Filled.PersonAdd" Href="/subjekty/pridat">
                 Nová osoba
             </MudButton>
-            <MudButton StartIcon="@Icons.Material.Filled.Search" Href="/invoices">
+            <MudButton StartIcon="@Icons.Material.Filled.Search" Href="">
                 Vyhledat fakturu
             </MudButton>
         </MudButtonGroup>
@@ -105,7 +105,7 @@
 </MudGrid>
 
 @code {
-    // Dočasná mock data - později nahradíš API callem
+    // Dočasná mock data
     private List<RecentInvoice> _recentInvoices = new()
     {
         new RecentInvoice { InvoiceNumber = 2024001, BuyerName = "ITnetwork s.r.o.", Price = 1200, DueDate = DateTime.Now.AddDays(14), Status = "Nezaplaceno" },
@@ -124,7 +124,7 @@
         };
     }
 
-    // Dočasná třída - později použiješ InvoiceDto
+    // Dočasná třída
     private class RecentInvoice
     {
         public int InvoiceNumber { get; set; }

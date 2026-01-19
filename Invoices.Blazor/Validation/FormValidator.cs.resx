@@ -123,6 +123,9 @@
   <data name="Format" xml:space="preserve">
     <value>Neplatný formát </value>
   </data>
+  <data name="InvalidModulo11" xml:space="preserve">
+    <value>Neplatné číslo</value>
+  </data>
   <data name="Length" xml:space="preserve">
     <value>Toto pole musí obsahovat {0} znaků</value>
   </data>

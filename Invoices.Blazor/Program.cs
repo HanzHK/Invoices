@@ -1,5 +1,6 @@
 using Invoices.Blazor.Services;
 using Invoices.Blazor.Validation;
+using Invoices.Blazor.Validation.Domain;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
