@@ -63,11 +63,7 @@
               Immediate="true"
               InputType="InputType.Text"
                 Validation="@Validator.ValidateAll(
-                    Validator.Required("AccountNumber"),
-                    Rules.AfterBlur("AccountNumber",
-                        Validator.MinLength("AccountNumber", 6),
-                        BlurTracker
-                    ),
+                    Validator.Required("AccountNumber"),                       
                     Validator.MaxLength("AccountNumber", 10),
                     Validator.Format("AccountNumber", @"^\d{6,10}$", 10),
                     AccountValidator.ValidateAfterBlur("AccountNumber")
