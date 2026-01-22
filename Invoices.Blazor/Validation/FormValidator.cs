@@ -24,7 +24,7 @@ namespace Invoices.Blazor.Validation
     {
         private readonly IStringLocalizer _localizer;
         private readonly FormFieldBlurTracker _blurTracker;
-
+        // Refactor use new DI instead
         public FormValidator(
             IStringLocalizer localizer,
             FormFieldBlurTracker blurTracker)
@@ -119,7 +119,7 @@ namespace Invoices.Blazor.Validation
                 return Task.FromResult<IEnumerable<string>>(new List<string> { error });
             };
         }
-
+        // TODO: Move to Rules folder and class
         /// <summary>
         /// Creates an asynchronous validator that checks whether the input matches a specified
         /// formatting pattern once the required number of digits has been entered.

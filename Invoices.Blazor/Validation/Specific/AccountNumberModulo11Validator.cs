@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Invoices.Blazor.Validation.Domain
+namespace Invoices.Blazor.Validation.Specific
 {
     public class AccountNumberModulo11Validator
     {

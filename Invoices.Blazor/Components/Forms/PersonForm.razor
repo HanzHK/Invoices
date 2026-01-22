@@ -2,7 +2,8 @@
 @using Invoices.Shared.Models.Person
 @using Invoices.Shared.Models.Common
 @using Invoices.Blazor.Validation
-@using Invoices.Blazor.Validation.Domain
+@using Invoices.Blazor.Validation.Specific
+@using Invoices.Blazor.Validation.Rules
 @using Invoices.Blazor.InputHandlers
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<PersonForm> L
@@ -61,36 +62,56 @@
               Required="true"
               Immediate="true"
               InputType="InputType.Text"
-              Validation="@Validator.ValidateAll(
-                      Validator.Required("AccountNumber"),
-                      Validator.MinLength("AccountNumber", 6),
-                      Validator.MaxLength("AccountNumber", 10),
-                      Validator.Format("AccountNumber", @"^\d{6,10}$", 10),
-                      AccountValidator.ValidateAfterBlur("AccountNumber")
-                  )"
+                Validation="@Validator.ValidateAll(
+                    Validator.Required("AccountNumber"),
+                    Rules.AfterBlur("AccountNumber",
+                        Validator.MinLength("AccountNumber", 6),
+                        BlurTracker
+                    ),
+                    Validator.MaxLength("AccountNumber", 10),
+                    Validator.Format("AccountNumber", @"^\d{6,10}$", 10),
+                    AccountValidator.ValidateAfterBlur("AccountNumber")
+                )"
+
               Adornment="Adornment.Start"
               AdornmentIcon="@Icons.Material.Filled.AccountBalance"
               OnFocus="@(() => BlurTracker.MarkFocused("AccountNumber"))"
               OnBlur="@(() => BlurTracker.MarkBlurred("AccountNumber"))" />
 
 
-        <MudTextField @bind-Value="Person.BankCode"
+        <MudTextField Value="@Person.BankCode"
+                      ValueChanged="@((string v) => 
+                      Person.BankCode = NumbersInputHandler.Handle(v, new[] { 4 }))"
                       Label="@L["BankCode"]"
                       Required="true"
                       Immediate="true"
-                      MaxLength="4"
-                      InputType="InputType.Number"
-                      Validation=@Validator.Required("BankCode")
+                      InputType="InputType.Text"
+                       Validation="@Validator.ValidateAll(
+                      Validator.Required("BankCode"),
+                      Validator.MaxLength("BankCode", 4),
+                      Validator.DigitsExactLengthAfterBlurAsync("BankCode", 4)
+                  )"
                       Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Numbers" />
+                      AdornmentIcon="@Icons.Material.Filled.Numbers"
+              OnFocus="@(() => BlurTracker.MarkFocused("BankCode"))"
+              OnBlur="@(() => BlurTracker.MarkBlurred("BankCode"))" />
 
-        <MudTextField @bind-Value="Person.Iban"
+        <MudTextField  Value="@Person.Iban"
+                      ValueChanged="@((string v) => 
+                      Person.Iban = NumbersInputHandler.Handle(v, new[] { 24 }))"
                       Label="@L["Iban"]"
                       Required="true"
                       Immediate="true"
-                      Validation=@Validator.Required("Iban")
+                      Validation="@Validator.ValidateAll(
+                              Validator.Required("Iban"),
+                              Validator.DigitsExactLengthAfterBlurAsync("Iban", 24),
+                              Validator.Format("Iban", @"^[A-Z0-9]{24}$", 24)
+      
+                          )"
                       Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Language" />
+                      AdornmentIcon="@Icons.Material.Filled.Language"
+                      OnFocus="@(() => BlurTracker.MarkFocused("Iban"))"
+                      OnBlur="@(() => BlurTracker.MarkBlurred("Iban"))" />
 
         <MudTextField Value="@Person.Telephone"
                       ValueChanged="@((string v) => Person.Telephone = NumbersInputHandler.Handle(v, new[] { 3, 3, 3 }))"
@@ -173,9 +194,12 @@
 </MudForm>
 
 @code {
+
+    // TODO: Refactor, use DI instead of creating new instances
     private MudForm? form;
     private FormValidator Validator;
     private AccountNumberModulo11Validator AccountValidator;
+    private RulesValidator Rules;
 
     [Parameter] public PersonDto Person { get; set; } = new();
     [Parameter] public bool IsEdit { get; set; }
