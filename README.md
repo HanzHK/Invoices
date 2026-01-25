@@ -42,13 +42,13 @@ Invoices.Blazor - Blazor WebAssembly frontend (alternativa k React klientu)
 
 ## 🛠️ Technologie
 
-ASP.NET Core
-Entity Framework Core
-SQLite 
-AutoMapper - Mapování mezi entitami a DTOs  
-Swagger - Automatická dokumentace API  
-Blazor WebAssembly - Alternativní SPA frontend  
-MudBlazor - UI komponenty pro Blazor  
+ASP.NET Core  
+Entity Framework Core  
+SQLite   
+AutoMapper - Mapování mezi entitami a DTOs    
+Swagger - Automatická dokumentace API    
+Blazor WebAssembly - Alternativní SPA frontend    
+MudBlazor - UI komponenty pro Blazor    
 
 
 
