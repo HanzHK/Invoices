@@ -1,5 +1,4 @@
 services:
-  # API (.NET)
   - type: web
     name: invoices-api
     runtime: dotnet
@@ -8,7 +7,6 @@ services:
     envVars:
       ASPNETCORE_URLS: "http://0.0.0.0:10000"
 
-  # Blazor WASM 
   - type: web
     name: invoices-blazor
     runtime: dotnet
@@ -16,5 +14,6 @@ services:
     startCommand: "dotnet out/Invoices.Blazor.dll"
     envVars:
       ASPNETCORE_URLS: "http://0.0.0.0:10001"
+
 
 
