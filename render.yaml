@@ -8,8 +8,13 @@ services:
     envVars:
       ASPNETCORE_URLS: http://0.0.0.0:10000
 
-  # Blazor WASM (static site)
-  - type: static
+  # Blazor WASM 
+  - type: web
     name: invoices-blazor
-    buildCommand: "dotnet publish Invoices.Blazor/Invoices.Blazor.csproj -c Release -o build"
-    staticPublishPath: "build/wwwroot"
+    runtime: dotnet
+    buildCommand: "dotnet publish Invoices.Blazor/Invoices.Blazor.csproj -c Release -o out"
+    startCommand: "dotnet out/Invoices.Blazor.dll"
+    envVars:
+      ASPNETCORE_URLS: http://0.0.0.0:10001
+
+
