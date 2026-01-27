@@ -6,7 +6,7 @@ services:
     buildCommand: "dotnet publish Invoices.Api/Invoices.Api.csproj -c Release -o out"
     startCommand: "dotnet out/Invoices.Api.dll"
     envVars:
-      ASPNETCORE_URLS: http://0.0.0.0:10000
+      ASPNETCORE_URLS: "http://0.0.0.0:10000"
 
   # Blazor WASM 
   - type: web
@@ -15,6 +15,6 @@ services:
     buildCommand: "dotnet publish Invoices.Blazor/Invoices.Blazor.csproj -c Release -o out"
     startCommand: "dotnet out/Invoices.Blazor.dll"
     envVars:
-      ASPNETCORE_URLS: http://0.0.0.0:10001
+      ASPNETCORE_URLS: "http://0.0.0.0:10001"
 
 
