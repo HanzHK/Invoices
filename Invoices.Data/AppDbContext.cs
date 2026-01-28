@@ -17,7 +17,7 @@ namespace Invoices.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Konfigurace entity Person
+            // Person
             modelBuilder.Entity<Person>(builder =>
             {
                 builder.Property(p => p.Country)
@@ -27,7 +27,7 @@ namespace Invoices.Data
                 builder.HasIndex(p => p.Hidden);
             });
 
-            // Konfigurace entity Invoice
+            // Invoice
             modelBuilder.Entity<Invoice>(builder =>
             {
                 builder.HasOne(i => i.Seller)
@@ -40,21 +40,21 @@ namespace Invoices.Data
 
                 builder.HasIndex(i => i.InvoiceNumber);
 
-                builder.Property(i => i.Price)
-                       .HasPrecision(18, 2);
+                // Price - SQLite nepodporuje HasPrecision
+                // builder.Property(i => i.Price).HasPrecision(18, 2);
 
+                // DateOnly konverze - BEZ HasColumnType("date")
                 builder.Property(i => i.Issued)
-                       .HasColumnType("date")  
                        .HasConversion(
                            v => v.ToDateTime(TimeOnly.MinValue),
                            v => DateOnly.FromDateTime(v));
 
                 builder.Property(i => i.DueDate)
-                       .HasColumnType("date") 
                        .HasConversion(
                            v => v.ToDateTime(TimeOnly.MinValue),
                            v => DateOnly.FromDateTime(v));
             });
         }
+
     }
 }

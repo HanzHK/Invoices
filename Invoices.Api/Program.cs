@@ -84,7 +84,7 @@ builder.Services.AddAutoMapper(cfg =>
 
 // Připojení k databázi, viz soubor appsettings.json
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Seed na sample data
 // builder.Services.AddTransient<SampleDataSeeder>();
@@ -107,6 +107,14 @@ if (app.Environment.IsDevelopment())
         }
     */
 }
+// Zajistíme, že databáze je vytvořena
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+}
+
+
 // CORS policy - povolení přístupu z Blazor klienta
 app.UseHttpsRedirection();
 app.UseRouting();
