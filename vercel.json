@@ -1,0 +1,4 @@
+{
+  "buildCommand": "dotnet publish Invoices.Blazor/Invoices.Blazor.csproj -c Release -o build",
+  "outputDirectory": "build/wwwroot"
+}
