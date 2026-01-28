@@ -3,9 +3,6 @@ on:
   push:
     branches:
     - master
-permissions:
-  id-token: write
-  contents: read
 env:
   AZURE_WEBAPP_NAME: invoices
   AZURE_WEBAPP_PACKAGE_PATH: Invoices.Api\publish
@@ -43,14 +40,9 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    - name: Azure Login
-      uses: azure/login@v2
-      with:
-        client-id: ${{ vars.invoices_CLIENT_ID_EF2E }}
-        tenant-id: ${{ vars.invoices_TENANT_ID_EF2E }}
-        subscription-id: ${{ vars.invoices_SUBSCRIPTION_ID_EF2E }}
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
