@@ -1,5 +1,0 @@
-{
-  "buildCommand": "dotnet publish Invoices.Blazor/Invoices.Blazor.csproj -c Release -o build",
-  "outputDirectory": "build/wwwroot",
-  "installCommand": "apt-get update && apt-get install -y dotnet-sdk-8.0"
-}
