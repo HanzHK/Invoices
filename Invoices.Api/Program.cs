@@ -1,25 +1,4 @@
-﻿/*  _____ _______         _                      _
- * |_   _|__   __|       | |                    | |
- *   | |    | |_ __   ___| |___      _____  _ __| | __  ___ ____
- *   | |    | | '_ \ / _ \ __\ \ /\ / / _ \| '__| |/ / / __|_  /
- *  _| |_   | | | | |  __/ |_ \ V  V / (_) | |  |   < | (__ / /
- * |_____|  |_|_| |_|\___|\__| \_/\_/ \___/|_|  |_|\_(_)___/___|
- *
- *                      ___ ___ ___
- *                     | . |  _| . |  LICENCE
- *                     |  _|_| |___|
- *                     |_|
- *
- *    REKVALIFIKAČNÍ KURZY  <>  PROGRAMOVÁNÍ  <>  IT KARIÉRA
- *
- * Tento zdrojový kód je součástí profesionálních IT kurzů na
- * WWW.ITNETWORK.CZ
- *
- * Kód spadá pod licenci PRO obsahu a vznikl díky podpoře
- * našich členů. Je určen pouze pro osobní užití a nesmí být šířen.
- * Více informací na http://www.itnetwork.cz/licence
- */
-using Invoices.Api;
+﻿using Invoices.Api;
 using Invoices.Api.Converters;
 using Invoices.Api.Interfaces;
 using Invoices.Api.Managers;
@@ -65,17 +44,23 @@ builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
 builder.Services.AddScoped<IStatisticsManager, StatisticsManager>();
 
+
+// CORS policy - povolení přístupu z Blazor klienta + Vercel klienta
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowBlazorClient",
+    options.AddPolicy("AllowAllClients",
         policy =>
         {
-            policy.WithOrigins("https://localhost:7024") // Adresa Blazor klienta
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy.WithOrigins(
+                         "https://localhost:7024",
+                         "https://invoice-client-starter-nu.vercel.app",
+                         "https://invoice-client-starter-nu.vercel.app/"
+                             )
+
+             .AllowAnyHeader()
+            .AllowAnyMethod();
         });
 });
-
 
 builder.Services.AddAutoMapper(cfg =>
 {
@@ -115,10 +100,9 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-// CORS policy - povolení přístupu z Blazor klienta
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors("AllowBlazorClient");
+app.UseCors("AllowAllClients");
 app.UseAuthorization();
 app.MapControllers();
 
