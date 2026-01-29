@@ -30,7 +30,7 @@ namespace Invoices.Blazor
 
                 var client = new HttpClient
                 {
-                    BaseAddress = new Uri("https://localhost:7071/")
+                    BaseAddress = new Uri("https://invoices-e9beeabjdgf5afcr.polandcentral-01.azurewebsites.net")
                 };
 
                 // attach options to client via extension
