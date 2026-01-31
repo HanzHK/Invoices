@@ -8,6 +8,7 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<PersonForm> L
 @inject LanguageService Lang
+@inject IStringLocalizerFactory Factory
 @inject FormFieldBlurTracker BlurTracker
 
 <MudForm @ref="form" Model="Person">
@@ -191,11 +192,11 @@
 
 @code {
 
-    // TODO: Refactor, use DI instead of creating new instances
+
     private MudForm? form;
+    private RulesValidator Rules;
     private FormValidator Validator;
     private AccountNumberModulo11Validator AccountValidator;
-    private RulesValidator Rules;
 
     [Parameter] public PersonDto Person { get; set; } = new();
     [Parameter] public bool IsEdit { get; set; }
@@ -203,8 +204,14 @@
 
     protected override void OnInitialized()
     {
-        Validator = new FormValidator(L, BlurTracker);
-        AccountValidator = AccountNumberModulo11Validator.Create(L, BlurTracker);
+        Validator = new FormValidator(Factory, BlurTracker, typeof(PersonForm));
+        AccountValidator = new AccountNumberModulo11Validator(
+                                    Factory.Create(typeof(PersonForm)),     // primary
+                                    Factory.Create(typeof(FormValidator)),  // fallback
+                                    BlurTracker
+        );
+
+
         Lang.OnChange += Refresh;
     }
 

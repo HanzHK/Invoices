@@ -1,36 +1,45 @@
-﻿using Invoices.Shared.Models.Common;
+﻿using Invoices.Blazor.Validation.Rules;
+using Invoices.Shared.Models.Common;
 using Microsoft.Extensions.Localization;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Invoices.Blazor.Validation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="FormValidator"/> class,
-    /// providing access to localized validation messages and optional blur‑tracking
-    /// logic used by validators that depend on field focus state.
+    /// Provides a collection of reusable validation rules for Blazor forms.
+    /// This validator acts as an orchestrator: it composes rule classes,
+    /// supplies them with localization and blur‑tracking services, and exposes
+    /// a convenient API for use in components.
     /// </summary>
-    /// <param name="localizer">
-    /// Localizer used to resolve validation message resources for the form
-    /// that owns this validator.
-    /// </param>
-    /// <param name="blurTracker">
-    /// Service responsible for tracking whether individual form fields
-    /// have been blurred, enabling validators that should only run after
-    /// the user leaves a field.
-    /// </param>
-    public class FormValidator
+    public class FormValidator : FormValidatorBase
     {
-        private readonly IStringLocalizer _localizer;
-        private readonly FormFieldBlurTracker _blurTracker;
-        // Refactor use new DI instead
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormValidator"/> class.
+        /// </summary>
+        /// <param name="factory">
+        /// Factory used to create localizers for the hosting component and for
+        /// the shared validator resources.
+        /// </param>
+        /// <param name="blurTracker">
+        /// Service responsible for tracking blur state of individual form fields,
+        /// enabling validation rules that should only execute after the user
+        /// leaves a field.
+        /// </param>
+        /// <param name="componentType">
+        /// Type of the hosting component whose resource file provides
+        /// component‑specific validation messages (e.g. PersonForm, InvoiceForm).
+        /// </param>
         public FormValidator(
-            IStringLocalizer localizer,
-            FormFieldBlurTracker blurTracker)
+            IStringLocalizerFactory factory,
+            FormFieldBlurTracker blurTracker,
+            Type componentType)
+            : base(
+                factory.Create(componentType),          
+                factory.Create(typeof(FormValidator)),  // Fallback localizer, for generic messages
+                blurTracker)
         {
-            _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
-            _blurTracker = blurTracker ?? throw new ArgumentNullException(nameof(blurTracker));
         }
 
         /// <summary>
@@ -48,7 +57,6 @@ namespace Invoices.Blazor.Validation
         /// If the value is considered missing according to the rules above, a single
         /// localized error message is returned; otherwise an empty sequence.
         /// </returns>
-
         public Func<T?, Task<IEnumerable<string>>> Required<T>(string fieldKey)
         {
             return value =>
@@ -59,7 +67,7 @@ namespace Invoices.Blazor.Validation
 
                 if (isInvalid)
                 {
-                    string error = _localizer[$"{fieldKey}Required"].Value
+                    string error = Localizer[$"{fieldKey}Required"].Value
                                    ?? $"{fieldKey} is required";
 
                     return Task.FromResult<IEnumerable<string>>(
@@ -90,7 +98,6 @@ namespace Invoices.Blazor.Validation
         public Func<string?, Task<IEnumerable<string>>> Required(string fieldKey)
             => Required<string>(fieldKey);
 
-
         /// <summary>
         /// Creates an asynchronous validator that checks whether the input value has
         /// exactly the specified length.
@@ -115,10 +122,12 @@ namespace Invoices.Blazor.Validation
                 if (string.IsNullOrWhiteSpace(value) || (value?.Length ?? 0) == length)
                     return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
 
-                string error = _localizer[$"{fieldKey}Length", length].Value ?? $"Length must be {length}";
+                string error = Localizer[$"{fieldKey}Length", length].Value
+                               ?? $"Length must be {length}";
                 return Task.FromResult<IEnumerable<string>>(new List<string> { error });
             };
         }
+
         // TODO: Move to Rules folder and class
         /// <summary>
         /// Creates an asynchronous validator that checks whether the input matches a specified
@@ -154,7 +163,7 @@ namespace Invoices.Blazor.Validation
 
                 if (!Regex.IsMatch(value, pattern))
                 {
-                    string error = _localizer[$"{fieldKey}Format"].Value ?? "Invalid format";
+                    string error = Localizer[$"{fieldKey}Format"].Value ?? "Invalid format";
                     return Task.FromResult<IEnumerable<string>>(new List<string> { error });
                 }
 
@@ -185,13 +194,14 @@ namespace Invoices.Blazor.Validation
                 {
                     var result = await validator(value);
                     errors.AddRange(result);
-                    if (errors.Count > 0) break; 
+                    if (errors.Count > 0) break;
                 }
 
                 return errors;
             };
         }
 
+        // TODO: Move to Rules folder and class
         /// <summary>
         /// Creates an asynchronous validator that checks whether the input contains
         /// exactly the specified number of digits, but only after the field has been blurred.
@@ -212,7 +222,7 @@ namespace Invoices.Blazor.Validation
         {
             return value =>
             {
-                if (_blurTracker == null || !_blurTracker.IsBlurred(fieldIdentifier))
+                if (BlurTracker == null || !BlurTracker.IsBlurred(fieldIdentifier))
                     return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
 
                 if (string.IsNullOrWhiteSpace(value))
@@ -222,7 +232,7 @@ namespace Invoices.Blazor.Validation
 
                 if (digitsOnly.Length != exactDigits)
                 {
-                    string msg = _localizer[$"{fieldIdentifier}DigitsExactLength", exactDigits].Value
+                    string msg = Localizer[$"{fieldIdentifier}DigitsExactLength", exactDigits].Value
                                  ?? $"Must contain exactly {exactDigits} digits";
 
                     return Task.FromResult<IEnumerable<string>>(new List<string> { msg });
@@ -231,40 +241,29 @@ namespace Invoices.Blazor.Validation
                 return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
             };
         }
+
         /// <summary>
-        /// Creates an asynchronous validation rule ensuring that the input value
-        /// does not exceed the specified maximum length. Empty or null values are
-        /// considered valid; use <c>Required</c> to enforce non‑emptiness.
+        /// Provides a maximum‑length validation rule for the specified field.
+        /// This method acts as an orchestrator: it constructs the underlying
+        /// <see cref="MaxLengthRule"/> and returns its executable validation
+        /// delegate. The rule itself handles localization and fallback logic.
         /// </summary>
         /// <param name="fieldName">
-        /// Name of the field used to construct the localization key
-        /// (<c>{fieldName}MaxLength</c>).
+        /// Name of the field used to build the localization key.
         /// </param>
         /// <param name="maxLength">
-        /// Maximum allowed number of characters. Values longer than this limit
-        /// produce a single localized error message.
+        /// Maximum allowed number of characters.
         /// </param>
         /// <returns>
-        /// A validation function returning an empty sequence when valid, or a
-        /// sequence containing one localized error message when the value exceeds
-        /// the allowed length.
+        /// A validation delegate that checks whether the input exceeds the
+        /// specified maximum length.
         /// </returns>
         public Func<string?, Task<IEnumerable<string>>> MaxLength(string fieldName, int maxLength)
         {
-            return value =>
-            {
-                if (string.IsNullOrEmpty(value))
-                    return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
-
-                if (value.Length > maxLength)
-                {
-                    var message = _localizer[$"{fieldName}MaxLength", maxLength].Value;
-                    return Task.FromResult<IEnumerable<string>>(new[] { message });
-                }
-
-                return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
-            };
+            return new MaxLengthRule(Primary, Fallback).Create(fieldName, maxLength);
         }
+
+        // TODO: Move to Rules folder and class
         /// <summary>
         /// Creates an asynchronous validation rule ensuring that the input value
         /// contains at least the specified minimum number of characters. Empty or
@@ -284,7 +283,6 @@ namespace Invoices.Blazor.Validation
         /// sequence containing one localized error message when the value is
         /// shorter than the required minimum length.
         /// </returns>
-
         public Func<string?, Task<IEnumerable<string>>> MinLength(string fieldName, int minLength)
         {
             return value =>
@@ -294,16 +292,12 @@ namespace Invoices.Blazor.Validation
 
                 if (value.Length < minLength)
                 {
-                    var message = _localizer[$"{fieldName}MinLength", minLength].Value;
+                    var message = Localizer[$"{fieldName}MinLength", minLength].Value;
                     return Task.FromResult<IEnumerable<string>>(new[] { message });
                 }
 
                 return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
             };
         }
-
-
-
-
     }
 }

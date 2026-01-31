@@ -3,6 +3,7 @@ using Invoices.Blazor.Validation;
 using Invoices.Blazor.Validation.Specific;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
 using System.Globalization;
 using System.Net.Http.Headers;
@@ -51,6 +52,16 @@ namespace Invoices.Blazor
             var defaultCulture = new CultureInfo("cs"); 
             CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
             CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
+
+            // Register Validators
+            builder.Services.AddScoped<FormValidator>(sp =>
+            {
+                var factory = sp.GetRequiredService<IStringLocalizerFactory>();
+                var blur = sp.GetRequiredService<FormFieldBlurTracker>();
+
+
+                throw new InvalidOperationException("Component must supply its type");
+            });
 
             // Add MudBlazor services
             builder.Services.AddMudServices();

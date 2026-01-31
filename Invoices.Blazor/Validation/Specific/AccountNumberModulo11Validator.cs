@@ -4,25 +4,16 @@ using System.Threading.Tasks;
 
 namespace Invoices.Blazor.Validation.Specific
 {
-    public class AccountNumberModulo11Validator
+    public class AccountNumberModulo11Validator : FormValidatorBase
     {
-        private readonly IStringLocalizer _localizer;
-        private readonly FormFieldBlurTracker _blurTracker;
-
-        public static AccountNumberModulo11Validator Create(
-            IStringLocalizer localizer,
+        public AccountNumberModulo11Validator(
+            IStringLocalizer primary,
+            IStringLocalizer fallback,
             FormFieldBlurTracker blurTracker)
+            : base(primary, fallback, blurTracker)
         {
-            return new AccountNumberModulo11Validator(localizer, blurTracker);
         }
 
-        private AccountNumberModulo11Validator(
-            IStringLocalizer localizer,
-            FormFieldBlurTracker blurTracker)
-        {
-            _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
-            _blurTracker = blurTracker ?? throw new ArgumentNullException(nameof(blurTracker));
-        }
 
         /// <summary>
         /// Creates an asynchronous validator that validates Czech bank account number (postfix, part after dash)
@@ -40,7 +31,7 @@ namespace Invoices.Blazor.Validation.Specific
         {
             return value =>
             {
-                if (!_blurTracker.IsBlurred(fieldIdentifier))
+                if (!BlurTracker.IsBlurred(fieldIdentifier))
                     return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
 
                 if (string.IsNullOrWhiteSpace(value))
@@ -48,9 +39,9 @@ namespace Invoices.Blazor.Validation.Specific
 
                 if (!IsValidAccountNumberModulo11(value))
                 {
-                    var specific = _localizer[$"{fieldIdentifier}InvalidModulo11"];
+                    var specific = Localizer[$"{fieldIdentifier}InvalidModulo11"];
                     var message = specific.ResourceNotFound
-                        ? _localizer["InvalidModulo11"].Value
+                        ? Localizer["InvalidModulo11"].Value
                         : specific.Value;
 
                     return Task.FromResult<IEnumerable<string>>(new[] { message });
