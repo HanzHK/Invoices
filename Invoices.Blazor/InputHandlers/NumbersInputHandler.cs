@@ -17,11 +17,30 @@ namespace Invoices.Blazor.InputHandlers
             if (string.IsNullOrEmpty(rawInput))
                 return string.Empty;
 
-            // Remove all non-digits and spaces
+            // Remove all non-digit characters
             var digits = new string(rawInput.Where(char.IsDigit).ToArray());
 
             // Apply block formatting
             return ApplyBlocks(digits, blocks);
+        }
+
+        /// <summary>
+        /// Returns a string containing only numeric characters from the input.
+        /// All non‑digit characters are removed. No formatting or grouping is applied.
+        /// </summary>
+        /// <param name="input">
+        /// Raw user input from a text field.
+        /// </param>
+        /// <returns>
+        /// A string containing only digits, or an empty string if the input is null
+        /// or empty.
+        /// </returns>
+        public static string DigitsOnly(string? input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            return new string(input.Where(char.IsDigit).ToArray());
         }
 
         /// <summary>

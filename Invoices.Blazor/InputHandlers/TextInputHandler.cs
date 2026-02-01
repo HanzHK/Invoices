@@ -49,6 +49,13 @@ namespace Invoices.Blazor.InputHandlers
         /// other transformations (trim, whitespace, casing, diacritics).
         /// </summary>
         public int? MaxLength { get; set; }
+
+        /// <summary>
+        /// When enabled, all numeric characters (0–9) are removed from the input.
+        /// Useful for fields that must contain only alphabetic or symbolic text.
+        /// </summary>
+        public bool RemoveDigits { get; set; } = false;
+
     }
 
 
@@ -83,6 +90,9 @@ namespace Invoices.Blazor.InputHandlers
             if (options.Trim)
                 result = result.Trim();
 
+            if (options.RemoveDigits)
+                result = RemoveDigits(result);
+
             if (options.CollapseWhitespace)
                 result = CollapseWhitespace(result);
 
@@ -94,6 +104,17 @@ namespace Invoices.Blazor.InputHandlers
 
             return result;
         }
+        /// <summary>
+        /// Removes all numeric characters (0–9) from the input.
+        /// </summary>
+        /// <param name="value">Input text to process.</param>
+        /// <returns>Text without any digits.</returns>
+        private static string RemoveDigits(string value)
+        {
+            return new string(value.Where(c => !char.IsDigit(c)).ToArray());
+        }
+
+
         /// <summary>
         /// Replaces all sequences of whitespace characters with a single space.
         /// Tabs, newlines and multiple spaces are normalized to one space.

@@ -20,7 +20,8 @@
                                 Trim = true,
                                 CollapseWhitespace = true,
                                 Casing = TextCasing.Title,
-                                MaxLength = 50
+                                MaxLength = 50,
+                                RemoveDigits = true
                             }))"
                       Label="@L["Name"]"
                       Required="true"
@@ -39,7 +40,7 @@
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
                               Validator.Required("IdentificationNumber"),
-                              Validator.DigitsExactLengthAfterBlurAsync("IdentificationNumber", 8),
+                              Validator.DigitsExactLengthAfterBlur("IdentificationNumber", 8),
                               Validator.Format("IdentificationNumber", @"^\d{8}$", 8)
                           )"
                       Adornment="Adornment.Start"
@@ -76,22 +77,24 @@
               OnBlur="@(() => BlurTracker.MarkBlurred("AccountNumber"))" />
 
 
-        <MudTextField Value="@Person.BankCode"
-                      ValueChanged="@((string v) => 
-                      Person.BankCode = NumbersInputHandler.Handle(v, new[] { 4 }))"
-                      Label="@L["BankCode"]"
-                      Required="true"
-                      Immediate="true"
-                      InputType="InputType.Text"
-                       Validation="@Validator.ValidateAll(
-                      Validator.Required("BankCode"),
-                      Validator.MaxLength("BankCode", 4),
-                      Validator.DigitsExactLengthAfterBlurAsync("BankCode", 4)
-                  )"
-                      Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Numbers"
+<MudTextField Value="@Person.BankCode"
+              ValueChanged="@((string v) =>
+                  Person.BankCode = NumbersInputHandler.DigitsOnly(v))"
+              Label="@L["BankCode"]"
+              Required="true"
+              Immediate="true"
+              InputType="InputType.Text"
+              Validation="@Validator.ValidateAll(
+                  Validator.Required("BankCode"),
+                  Validator.MaxLength("BankCode", 4),
+                  Validator.DigitsExactLengthAfterBlur("BankCode", 4)
+              )"
+              Adornment="Adornment.Start"
+              AdornmentIcon="@Icons.Material.Filled.Numbers"
               OnFocus="@(() => BlurTracker.MarkFocused("BankCode"))"
               OnBlur="@(() => BlurTracker.MarkBlurred("BankCode"))" />
+
+
 
         <MudTextField  Value="@Person.Iban"
                       ValueChanged="@((string v) => 
@@ -101,7 +104,7 @@
                       Immediate="true"
                       Validation="@Validator.ValidateAll(
                               Validator.Required("Iban"),
-                              Validator.DigitsExactLengthAfterBlurAsync("Iban", 24),
+                              Validator.DigitsExactLengthAfterBlur("Iban", 24),
                               Validator.Format("Iban", @"^[A-Z0-9]{24}$", 24)
       
                           )"
@@ -118,7 +121,7 @@
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
                               Validator.Required("Telephone"),
-                              Validator.DigitsExactLengthAfterBlurAsync("Telephone", 9),
+                              Validator.DigitsExactLengthAfterBlur("Telephone", 9),
                               Validator.Format("Telephone", @"^\d{3}\s\d{3}\s\d{3}$", 9)      
                           )"
                       Adornment="Adornment.Start"

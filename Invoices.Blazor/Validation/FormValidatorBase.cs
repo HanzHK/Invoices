@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using Invoices.Blazor.Validation.Infrastructure;
+using Microsoft.Extensions.Localization;
 
 namespace Invoices.Blazor.Validation
 {
@@ -30,7 +31,17 @@ namespace Invoices.Blazor.Validation
         protected readonly FormFieldBlurTracker BlurTracker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormValidatorBase"/> class.
+        /// Provides centralized resolution of localized validation messages,
+        /// supporting both component‑specific resource keys and generic fallback
+        /// keys shared across all validators.
+        /// </summary>
+        private protected readonly MessageResolver Messages;
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormValidatorBase"/> class,
+        /// setting up component‑specific and fallback localizers, blur tracking,
+        /// and internal message resolution infrastructure.
         /// </summary>
         /// <param name="primary">
         /// Primary localizer bound to the hosting component, used for
@@ -51,6 +62,7 @@ namespace Invoices.Blazor.Validation
             Primary = primary;
             Fallback = fallback;
             BlurTracker = blurTracker;
+            Messages = new MessageResolver(primary, fallback);
         }
 
         /// <summary>

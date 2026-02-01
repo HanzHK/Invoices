@@ -4,58 +4,55 @@ namespace Invoices.Blazor.Validation.Rules
 {
     /// <summary>
     /// Provides a reusable validation rule that checks whether the input value
-    /// exceeds a specified maximum length. Empty or null values are considered
+    /// meets a specified minimum length. Empty or null values are considered
     /// valid; use <c>Required</c> to enforce non‑emptiness.
-    ///
-    /// The rule supports a two‑level localization fallback:
-    /// 1) Specific key from the hosting component: {fieldName}MaxLength
-    /// 2) Generic key from the shared validator resources: MaxLength
     /// </summary>
-    internal class MaxLengthRule
+    internal class MinLengthRule
     {
         private readonly MessageResolver _messages;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MaxLengthRule"/> class.
+        /// Initializes a new instance of the <see cref="MinLengthRule"/> class.
         /// </summary>
         /// <param name="messages">
         /// Service used to resolve localized validation messages using
         /// component‑specific and fallback resource keys.
         /// </param>
-        public MaxLengthRule(MessageResolver messages)
+        public MinLengthRule(MessageResolver messages)
         {
             _messages = messages;
         }
 
         /// <summary>
         /// Creates an asynchronous validation rule ensuring that the input value
-        /// does not exceed the specified maximum length.
+        /// meets the specified minimum length.
         /// </summary>
         /// <param name="fieldName">
         /// Name of the field used to construct the localization key
-        /// (<c>{fieldName}MaxLength</c>).
+        /// (<c>{fieldName}MinLength</c>).
         /// </param>
-        /// <param name="maxLength">
-        /// Maximum allowed number of characters.
+        /// <param name="minLength">
+        /// Minimum required number of characters.
         /// </param>
         /// <returns>
         /// A validation function returning an empty sequence when valid, or a
-        /// sequence containing one localized error message when the value exceeds
-        /// the allowed length.
+        /// sequence containing one localized error message when the value is
+        /// shorter than the required length.
         /// </returns>
-        public Func<string?, Task<IEnumerable<string>>> Create(string fieldName, int maxLength)
+        public Func<string?, Task<IEnumerable<string>>> Create(string fieldName, int minLength)
         {
             return value =>
             {
                 if (string.IsNullOrEmpty(value))
                     return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
 
-                if (value.Length <= maxLength)
-                    return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
+                if (value.Length < minLength)
+                {
+                    var message = _messages.Resolve(fieldName, "MinLength", minLength);
+                    return Task.FromResult<IEnumerable<string>>(new[] { message });
+                }
 
-                var message = _messages.Resolve(fieldName, "MaxLength", maxLength);
-
-                return Task.FromResult<IEnumerable<string>>(new[] { message });
+                return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
             };
         }
     }

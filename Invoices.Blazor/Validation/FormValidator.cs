@@ -43,66 +43,48 @@ namespace Invoices.Blazor.Validation
         }
 
         /// <summary>
-        /// Creates an asynchronous validator that ensures the input value is present.
-        /// For reference types and nullable value types, the value must not be <c>null</c>.
-        /// When <typeparamref name="T"/> is <see cref="string"/>, the value must also not be
-        /// empty or consist solely of whitespace.
+        /// Creates a validator ensuring that a value is present.
+        /// This generic overload supports reference types and nullable value types,
+        /// and delegates the actual validation logic to <see cref="RequiredRule"/>.
         /// </summary>
-        /// <param name="fieldKey">
+        /// <typeparam name="T">
+        /// The type of the value being validated. When <typeparamref name="T"/> is
+        /// <see cref="string"/>, additional whitespace checks are applied.
+        /// </typeparam>
+        /// <param name="fieldName">
         /// Resource key prefix used to resolve the localized error message
         /// (e.g. "Name" → "NameRequired").
         /// </param>
         /// <returns>
-        /// A function that returns an asynchronous sequence of validation errors.
-        /// If the value is considered missing according to the rules above, a single
-        /// localized error message is returned; otherwise an empty sequence.
+        /// A function that asynchronously returns validation errors for the field.
         /// </returns>
-        public Func<T?, Task<IEnumerable<string>>> Required<T>(string fieldKey)
+        public Func<T?, Task<IEnumerable<string>>> Required<T>(string fieldName)
         {
-            return value =>
-            {
-                bool isInvalid =
-                    value is null ||
-                    (value is string s && string.IsNullOrWhiteSpace(s));
-
-                if (isInvalid)
-                {
-                    string error = Localizer[$"{fieldKey}Required"].Value
-                                   ?? $"{fieldKey} is required";
-
-                    return Task.FromResult<IEnumerable<string>>(
-                        new List<string> { error }
-                    );
-                }
-
-                return Task.FromResult<IEnumerable<string>>(
-                    Enumerable.Empty<string>()
-                );
-            };
+            return new RequiredRule(Messages).Create<T>(fieldName);
         }
 
         /// <summary>
         /// Convenience overload for validating string fields.
-        /// This method simply forwards the call to the generic
-        /// <see cref="Required{T}(string)"/> implementation with
-        /// <typeparamref name="T"/> set to <see cref="string"/>.
+        /// Equivalent to calling <c>Required&lt;string&gt;(fieldName)</c>.
         /// </summary>
-        /// <param name="fieldKey">
+        /// <param name="fieldName">
         /// Resource key prefix used to resolve the localized error message
         /// (e.g. "Name" → "NameRequired").
         /// </param>
         /// <returns>
-        /// A validator function equivalent to calling
-        /// <c>Required&lt;string&gt;(fieldKey)</c>.
+        /// A function that asynchronously returns validation errors for the field.
         /// </returns>
-        public Func<string?, Task<IEnumerable<string>>> Required(string fieldKey)
-            => Required<string>(fieldKey);
+        public Func<string?, Task<IEnumerable<string>>> Required(string fieldName)
+        {
+            return new RequiredRule(Messages).Create(fieldName);
+        }
 
         /// <summary>
-        /// Creates an asynchronous validator that checks whether the input value has
-        /// exactly the specified length.
+        /// Creates a validator ensuring that the input value has exactly the specified
+        /// length. Delegates the validation logic to <see cref="LengthRule"/>, which
+        /// handles localized message resolution.
         /// </summary>
-        /// <param name="fieldKey">
+        /// <param name="fieldName">
         /// Resource key prefix used to resolve the localized error message
         /// (e.g. "PostalCode" → "PostalCodeLength").
         /// </param>
@@ -110,66 +92,39 @@ namespace Invoices.Blazor.Validation
         /// Required number of characters the input must contain.
         /// </param>
         /// <returns>
-        /// A function that returns an asynchronous sequence of validation errors.
-        /// If the value is null, empty, or already matches the required length,
-        /// the validator yields no errors. Otherwise, it returns a single localized
-        /// error message indicating the expected length.
+        /// A function that asynchronously returns validation errors for the field.
         /// </returns>
-        public Func<string?, Task<IEnumerable<string>>> Length(string fieldKey, int length)
+        public Func<string?, Task<IEnumerable<string>>> Length(string fieldName, int length)
         {
-            return value =>
-            {
-                if (string.IsNullOrWhiteSpace(value) || (value?.Length ?? 0) == length)
-                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
-
-                string error = Localizer[$"{fieldKey}Length", length].Value
-                               ?? $"Length must be {length}";
-                return Task.FromResult<IEnumerable<string>>(new List<string> { error });
-            };
+            return new LengthRule(Messages).Create(fieldName, length);
         }
 
-        // TODO: Move to Rules folder and class
         /// <summary>
-        /// Creates an asynchronous validator that checks whether the input matches a specified
+        /// Creates a validator ensuring that the input value matches a specified
         /// formatting pattern once the required number of digits has been entered.
+        /// Delegates the validation logic to <see cref="FormatRule"/>, which handles
+        /// localized message resolution.
         /// </summary>
-        /// <param name="fieldKey">
+        /// <param name="fieldName">
         /// Resource key prefix used to resolve the localized error message
         /// (e.g. "Telephone" → "TelephoneFormat").
         /// </param>
         /// <param name="pattern">
-        /// Regular expression pattern the formatted value must satisfy once validation is triggered.
+        /// Regular expression pattern the formatted value must satisfy once validation
+        /// is triggered.
         /// </param>
         /// <param name="requiredLength">
-        /// Minimum number of digits (ignoring formatting characters) required before the pattern check is applied.
+        /// Minimum number of digits (ignoring formatting characters) required before
+        /// the pattern check is applied.
         /// </param>
         /// <returns>
-        /// A function that returns an asynchronous sequence of validation errors.
-        /// If the value is empty or contains fewer digits than required, no errors are returned.
-        /// Once the digit threshold is met, the validator checks the pattern and yields a single
-        /// localized error message if the format is invalid; otherwise an empty sequence.
+        /// A function that asynchronously returns validation errors for the field.
         /// </returns>
-        public Func<string?, Task<IEnumerable<string>>> Format(string fieldKey, string pattern, int requiredLength)
+        public Func<string?, Task<IEnumerable<string>>> Format(string fieldName, string pattern, int requiredLength)
         {
-            return value =>
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
-
-                var digitsOnly = new string(value!.Where(char.IsDigit).ToArray());
-
-                if (digitsOnly.Length < requiredLength)
-                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
-
-                if (!Regex.IsMatch(value, pattern))
-                {
-                    string error = Localizer[$"{fieldKey}Format"].Value ?? "Invalid format";
-                    return Task.FromResult<IEnumerable<string>>(new List<string> { error });
-                }
-
-                return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
-            };
+            return new FormatRule(Messages).Create(fieldName, pattern, requiredLength);
         }
+
 
         /// <summary>
         /// Combines multiple asynchronous validators into a single validator that executes them in order.
@@ -201,103 +156,64 @@ namespace Invoices.Blazor.Validation
             };
         }
 
-        // TODO: Move to Rules folder and class
         /// <summary>
-        /// Creates an asynchronous validator that checks whether the input contains
-        /// exactly the specified number of digits, but only after the field has been blurred.
+        /// Creates a validator ensuring that the input contains exactly the specified
+        /// number of digits, but only after the field has been blurred.
         /// </summary>
-        /// <param name="fieldIdentifier">
-        /// Key used to resolve the localized error message (e.g. "Telephone" → "TelephoneDigitsExactLength").
+        /// <param name="fieldName">
+        /// Resource key prefix used to resolve the localized error message
+        /// (e.g. "Telephone" → "TelephoneDigitsExactLength").
         /// </param>
         /// <param name="exactDigits">
-        /// Required number of digits the input must contain after formatting is removed.
+        /// Required number of digits the input must contain.
         /// </param>
         /// <returns>
-        /// A function that returns an asynchronous sequence of validation errors.
-        /// If the field has not been blurred yet, or the value is empty, the validator yields no errors.
-        /// Once blurred, it returns a single localized error message when the digit count does not match,
-        /// otherwise an empty sequence.
+        /// A function that asynchronously returns validation errors for the field.
         /// </returns>
-        public Func<string?, Task<IEnumerable<string>>> DigitsExactLengthAfterBlurAsync(string fieldIdentifier, int exactDigits)
+        public Func<string?, Task<IEnumerable<string>>> DigitsExactLengthAfterBlur(string fieldName, int exactDigits)
         {
-            return value =>
-            {
-                if (BlurTracker == null || !BlurTracker.IsBlurred(fieldIdentifier))
-                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
-
-                if (string.IsNullOrWhiteSpace(value))
-                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
-
-                var digitsOnly = new string(value!.Where(char.IsDigit).ToArray());
-
-                if (digitsOnly.Length != exactDigits)
-                {
-                    string msg = Localizer[$"{fieldIdentifier}DigitsExactLength", exactDigits].Value
-                                 ?? $"Must contain exactly {exactDigits} digits";
-
-                    return Task.FromResult<IEnumerable<string>>(new List<string> { msg });
-                }
-
-                return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
-            };
+            return new DigitsExactLengthRule(Messages, BlurTracker).Create(fieldName, exactDigits);
         }
 
         /// <summary>
-        /// Provides a maximum‑length validation rule for the specified field.
-        /// This method acts as an orchestrator: it constructs the underlying
-        /// <see cref="MaxLengthRule"/> and returns its executable validation
-        /// delegate. The rule itself handles localization and fallback logic.
+        /// Creates a validator ensuring that the input value does not exceed the
+        /// specified maximum length. Delegates the validation logic to
+        /// <see cref="MaxLengthRule"/>, which handles localized message resolution.
         /// </summary>
         /// <param name="fieldName">
-        /// Name of the field used to build the localization key.
+        /// Resource key prefix used to resolve the localized error message
+        /// (e.g. "Name" → "NameMaxLength").
         /// </param>
         /// <param name="maxLength">
         /// Maximum allowed number of characters.
         /// </param>
         /// <returns>
-        /// A validation delegate that checks whether the input exceeds the
-        /// specified maximum length.
+        /// A function that asynchronously returns validation errors for the field.
         /// </returns>
         public Func<string?, Task<IEnumerable<string>>> MaxLength(string fieldName, int maxLength)
         {
-            return new MaxLengthRule(Primary, Fallback).Create(fieldName, maxLength);
+            return new MaxLengthRule(Messages).Create(fieldName, maxLength);
         }
 
-        // TODO: Move to Rules folder and class
         /// <summary>
-        /// Creates an asynchronous validation rule ensuring that the input value
-        /// contains at least the specified minimum number of characters. Empty or
-        /// null values are considered valid; use <c>Required</c> to enforce
-        /// non‑emptiness.
+        /// Creates a validator ensuring that the input value meets the specified
+        /// minimum length. Delegates the validation logic to <see cref="MinLengthRule"/>,
+        /// which handles localized message resolution.
         /// </summary>
         /// <param name="fieldName">
-        /// Name of the field used to construct the localization key
-        /// (<c>{fieldName}MinLength</c>).
+        /// Resource key prefix used to resolve the localized error message
+        /// (e.g. "Name" → "NameMinLength").
         /// </param>
         /// <param name="minLength">
-        /// Minimum allowed number of characters. Values shorter than this limit
-        /// produce a single localized error message.
+        /// Minimum required number of characters.
         /// </param>
         /// <returns>
-        /// A validation function returning an empty sequence when valid, or a
-        /// sequence containing one localized error message when the value is
-        /// shorter than the required minimum length.
+        /// A function that asynchronously returns validation errors for the field.
         /// </returns>
         public Func<string?, Task<IEnumerable<string>>> MinLength(string fieldName, int minLength)
         {
-            return value =>
-            {
-                if (string.IsNullOrEmpty(value))
-                    return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
-
-                if (value.Length < minLength)
-                {
-                    var message = Localizer[$"{fieldName}MinLength", minLength].Value;
-                    return Task.FromResult<IEnumerable<string>>(new[] { message });
-                }
-
-                return Task.FromResult<IEnumerable<string>>(Array.Empty<string>());
-            };
+            return new MinLengthRule(Messages).Create(fieldName, minLength);
         }
+
     }
 }
