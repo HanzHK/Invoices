@@ -163,20 +163,24 @@
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.LocationCity" />
 
-        <MudSelect T="Country ?"
-                   Label="@L["Country"]"
-                   @bind-Value="Person.Country"
-                   Required="true"
-                   Immediate="true"
-                   Validation="@(Validator.Required<Country?>("Country"))"
-                   Adornment="Adornment.Start"
-                   AdornmentIcon="@Icons.Material.Filled.Public">
-            <MudSelectItem T="Country ?" Value="@(null)">Vyberte stát</MudSelectItem>
-            @foreach (var country in Enum.GetValues<Country>())
-            {
-                <MudSelectItem T="Country ?" Value="country">@GetCountryAlias(country)</MudSelectItem>
-            }
-        </MudSelect>
+<MudSelect T="Country ?"
+           @ref="countrySelect"
+           Label="@L["Country"]"
+           @bind-Value="Person.Country"
+           Required="true"
+           Immediate="true"
+           Validation="@(Validator.Required<Country?>("Country"))"
+           Adornment="Adornment.Start"
+           AdornmentIcon="@Icons.Material.Filled.Public"
+           OnClose="ValidateCountry">
+
+    <MudSelectItem T="Country ?" Value="@(null)">Vyberte stát</MudSelectItem>
+
+    @foreach (var country in Enum.GetValues<Country>())
+    {
+        <MudSelectItem T="Country ?" Value="country">@GetCountryAlias(country)</MudSelectItem>
+    }
+</MudSelect>
 
         <MudTextField @bind-Value="Person.Note"
                       Label="@L["Note"]"
@@ -242,4 +246,13 @@
     {
         Lang.OnChange -= Refresh;
     }
+    private MudSelect<Country?>? countrySelect;
+
+
+    private async Task ValidateCountry()
+    {
+        if (countrySelect is not null)
+            await countrySelect.Validate();
+    }
+
 }

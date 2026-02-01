@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Invoices.Shared\Invoices.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Person\Detail\" />
+  </ItemGroup>
+
 </Project>
