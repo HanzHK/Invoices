@@ -1,5 +1,13 @@
-﻿<h3>PersonList</h3>
+﻿<MudDataGrid Items="@Items"
+             RowIdSelector="p => p.PersonId"
+             Hover="true"
+             Dense="true"
+             Elevation="0"
+             Filterable="true"
+             Sortable="true">
 
-@code {
+    <Columns>
+        <PersonNameColumn />
+    </Columns>
 
-}
+</MudDataGrid>

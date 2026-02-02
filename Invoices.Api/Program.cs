@@ -54,7 +54,8 @@ builder.Services.AddCors(options =>
             policy.WithOrigins(
                          "https://localhost:7024",
                          "https://invoice-client-starter-nu.vercel.app",
-                         "https://invoice-client-starter-nu.vercel.app/"
+                         "https://invoice-client-starter-nu.vercel.app/",
+                         "https://blazor-frontend-vercel.vercel.app/"
                              )
 
              .AllowAnyHeader()

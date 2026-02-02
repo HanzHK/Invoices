@@ -1,4 +1,5 @@
 using Invoices.Blazor.Services;
+using Invoices.Blazor.Services.Localization;
 using Invoices.Blazor.Validation;
 using Invoices.Blazor.Validation.Specific;
 using Microsoft.AspNetCore.Components.Web;
@@ -62,6 +63,9 @@ namespace Invoices.Blazor
 
                 throw new InvalidOperationException("Component must supply its type");
             });
+
+            // Register LocalizationResolver
+            builder.Services.AddSingleton<ILocalizationResolver, LocalizationResolver>();
 
             // Add MudBlazor services
             builder.Services.AddMudServices();
