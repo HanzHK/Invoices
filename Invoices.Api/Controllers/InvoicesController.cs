@@ -143,16 +143,8 @@ namespace Invoices.Api.Controllers
         [HttpGet("statistics")]
         public ActionResult<InvoiceStatisticsDto> GetInvoiceStatistics([FromServices] IStatisticsManager statisticsManager)
         {
-            try
-            {
-                var stats = statisticsManager.GetInvoiceStatistics();
-                return Ok(stats);
-            }
-            catch (Exception ex)
-            {
-                // Zaloguj nebo vrať v response
-                return StatusCode(500, new { error = ex.Message, stackTrace = ex.StackTrace });
-            }
+            var stats = statisticsManager.GetInvoiceStatistics();
+            return Ok(stats);
         }
 
 

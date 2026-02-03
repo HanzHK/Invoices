@@ -3,6 +3,7 @@ using Invoices.Api.Converters;
 using Invoices.Api.Interfaces;
 using Invoices.Api.Managers;
 using Invoices.Api.Seeding;
+using Invoices.Api.Services.Statistics;
 using Invoices.Data;
 using Invoices.Data.Entities;
 using Invoices.Data.Entities.Enums;
@@ -43,6 +44,7 @@ builder.Services.AddScoped<IPersonManager, PersonManager>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
 builder.Services.AddScoped<IStatisticsManager, StatisticsManager>();
+builder.Services.AddScoped<IPersonStatisticsCalculator, PersonStatisticsCalculator>();
 
 
 // CORS policy - povolení přístupu z Blazor klienta + Vercel klienta
