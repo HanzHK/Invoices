@@ -1,5 +1,6 @@
 ﻿using Invoices.Api;
 using Invoices.Api.Converters;
+using Invoices.Api.Infrastructure.Filters;
 using Invoices.Api.Interfaces;
 using Invoices.Api.Managers;
 using Invoices.Api.Seeding;
@@ -46,6 +47,11 @@ builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
 builder.Services.AddScoped<IStatisticsManager, StatisticsManager>();
 builder.Services.AddScoped<IPersonStatisticsCalculator, PersonStatisticsCalculator>();
 
+//  Register Filter DI services
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+});
 
 // CORS policy - povolení přístupu z Blazor klienta + Vercel klienta
 builder.Services.AddCors(options =>
