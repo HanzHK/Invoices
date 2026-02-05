@@ -1,17 +1,4 @@
-﻿@using Invoices.Blazor.Services
-@using Invoices.Shared.Models.Person
-@using Invoices.Shared.Models.Common
-@using Invoices.Blazor.Validation
-@using Invoices.Blazor.Validation.Specific
-@using Invoices.Blazor.Validation.Rules
-@using Invoices.Blazor.InputHandlers
-@using Microsoft.Extensions.Localization
-@inject IStringLocalizer<PersonForm> L
-@inject LanguageService Lang
-@inject IStringLocalizerFactory Factory
-@inject FormFieldBlurTracker BlurTracker
-
-<MudForm @ref="form" Model="Person">
+﻿<MudForm @ref="form" Model="Person">
     <MudStack Spacing="8">
 
         <MudTextField Value="@Person.Name"
@@ -40,8 +27,7 @@
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
                               Validator.Required("IdentificationNumber"),
-                              Validator.DigitsExactLengthAfterBlur("IdentificationNumber", 8),
-                              Validator.Format("IdentificationNumber", @"^\d{8}$", 8)
+                              Validator.DigitsExactLength(() => Person.IdentificationNumber, "IdentificationNumber", 8)
                           )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Badge"
@@ -67,7 +53,6 @@
                 Validation="@Validator.ValidateAll(
                     Validator.Required("AccountNumber"),                       
                     Validator.MaxLength("AccountNumber", 10),
-                    Validator.Format("AccountNumber", @"^\d{6,10}$", 10),
                     AccountValidator.ValidateAfterBlur("AccountNumber")
                 )"
 
@@ -87,7 +72,7 @@
               Validation="@Validator.ValidateAll(
                   Validator.Required("BankCode"),
                   Validator.MaxLength("BankCode", 4),
-                  Validator.DigitsExactLengthAfterBlur("BankCode", 4)
+                  Validator.DigitsExactLength(() => Person.BankCode, "BankCode", 4)
               )"
               Adornment="Adornment.Start"
               AdornmentIcon="@Icons.Material.Filled.Numbers"
@@ -104,9 +89,7 @@
                       Immediate="true"
                       Validation="@Validator.ValidateAll(
                               Validator.Required("Iban"),
-                              Validator.DigitsExactLengthAfterBlur("Iban", 24),
-                              Validator.Format("Iban", @"^[A-Z0-9]{24}$", 24)
-      
+                              Validator.DigitsExactLength(() => Person.Iban, "Iban", 24)
                           )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Language"
@@ -121,8 +104,7 @@
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
                               Validator.Required("Telephone"),
-                              Validator.DigitsExactLengthAfterBlur("Telephone", 9),
-                              Validator.Format("Telephone", @"^\d{3}\s\d{3}\s\d{3}$", 9)      
+                              Validator.DigitsExactLength(() => Person.Telephone, "Telephone", 9)   
                           )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Phone"
@@ -196,63 +178,3 @@
 
     </MudStack>
 </MudForm>
-
-@code {
-
-
-    private MudForm? form;
-    private RulesValidator Rules;
-    private FormValidator Validator;
-    private AccountNumberModulo11Validator AccountValidator;
-
-    [Parameter] public PersonDto Person { get; set; } = new();
-    [Parameter] public bool IsEdit { get; set; }
-    [Parameter] public EventCallback<PersonDto> OnSubmit { get; set; }
-
-    protected override void OnInitialized()
-    {
-        Validator = new FormValidator(Factory, BlurTracker, typeof(PersonForm));
-        AccountValidator = new AccountNumberModulo11Validator(
-                                    Factory.Create(typeof(PersonForm)),     // primary
-                                    Factory.Create(typeof(FormValidator)),  // fallback
-                                    BlurTracker
-        );
-
-
-        Lang.OnChange += Refresh;
-    }
-
-    private async Task SubmitInternal()
-    {
-        await form.Validate();
-
-        if (!form.IsValid)
-            return;
-
-        await OnSubmit.InvokeAsync(Person);
-    }
-
-    private string GetCountryAlias(Country country)
-    {
-        return L[country.ToString()];
-    }
-
-    private void Refresh()
-    {
-        InvokeAsync(StateHasChanged);
-    }
-
-    public void Dispose()
-    {
-        Lang.OnChange -= Refresh;
-    }
-    private MudSelect<Country?>? countrySelect;
-
-
-    private async Task ValidateCountry()
-    {
-        if (countrySelect is not null)
-            await countrySelect.Validate();
-    }
-
-}

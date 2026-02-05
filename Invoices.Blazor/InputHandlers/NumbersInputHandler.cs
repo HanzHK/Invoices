@@ -8,6 +8,7 @@ namespace Invoices.Blazor.InputHandlers
         /// <summary>
         /// Cleans raw user input by removing all non-digit characters
         /// and formats the remaining digits into blocks defined by the given lengths.
+        /// Digits exceeding the total block capacity are automatically truncated.
         /// </summary>
         /// <param name="rawInput">User input that may contain any characters.</param>
         /// <param name="blocks">Block sizes used to format the digits (e.g., 3-3-3).</param>
@@ -17,10 +18,12 @@ namespace Invoices.Blazor.InputHandlers
             if (string.IsNullOrEmpty(rawInput))
                 return string.Empty;
 
-            // Remove all non-digit characters
             var digits = new string(rawInput.Where(char.IsDigit).ToArray());
 
-            // Apply block formatting
+            var maxLength = blocks.Sum();
+            if (digits.Length > maxLength)
+                digits = digits.Substring(0, maxLength);
+
             return ApplyBlocks(digits, blocks);
         }
 
@@ -45,7 +48,8 @@ namespace Invoices.Blazor.InputHandlers
 
         /// <summary>
         /// Splits a digit-only string into blocks defined by the given lengths
-        /// and joins them with spaces.
+        /// and joins them with spaces. Digits exceeding the total block capacity
+        /// are ignored.
         /// </summary>
         /// <param name="digits">Cleaned numeric input without non-digit characters.</param>
         /// <param name="blocks">Sequence of block sizes (e.g., 3-3-3 for phone numbers).</param>
@@ -70,10 +74,6 @@ namespace Invoices.Blazor.InputHandlers
                 parts.Add(digits.Substring(index, length));
                 index += length;
             }
-
-            // Add remaining digits if any
-            if (index < digits.Length)
-                parts.Add(digits.Substring(index));
 
             return string.Join(" ", parts);
         }
