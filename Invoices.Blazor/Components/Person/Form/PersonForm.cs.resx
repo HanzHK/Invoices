@@ -171,9 +171,6 @@
   <data name="TelephoneLength" xml:space="preserve">
     <value>Telefon musí mít {0} znaků.</value>
   </data>
-  <data name="TelephoneFormat" xml:space="preserve">
-    <value>Neplatný formát telefonního čísla</value>
-  </data>
   <data name="TelephoneDigitsExactLength" xml:space="preserve">
     <value>Zadejte telefonní číslo o délce 9 číslic</value>
   </data>

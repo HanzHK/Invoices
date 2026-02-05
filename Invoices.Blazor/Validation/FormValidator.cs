@@ -1,8 +1,13 @@
 ﻿using Invoices.Blazor.Validation.Rules;
 using Invoices.Shared.Models.Common;
 using Microsoft.Extensions.Localization;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection.Emit;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Invoices.Blazor.Validation
 {
@@ -65,19 +70,44 @@ namespace Invoices.Blazor.Validation
         }
 
         /// <summary>
-        /// Creates a validator ensuring the input matches a formatting pattern
-        /// once the required number of digits is present.
-        /// Registers the validator for field‑level execution.
+        /// — Creates a validator ensuring the input matches a formatting pattern
+        /// — once the required number of digits is present.
+        /// — Registers the validator for field‑level execution.
         /// </summary>
         public Func<string?, Task<IEnumerable<string>>> Format(string fieldName, string pattern, int requiredLength)
         {
-            var validator = new FormatRule(Messages).Create(fieldName, pattern, requiredLength);
+            var validator = new FormatRule(Messages, BlurTracker)
+                .Create(fieldName, pattern, requiredLength);
+
             RegisterValidator(fieldName, v => validator((string?)v));
             return validator;
         }
 
+
         /// <summary>
         /// Combines multiple validators into a single sequential validator.
+        /// Supports both string-based and object-based validators.
+        /// Does not register anything for field‑level execution.
+        /// </summary>
+        public Func<object, Task<IEnumerable<string>>> ValidateAll(
+            params Func<object, Task<IEnumerable<string>>>[] validators)
+        {
+            return async value =>
+            {
+                var errors = new List<string>();
+                foreach (var validator in validators)
+                {
+                    var result = await validator(value);
+                    errors.AddRange(result);
+                    if (errors.Count > 0) break;
+                }
+                return errors;
+            };
+        }
+
+        /// <summary>
+        /// Combines multiple string validators into a single sequential validator.
+        /// Provided for backward compatibility with existing string-based validators.
         /// Does not register anything for field‑level execution.
         /// </summary>
         public Func<string?, Task<IEnumerable<string>>> ValidateAll(
@@ -86,27 +116,36 @@ namespace Invoices.Blazor.Validation
             return async value =>
             {
                 var errors = new List<string>();
-
                 foreach (var validator in validators)
                 {
                     var result = await validator(value);
                     errors.AddRange(result);
                     if (errors.Count > 0) break;
                 }
-
                 return errors;
             };
         }
 
         /// <summary>
-        /// Creates a validator ensuring the input contains exactly the specified
-        /// number of digits, but only after the field has been blurred.
+        /// Creates a validator ensuring the model property contains exactly the specified
+        /// number of digits. Validation evaluates the processed model value after input handlers
+        /// have run. Triggers when the field has been blurred or when the required digit count
+        /// has been reached.
         /// Registers the validator for field‑level execution.
         /// </summary>
-        public Func<string?, Task<IEnumerable<string>>> DigitsExactLengthAfterBlur(string fieldName, int exactDigits)
+        /// <param name="getModelValue">
+        /// Function that retrieves the current value from the model property being validated.
+        /// </param>
+        /// <param name="fieldName">Field name used for tracking and message resolution.</param>
+        /// <param name="exactDigits">Required number of digits.</param>
+        /// <returns>Validator function that can be used in MudTextField Validation parameter.</returns>
+        public Func<object, Task<IEnumerable<string>>> DigitsExactLength(
+            Func<string?> getModelValue,
+            string fieldName,
+            int exactDigits)
         {
-            var validator = new DigitsExactLengthRule(Messages, BlurTracker).Create(fieldName, exactDigits);
-            RegisterValidator(fieldName, v => validator((string?)v));
+            var validator = new DigitsExactLengthRule(Messages, BlurTracker).Create(getModelValue, fieldName, exactDigits);
+            RegisterValidator(fieldName, validator);
             return validator;
         }
 

@@ -3,8 +3,10 @@
 namespace Invoices.Blazor.Validation.Rules
 {
     /// <summary>
-    /// Provides a validation rule that checks whether the input contains exactly
-    /// the specified number of digits, but only after the field has been blurred.
+    /// Provides a validation rule that checks whether a model property contains exactly
+    /// the specified number of digits. This validator evaluates the processed model value
+    /// rather than the raw input, ensuring validation runs after any input handlers have
+    /// formatted or transformed the data.
     /// </summary>
     internal class DigitsExactLengthRule
     {
@@ -28,33 +30,50 @@ namespace Invoices.Blazor.Validation.Rules
         }
 
         /// <summary>
-        /// Creates an asynchronous validator that checks whether the input contains
-        /// exactly the specified number of digits, but only after the field has been blurred.
+        /// Creates an asynchronous validator that checks whether the model property contains
+        /// exactly the specified number of digits. Validation evaluates the model value after
+        /// any input handlers have processed it, ensuring accurate validation of the final state.
+        /// Validation is triggered when the field has been blurred or when the user has entered
+        /// the required number of digits.
         /// </summary>
+        /// <param name="getModelValue">
+        /// Function that retrieves the current value from the model property being validated.
+        /// </param>
         /// <param name="fieldKey">
         /// Key used to resolve the localized error message
         /// (e.g. "Telephone" → "TelephoneDigitsExactLength").
         /// </param>
         /// <param name="exactDigits">
-        /// Required number of digits the input must contain after formatting is removed.
+        /// Required number of digits the model value must contain after formatting is removed.
         /// </param>
         /// <returns>
         /// A function that returns an asynchronous sequence of validation errors.
-        /// If the field has not been blurred yet, or the value is empty, the validator yields no errors.
-        /// Once blurred, it returns a single localized error message when the digit count does not match,
-        /// otherwise an empty sequence.
+        /// The validator ignores the input parameter and evaluates the model value directly.
+        /// If the field has not been blurred yet and the user has not reached the required
+        /// number of digits, the validator yields no errors. Once blurred or once the required
+        /// digit count is reached, it returns a single localized error message when the digit
+        /// count does not match, otherwise an empty sequence.
         /// </returns>
-        public Func<string?, Task<IEnumerable<string>>> Create(string fieldKey, int exactDigits)
+        public Func<object, Task<IEnumerable<string>>> Create(
+            Func<string?> getModelValue,
+            string fieldKey,
+            int exactDigits)
         {
-            return value =>
+            return _ =>
             {
-                if (_blurTracker == null || !_blurTracker.IsBlurred(fieldKey))
+                var modelValue = getModelValue();
+
+                if (string.IsNullOrWhiteSpace(modelValue))
                     return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
 
-                if (string.IsNullOrWhiteSpace(value))
-                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
+                var digitsOnly = new string(modelValue!.Where(char.IsDigit).ToArray());
 
-                var digitsOnly = new string(value!.Where(char.IsDigit).ToArray());
+                bool shouldValidate =
+                    _blurTracker.IsBlurred(fieldKey) ||
+                    digitsOnly.Length >= exactDigits;
+
+                if (!shouldValidate)
+                    return Task.FromResult<IEnumerable<string>>(Enumerable.Empty<string>());
 
                 if (digitsOnly.Length != exactDigits)
                 {
