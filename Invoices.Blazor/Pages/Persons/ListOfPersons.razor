@@ -4,6 +4,10 @@
 
     <MudText Typo="Typo.h5">Seznam osob</MudText>
 
-    <PersonList Items="@persons" />
+    <PersonList Items="persons"
+                OnEdit="EditPerson"
+                OnDelete="DeletePerson"
+                OnDetail="ViewPersonDetails" />
+
 
 </MudPaper>

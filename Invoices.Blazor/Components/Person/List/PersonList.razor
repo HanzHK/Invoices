@@ -1,13 +1,43 @@
-﻿<MudDataGrid Items="@Items"
-             RowIdSelector="p => p.PersonId"
-             Hover="true"
-             Dense="true"
-             Elevation="0"
-             Filterable="true"
-             Sortable="true">
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@using Invoices.Blazor.Components.Person.ActionButtons
+@inherits LocalizationComponentBase
 
-    <Columns>
-        <PersonNameColumn />
-    </Columns>
+<MudTable Items="@Items"
+          Hover="true"
+          Dense="false"
+          Bordered="true"
+          Striped="true"
+          Elevation="1"
+          FixedHeader="true"
+          Class="person-table">
+<ColGroup>
+        <col style="width: 60px;" />
+        <col style="width: 60%;" />
+        <col style="width: 200px;" />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh class="col-id">@T("Id")</MudTh>
+        <MudTh class="col-name">@T("Name")</MudTh>
+        <MudTh class="col-actions">@T("Actions")</MudTh>
+    </HeaderContent>
 
-</MudDataGrid>
+    <RowTemplate>
+        <MudTd class="col-id">@context.PersonId</MudTd>
+
+        <MudTd class="col-name">
+            @context.Name
+        </MudTd>
+
+        <MudTd class="col-actions">
+            <PersonActionButtons PersonModel="@context"
+                                 OnEdit="() => OnEdit.InvokeAsync(context)"
+                                 OnDelete="() => OnDelete.InvokeAsync(context)"
+                                 OnDetail="() => OnDetail.InvokeAsync(context)" />
+        </MudTd>
+    </RowTemplate>
+
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+

@@ -14,5 +14,18 @@ namespace Invoices.Blazor.Pages.Persons
         {
             persons = await PersonService.GetAllAsync();
         }
+        private async Task DeletePerson(PersonDto person)
+        {
+            await PersonService.DeleteAsync(person.PersonId);
+            persons.Remove(person);
+        }
+        private void EditPerson(PersonDto person)
+        {
+            // Navigate to the edit page or open a modal for editing
+        }
+        private void ViewPersonDetails(PersonDto person)
+            {
+            // Navigate to the details page or open a modal for viewing details
+        }
     }
 }

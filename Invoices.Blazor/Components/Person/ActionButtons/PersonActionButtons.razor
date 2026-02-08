@@ -1,0 +1,23 @@
+﻿@using Invoices.Blazor.Components.Person.PersonActionButtons
+@inherits PersonActionButtonsBase
+
+<div class="d-flex gap-2">
+    <ActionButton Icon="@Icons.Material.Filled.Visibility"
+                  Tooltip="Detail"
+                  OnClick="() => OnDetail.InvokeAsync(PersonModel)">
+        Detail
+    </ActionButton>
+
+    <ActionButton Icon="@Icons.Material.Filled.Edit"
+                  Tooltip="Upravit"
+                  OnClick="() => OnEdit.InvokeAsync(PersonModel)">
+        Upravit
+    </ActionButton>
+
+    <ActionButton Icon="@Icons.Material.Filled.Delete"
+                  Color="Color.Error"
+                  Tooltip="Smazat"
+                  OnClick="() => OnDelete.InvokeAsync(PersonModel)">
+        Smazat
+    </ActionButton>
+</div>

@@ -31,10 +31,4 @@
     <Folder Include="Components\Person\Detail\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Components\Person\List\Localization\Columns.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-
 </Project>
