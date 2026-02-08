@@ -1,5 +1,7 @@
-﻿using Invoices.Shared.Models.Person;
+﻿using Invoices.Blazor.Services;
+using Invoices.Shared.Models.Person;
 using Microsoft.AspNetCore.Components;
+using System;
 
 namespace Invoices.Blazor.Components.Person.List;
 
@@ -10,16 +12,17 @@ public partial class PersonList
     [Parameter] public EventCallback<PersonDto> OnDelete { get; set; }
     [Parameter] public EventCallback<PersonDto> OnDetail { get; set; }
 
-    private Task DeletePerson(PersonDto args)
+    private Task DeletePerson(PersonDto person)
     {
-        throw new NotImplementedException();
+        return OnDelete.InvokeAsync(person);
     }
-    private Task ViewPersonDetails(PersonDto args)
+
+    private Task ViewPersonDetails(PersonDto person)
     {
-        throw new NotImplementedException();
+        return OnDetail.InvokeAsync(person);
     }
-    private Task EditPerson(PersonDto args)
+    private Task EditPerson(PersonDto person)
     {
-        throw new NotImplementedException();
+        return OnEdit.InvokeAsync(person);
     }
 }

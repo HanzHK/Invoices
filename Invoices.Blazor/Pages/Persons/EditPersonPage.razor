@@ -1,0 +1,12 @@
+﻿@page "/persons/edit/{Id:int}"
+
+@if (person is null)
+{
+    <MudText>Načítám...</MudText>
+}
+else
+{
+    <MudPaper Class="pa-16 ma-8">
+    <PersonForm Person="@person" IsEdit="true" OnSubmit="Save" />
+    </MudPaper>
+}

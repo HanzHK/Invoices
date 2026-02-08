@@ -76,6 +76,7 @@ namespace Invoices.Blazor
             // Register API services
             builder.Services.AddApiServices();
 
+
             await builder.Build().RunAsync();
         }
     }

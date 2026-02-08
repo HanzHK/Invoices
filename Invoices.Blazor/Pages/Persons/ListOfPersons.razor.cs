@@ -7,6 +7,7 @@ namespace Invoices.Blazor.Pages.Persons
     public partial class ListOfPersons
     {
         [Inject] public PersonService PersonService { get; set; } = default!;
+        [Inject] public NavigationManager Nav { get; set; } = default!;
 
         private List<PersonDto> persons = new();
 
@@ -21,7 +22,7 @@ namespace Invoices.Blazor.Pages.Persons
         }
         private void EditPerson(PersonDto person)
         {
-            // Navigate to the edit page or open a modal for editing
+            Nav.NavigateTo($"/persons/edit/{person.PersonId}");
         }
         private void ViewPersonDetails(PersonDto person)
             {
