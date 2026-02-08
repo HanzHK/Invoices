@@ -96,17 +96,14 @@ namespace Invoices.Api.Managers
 
         public PersonDto ReplacePerson(int id, PersonDto dto)
         {
-            // Nejdřív podle id a přiřadím správnou osobu
             var original = personRepository.FindById(id);
-
-            // Kontrola jestli osoba s takovým id existuje
             if (original is null)
                 throw new KeyNotFoundException($"Osoba s id {id} nebyla nalezena.");
 
-            // Nastaví se na hidden
             original.Hidden = true;
 
             var replacement = mapper.Map<Person>(dto);
+            replacement.PersonId = default; 
             replacement.Hidden = false;
 
             personRepository.Add(replacement);

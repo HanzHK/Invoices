@@ -34,7 +34,11 @@ namespace Invoices.Api
         public AutoMapperProfile()
         {
             // Person ↔ PersonDto
-            CreateMap<Person, PersonDto>().ReverseMap();
+            CreateMap<Person, PersonDto>();
+
+            // PersonDto → Person (for creating/editing)
+            CreateMap<PersonDto, Person>()
+                .ForMember(dest => dest.PersonId, opt => opt.Ignore());
 
             // POST DTO → Entity
             CreateMap<InvoicePostDto, Invoice>()
