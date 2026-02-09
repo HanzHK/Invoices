@@ -1,0 +1,18 @@
+﻿@inherits ActionButtonBase
+
+<MudTooltip Text="@Tooltip" Disabled="@string.IsNullOrWhiteSpace(Tooltip)">
+    <MudButton Color="@Color"
+               Variant="@Variant"
+               Disabled="@Disabled"
+               Size="@Size"
+               OnClick="@OnClick"
+               Class="action-button">
+
+        @if (!string.IsNullOrWhiteSpace(Icon))
+        {
+            <MudIcon Icon="@Icon" Class="me-2" />
+        }
+
+        @ChildContent
+    </MudButton>
+</MudTooltip>

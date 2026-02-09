@@ -1,0 +1,15 @@
+﻿@using Invoices.Blazor.Pages.Infrastructure.Localization
+@inherits LocalizationPageBase
+@page "/subjects/list"
+
+<MudPaper Class="pa-16 ma-8">
+
+    <MudText Typo="Typo.h5">@T("PersonListTitle")</MudText>
+
+    <PersonList Items="persons"
+                OnEdit="EditPerson"
+                OnDelete="DeletePerson"
+                OnDetail="ViewPersonDetails" />
+
+
+</MudPaper>

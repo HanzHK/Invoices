@@ -1,0 +1,15 @@
+﻿@using Invoices.Blazor.Pages.Infrastructure.Localization
+@inherits LocalizationPageBase
+@page "/subjects/edit/{Id:int}"
+
+<MudText Typo="Typo.h5">@T("EditTitle")</MudText>
+@if (person is null)
+{
+    <MudText>@T("Loading")</MudText>
+}
+else
+{
+    <MudPaper Class="pa-16 ma-8">
+    <PersonForm Person="@person" IsEdit="true" OnSubmit="Save" />
+    </MudPaper>
+}
