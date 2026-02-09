@@ -1,32 +1,58 @@
-﻿using Invoices.Blazor.Services;
+﻿using Invoices.Blazor.Pages.Infrastructure.Localization;
+using Invoices.Blazor.Services;
 using Invoices.Shared.Models.Person;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace Invoices.Blazor.Pages.Persons
 {
-    public partial class ListOfPersons
+    /// <summary>
+    /// Page displaying a list of subjects (persons).
+    /// Provides:
+    /// - Localized UI strings via T()
+    /// - Snackbar notifications
+    /// - Navigation helpers
+    /// - Loading state
+    /// - Error handling
+    /// </summary>
+    public partial class ListOfPersons : LocalizationPageBase
     {
         [Inject] public PersonService PersonService { get; set; } = default!;
-        [Inject] public NavigationManager Nav { get; set; } = default!;
 
-        private List<PersonDto> persons = new();
+        private List<PersonDto>? persons;
 
         protected override async Task OnInitializedAsync()
         {
-            persons = await PersonService.GetAllAsync();
+            try
+            {
+                persons = await PersonService.GetAllAsync();
+            }
+            catch
+            {
+                Snackbar.Add(T("LoadFailed"), Severity.Error);
+                persons = new();
+            }
         }
+
         private async Task DeletePerson(PersonDto person)
         {
             await PersonService.DeleteAsync(person.PersonId);
-            persons.Remove(person);
+
+            persons = persons!
+                .Where(p => p.PersonId != person.PersonId)
+                .ToList();
+
+            Snackbar.Add(T("PersonDeleted"), Severity.Success);
         }
+
         private void EditPerson(PersonDto person)
         {
-            Nav.NavigateTo($"/persons/edit/{person.PersonId}");
+            Nav.NavigateTo($"/subjects/edit/{person.PersonId}");
         }
+
         private void ViewPersonDetails(PersonDto person)
-            {
-            // Navigate to the details page or open a modal for viewing details
+        {
+            // Navigate to details page or open modal
         }
     }
 }

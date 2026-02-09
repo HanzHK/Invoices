@@ -1,8 +1,11 @@
-﻿@page "/persons/edit/{Id:int}"
+﻿@using Invoices.Blazor.Pages.Infrastructure.Localization
+@inherits LocalizationPageBase
+@page "/subjects/edit/{Id:int}"
 
+<MudText Typo="Typo.h5">@T("EditTitle")</MudText>
 @if (person is null)
 {
-    <MudText>Načítám...</MudText>
+    <MudText>@T("Loading")</MudText>
 }
 else
 {

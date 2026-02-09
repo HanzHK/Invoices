@@ -1,16 +1,25 @@
-﻿using Invoices.Blazor.Services;
+﻿using Invoices.Blazor.Pages.Infrastructure.Localization;
+using Invoices.Blazor.Services;
 using Invoices.Shared.Models.Person;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
+
 namespace Invoices.Blazor.Pages.Persons
 {
-    public partial class EditPersonPage
+    /// <summary>
+    /// Page for editing an existing person.
+    /// Uses LocalizationPageBase to provide:
+    /// - Localized strings via T()
+    /// - Snackbar notifications
+    /// - Navigation helpers
+    /// </summary>
+    public partial class EditPersonPage : LocalizationPageBase
     {
         [Inject] public PersonService PersonService { get; set; } = default!;
-        [Inject] public NavigationManager Nav { get; set; } = default!;
 
         [Parameter] public int Id { get; set; }
 
-        private PersonDto? person = null;
+        private PersonDto? person;
 
         protected override async Task OnInitializedAsync()
         {
@@ -18,7 +27,8 @@ namespace Invoices.Blazor.Pages.Persons
 
             if (dto is null)
             {
-                Nav.NavigateTo("/persons");
+                Snackbar.Add(T("PersonNotFound"), Severity.Warning);
+                Nav.NavigateTo("/subjects/list");
                 return;
             }
 
@@ -28,7 +38,10 @@ namespace Invoices.Blazor.Pages.Persons
         private async Task Save(PersonDto updated)
         {
             await PersonService.ReplaceAsync(updated.PersonId, updated);
-            Nav.NavigateTo("/persons");
+
+            Snackbar.Add(T("PersonUpdated"), Severity.Success);
+
+            Nav.NavigateTo("/subjects/list");
         }
     }
 }
