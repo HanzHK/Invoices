@@ -1,0 +1,39 @@
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@inherits LocalizationComponentBase
+<MudPaper Class="pa-4">
+    <MudStack Spacing="16">
+
+        <MudText Typo="Typo.h6">@T("BasicInformation")</MudText>
+
+        <MudTextField Label="@T("Name")"
+                      Value="Person.Name"
+                      ReadOnly="true"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Person" />
+
+        <MudTextField Label="@T("IdentificationNumber")"
+                      Value="Person.IdentificationNumber"
+                      ReadOnly="true"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Badge" />
+
+        <MudTextField Label="@T("TaxNumber")"
+                      Value="Person.TaxNumber"
+                      ReadOnly="true"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Receipt" />
+
+        <MudTextField Label="@T("Telephone")"
+                      Value="Person.Telephone"
+                      ReadOnly="true"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Phone" />
+
+        <MudTextField Label="@T("Mail")"
+                      Value="Person.Mail"
+                      ReadOnly="true"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Email" />
+
+    </MudStack>
+</MudPaper>
