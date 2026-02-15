@@ -1,10 +1,6 @@
 ﻿@page "/subjects/add"
-@using Invoices.Shared.Models
-@using Invoices.Blazor.Services
-@using Invoices.Shared.Models.Person
-@using Invoices.Shared.Models.Common
-@using Invoices.Blazor.Components.Person.Form
-@inject PersonService PersonService
+@using Invoices.Blazor.Pages.Infrastructure.Localization
+@inherits LocalizationPageBase
 
 <MudPaper Class="pa-16 ma-8">
     <MudText Typo="Typo.h5">Vytvořit novou osobu</MudText>
@@ -13,17 +9,3 @@
 
 </MudPaper>
 
-@code {
-    private PersonDto person = new();
-
-    private async Task CreatePersonAsync (PersonDto model)
-    {
-        var created = await PersonService.CreateAsync(model);
-
-        if (created != null)
-        {
-            // TODO: redirect na seznam nebo detail
-        }
-    }
-
-}
