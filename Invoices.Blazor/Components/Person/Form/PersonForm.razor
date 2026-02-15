@@ -4,7 +4,7 @@
         <MudTextField Value="@Person.Name"
                       ValueChanged="@((string v) => 
                             Person.Name = TextInputHandler.Handle(v, new TextInputOptions {
-                                Trim = true,
+                                Trim = false,
                                 CollapseWhitespace = true,
                                 Casing = TextCasing.Title,
                                 MaxLength = 50,
