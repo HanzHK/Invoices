@@ -1,4 +1,5 @@
 using Invoices.Blazor.Services;
+using Invoices.Blazor.Services.CountryAlias;
 using Invoices.Blazor.Services.Localization;
 using Invoices.Blazor.Validation;
 using Invoices.Blazor.Validation.Specific;
@@ -66,6 +67,9 @@ namespace Invoices.Blazor
 
             // Register LocalizationResolver
             builder.Services.AddSingleton<ILocalizationResolver, LocalizationResolver>();
+
+            // Register CountryAliasService
+            builder.Services.AddScoped<ICountryAliasService, CountryAliasService>();
 
             // Add MudBlazor services
             builder.Services.AddMudServices();

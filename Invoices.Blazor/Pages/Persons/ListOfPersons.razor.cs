@@ -52,7 +52,7 @@ namespace Invoices.Blazor.Pages.Persons
 
         private void ViewPersonDetails(PersonDto person)
         {
-            // Navigate to details page or open modal
+            Nav.NavigateTo($"subjects/detail/{person.PersonId}");
         }
     }
 }

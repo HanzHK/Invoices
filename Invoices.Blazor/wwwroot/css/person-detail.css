@@ -1,0 +1,19 @@
+﻿.detail-card {
+    margin-bottom: 20px;
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+}
+
+.detail-label {
+    margin-bottom: 2px;
+    font-weight: 500;
+    opacity: 0.75;
+}
+
+.detail-value {
+    line-height: 1.3;
+}

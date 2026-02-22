@@ -27,4 +27,10 @@
     <ProjectReference Include="..\Invoices.Shared\Invoices.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Services\CountryAlias\CountryAliasResources.resx">
+      <CustomToolNamespace></CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
