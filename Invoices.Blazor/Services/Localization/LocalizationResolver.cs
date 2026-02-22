@@ -1,4 +1,5 @@
-﻿using System.Resources;
+﻿using System.Collections.Concurrent;
+using System.Resources;
 
 namespace Invoices.Blazor.Services.Localization
 {
@@ -14,10 +15,13 @@ namespace Invoices.Blazor.Services.Localization
     /// </remarks>
     public class LocalizationResolver : ILocalizationResolver
     {
-        /// <inheritdoc />
+        private static readonly ConcurrentDictionary<string, ResourceManager> _managers = new();
+
         public string Resolve(string key, string resourceBaseName)
         {
-            var manager = new ResourceManager(resourceBaseName, typeof(LocalizationResolver).Assembly);
+            var manager = _managers.GetOrAdd(
+                resourceBaseName,
+                name => new ResourceManager(name, typeof(LocalizationResolver).Assembly));
 
             var value = manager.GetString(key);
             return string.IsNullOrEmpty(value) ? key : value;
