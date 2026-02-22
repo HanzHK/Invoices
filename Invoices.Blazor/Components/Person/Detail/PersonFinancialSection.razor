@@ -1,0 +1,50 @@
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@using Invoices.Blazor.Components.Infrastructure.Sections
+@inherits UnifiedSectionBase
+<MudCard Class="detail-card" Elevation="2" Style="height: 100%">
+    <MudCardHeader Class="detail-header" Style="padding: 8px 16px;">
+        <CardHeaderContent>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Color="Color.Primary" />
+                <MudText Typo="Typo.h6">@T("FinancialInformation")</MudText>
+            </MudStack>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid GutterSize="16px">
+            <MudItem xs="12" sm="@ColumnSize">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("AccountNumber")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.AccountNumber</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" sm="@ColumnSize">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("BankCode")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Numbers" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.BankCode</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" sm="@ColumnSize">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("Iban")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Language" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.Iban</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
