@@ -1,1 +1,17 @@
-﻿<h3>PersonDetail</h3>
+﻿<link href="css/person-detail.css" rel="stylesheet" />
+<MudGrid GutterSize="24px">
+
+
+    <MudItem xs="12" md="6">
+        <CascadingValue Value="1">
+        <PersonBasicInfoSection Person="Person"/>
+        </CascadingValue>
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <CascadingValue Value="1">
+        <PersonAddressSection Person="Person"/>
+        </CascadingValue>
+    </MudItem>
+
+</MudGrid>
