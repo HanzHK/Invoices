@@ -10,5 +10,10 @@ namespace Invoices.Blazor.Components.Person.PersonActionButtons
         [Parameter] public EventCallback<PersonDto> OnEdit { get; set; }
         [Parameter] public EventCallback<PersonDto> OnDelete { get; set; }
         [Parameter] public EventCallback<PersonDto> OnDetail { get; set; }
+
+        /// <summary>
+        /// Determines whether the Detail action button is rendered.
+        /// </summary>
+        [Parameter] public bool ShowDetail { get; set; } = true;
     }
 }

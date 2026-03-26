@@ -32,5 +32,19 @@ namespace Invoices.Blazor.Pages.Persons
             }
         }
 
+        private async Task DeletePerson(PersonDto person)
+        {
+            await PersonService.DeleteAsync(person.PersonId);
+
+            Snackbar.Add(T("PersonDeleted"), Severity.Success);
+
+            Nav.NavigateTo("/subjects/list");
+        }
+
+
+        private void EditPerson(PersonDto person)
+        {
+            Nav.NavigateTo($"/subjects/edit/{person.PersonId}");
+        }
     }
 }

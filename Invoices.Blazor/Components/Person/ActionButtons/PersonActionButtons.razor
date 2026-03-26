@@ -2,11 +2,14 @@
 @inherits PersonActionButtonsBase
 
 <div class="d-flex gap-2">
+    @if (ShowDetail)
+    {
     <ActionButton Icon="@Icons.Material.Filled.Visibility"
                   Tooltip="Detail"
                   OnClick="() => OnDetail.InvokeAsync(PersonModel)">
         Detail
     </ActionButton>
+    }
 
     <ActionButton Icon="@Icons.Material.Filled.Edit"
                   Tooltip="Upravit"
