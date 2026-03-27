@@ -32,14 +32,12 @@ namespace Invoices.Blazor.Pages.Persons
             }
         }
 
-        private async Task DeletePerson(PersonDto person)
+        private Task DeletePerson(PersonDto person)
         {
-            await PersonService.DeleteAsync(person.PersonId);
-
-            Snackbar.Add(T("PersonDeleted"), Severity.Success);
-
             Nav.NavigateTo("/subjects/list");
+            return Task.CompletedTask;
         }
+
 
 
         private void EditPerson(PersonDto person)

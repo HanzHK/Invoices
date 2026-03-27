@@ -4,8 +4,9 @@
 <div class="d-flex justify-end mb-3">
     <PersonActionButtons PersonModel="Person"
                          ShowDetail="false"
-                         OnEdit="() => OnEdit.InvokeAsync(Person)"
-                         OnDelete="() => OnDelete.InvokeAsync(Person)" />
+                         OnEdit="OnEdit"
+                         OnDelete="OnDelete" />
+
 </div>
 
 <MudGrid GutterSize="24px">

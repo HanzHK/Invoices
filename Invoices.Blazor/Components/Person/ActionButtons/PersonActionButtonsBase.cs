@@ -1,9 +1,12 @@
-﻿using Invoices.Shared.Models.Person;
+﻿using Invoices.Blazor.Components.Infrastructure.Localization;
+using Invoices.Blazor.Services.UI.Actions;
+using Invoices.Shared.Models.Person;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
-namespace Invoices.Blazor.Components.Person.PersonActionButtons
+namespace Invoices.Blazor.Components.Person.ActionButtons
 {
-    public partial class PersonActionButtonsBase : ComponentBase
+    public partial class PersonActionButtonsBase : LocalizationComponentBase
     {
         [Parameter] public PersonDto PersonModel { get; set; } = default!;
 
@@ -15,5 +18,8 @@ namespace Invoices.Blazor.Components.Person.PersonActionButtons
         /// Determines whether the Detail action button is rendered.
         /// </summary>
         [Parameter] public bool ShowDetail { get; set; } = true;
+
+        [Inject] protected IPersonActions PersonActions { get; set; } = default!;
+        [Inject] protected ISnackbar Snackbar { get; set; } = default!;
     }
 }
