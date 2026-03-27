@@ -1,19 +1,26 @@
-﻿@inject DarkModeSwitchService DarkModeService
-
+﻿@namespace Invoices.Blazor.Layout.Appbar
+@using Invoices.Blazor.Components.Infrastructure.Localization
+@inherits LocalizationComponentBase
+@inject DarkModeSwitchService DarkModeService
 
 <MudAppBar Elevation="1" Dense="true">
     <MudIconButton Icon="@Icons.Material.Filled.Menu"
                    Color="Color.Inherit"
                    Edge="Edge.Start"
-                   OnClick="@DarkModeService.ToggleDrawer" />
+                   OnClick="@DarkModeService.ToggleDrawer"
+                   Title="@T("Menu")" />
 
-    <MudText Typo="Typo.h6" Class="ml-3">Fakturace</MudText>
+    <MudText Typo="Typo.h6" Class="ml-3">@T("AppTitle")</MudText>
     <MudSpacer />
 
     <MudIconButton Icon="@(DarkModeService.IsDarkMode? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
                    Color="Color.Inherit"
                    OnClick="@DarkModeService.ToggleTheme"
-                   Title="@(DarkModeService.IsDarkMode ? "Světlý režim" : "Tmavý režim")" />
+                   Title="@(DarkModeService.IsDarkMode? T("LightMode") : T("DarkMode"))"
+                   ForceLoad="true" />
+    <LangMenu />
 
-    <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit" />
+    <MudIconButton Icon="@Icons.Material.Filled.Notifications"
+                   Color="Color.Inherit"
+                   Title="@T("Notifications")" />
 </MudAppBar>

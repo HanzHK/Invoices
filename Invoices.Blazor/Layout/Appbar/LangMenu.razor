@@ -1,0 +1,25 @@
+﻿@namespace Invoices.Blazor.Layout.Appbar
+@using Invoices.Blazor.Components.Infrastructure.Localization
+@inherits LocalizationComponentBase
+
+<MudMenu Dense="true"
+         Color="Color.Inherit"
+         AnchorOrigin="Origin.BottomRight"
+         TransformOrigin="Origin.TopRight">
+
+    <ActivatorContent>
+        <MudIconButton Icon="@Icons.Material.Filled.Language"
+                       Color="Color.Inherit" />
+    </ActivatorContent>
+
+    <ChildContent>
+        <MudMenuItem OnClick="@(() => ChangeLanguage("cs-CZ"))">
+            🇨🇿 @T("Czech")
+        </MudMenuItem>
+
+        <MudMenuItem OnClick="@(() => ChangeLanguage("en-US"))">
+            🇬🇧 @T("English")
+        </MudMenuItem>
+    </ChildContent>
+
+</MudMenu>
