@@ -30,9 +30,10 @@
 
         <MudTd class="col-actions">
             <PersonActionButtons PersonModel="@context"
-                                 OnEdit="() => OnEdit.InvokeAsync(context)"
-                                 OnDelete="() => OnDelete.InvokeAsync(context)"
-                                 OnDetail="() => OnDetail.InvokeAsync(context)" />
+                                 OnEdit="OnEdit"
+                                 OnDelete="OnDelete"
+                                 OnDetail="OnDetail" />
+
         </MudTd>
     </RowTemplate>
 

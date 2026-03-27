@@ -1,0 +1,73 @@
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@using Invoices.Blazor.Components.Infrastructure.Sections
+@inherits UnifiedSectionBase
+
+<MudCard Class="detail-card" Elevation="2">
+    <MudCardHeader Class="detail-header" Style="padding: 8px 16px;">
+        <CardHeaderContent>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Primary" />
+                <MudText Typo="Typo.h6">@T("BasicInformation")</MudText>
+            </MudStack>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudGrid GutterSize="16px">
+            <MudItem xs="12" sm="6">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("Name")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.Name</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("IdentificationNumber")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Badge" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.IdentificationNumber</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("TaxNumber")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Numbers" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.TaxNumber</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("Telephone")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Phone" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.Telephone</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("Mail")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Email" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.Mail</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>

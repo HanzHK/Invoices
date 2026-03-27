@@ -117,22 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LoadFailed" xml:space="preserve">
-    <value> Nepodařilo se načíst seznam subjektů.</value>
+  <data name="AccountNumber" xml:space="preserve">
+    <value>Account Number</value>
+    <comment>Bank account number field</comment>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Načítám…</value>
+  <data name="BankCode" xml:space="preserve">
+    <value>Bank Code</value>
+    <comment>4-digit bank code field</comment>
   </data>
-  <data name="NoData" xml:space="preserve">
-    <value>Žádné subjekty k zobrazení.</value>
+  <data name="FinancialInformation" xml:space="preserve">
+    <value>Financial Information</value>
+    <comment>Section header</comment>
   </data>
-  <data name="PersonDeleted" xml:space="preserve">
-    <value>Subjekt byl smazán.</value>
-  </data>
-  <data name="PersonListTitle" xml:space="preserve">
-    <value>Seznam subjektů</value>
-  </data>
-  <data name="PersonNotFound" xml:space="preserve">
-    <value>Subjekt nebyl nalezen</value>
+  <data name="Iban" xml:space="preserve">
+    <value>IBAN</value>
+    <comment>International bank account number field</comment>
   </data>
 </root>

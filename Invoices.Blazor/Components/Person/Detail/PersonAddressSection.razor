@@ -1,0 +1,77 @@
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@using Invoices.Blazor.Components.Infrastructure.Sections
+@inherits UnifiedSectionBase
+
+<MudCard Class="detail-card" Elevation="2">
+
+    <MudCardHeader Class="detail-header" Style="padding: 8px 16px;">
+        <CardHeaderContent>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.LocationOn" Color="Color.Primary" />
+                <MudText Typo="Typo.h6">@T("Address")</MudText>
+            </MudStack>
+        </CardHeaderContent>
+    </MudCardHeader>
+
+    <MudCardContent>
+        <MudGrid GutterSize="16px">
+
+            <!-- Street -->
+            <MudItem xs="12" sm="@ColumnSize">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("Street")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.Street</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+
+            <!-- City -->
+            <MudItem xs="12" sm="@ColumnSize">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("City")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.LocationCity" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.City</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+
+            <!-- Zip -->
+            <MudItem xs="12" sm="@ColumnSize">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("ZipCode")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.MarkunreadMailbox" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">@Person.Zip</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+
+            <!-- Country -->
+            <MudItem xs="12" sm="@ColumnSize">
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary" Class="detail-label">
+                        @T("Country")
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Public" Size="Size.Small" />
+                        <MudText Typo="Typo.body1" Class="detail-value">
+                            @(Person.Country is null ? "" : GetCountryAlias(Person.Country.Value))
+                        </MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+
+
+        </MudGrid>
+    </MudCardContent>
+
+</MudCard>

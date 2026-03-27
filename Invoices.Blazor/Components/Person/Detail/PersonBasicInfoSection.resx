@@ -117,22 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LoadFailed" xml:space="preserve">
-    <value> Nepodařilo se načíst seznam subjektů.</value>
+  <data name="BasicInformation" xml:space="preserve">
+    <value>Basic Information</value>
+    <comment>Section title</comment>
   </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Načítám…</value>
+  <data name="IdentificationNumber" xml:space="preserve">
+    <value> Identification Number</value>
+    <comment>Business or personal ID</comment>
   </data>
-  <data name="NoData" xml:space="preserve">
-    <value>Žádné subjekty k zobrazení.</value>
+  <data name="Mail" xml:space="preserve">
+    <value>E-mail</value>
+    <comment>Email address</comment>
   </data>
-  <data name="PersonDeleted" xml:space="preserve">
-    <value>Subjekt byl smazán.</value>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+    <comment>Person’s full name</comment>
   </data>
-  <data name="PersonListTitle" xml:space="preserve">
-    <value>Seznam subjektů</value>
+  <data name="TaxNumber" xml:space="preserve">
+    <value>Tax Number</value>
+    <comment>VAT / tax identifier</comment>
   </data>
-  <data name="PersonNotFound" xml:space="preserve">
-    <value>Subjekt nebyl nalezen</value>
+  <data name="Telephone" xml:space="preserve">
+    <value> Telephone</value>
+    <comment>Phone number</comment>
   </data>
 </root>

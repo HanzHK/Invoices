@@ -1,5 +1,7 @@
 using Invoices.Blazor.Services;
+using Invoices.Blazor.Services.CountryAlias;
 using Invoices.Blazor.Services.Localization;
+using Invoices.Blazor.Services.UI.Actions;
 using Invoices.Blazor.Validation;
 using Invoices.Blazor.Validation.Specific;
 using Microsoft.AspNetCore.Components.Web;
@@ -46,6 +48,9 @@ namespace Invoices.Blazor
             // Register FormFieldBlurTracker
             builder.Services.AddScoped<FormFieldBlurTracker>();
 
+            // Register PersonActions
+            builder.Services.AddScoped<IPersonActions, PersonActions>();
+
             // Add localization services
             builder.Services.AddLocalization();
 
@@ -66,6 +71,9 @@ namespace Invoices.Blazor
 
             // Register LocalizationResolver
             builder.Services.AddSingleton<ILocalizationResolver, LocalizationResolver>();
+
+            // Register CountryAliasService
+            builder.Services.AddScoped<ICountryAliasService, CountryAliasService>();
 
             // Add MudBlazor services
             builder.Services.AddMudServices();

@@ -137,4 +137,8 @@
     <value>Subjects list</value>
     <comment>Page Title</comment>
   </data>
+  <data name="PersonNotFound" xml:space="preserve">
+    <value>Person not found</value>
+    <comment>Shown when the requested person ID does not exist in the database</comment>
+  </data>
 </root>

@@ -1,0 +1,37 @@
+﻿@using Invoices.Blazor.Components.Person.ActionButtons
+<link href="css/person-detail.css" rel="stylesheet" />
+
+<div class="d-flex justify-end mb-3">
+    <PersonActionButtons PersonModel="Person"
+                         ShowDetail="false"
+                         OnEdit="OnEdit"
+                         OnDelete="OnDelete" />
+
+</div>
+
+<MudGrid GutterSize="24px">
+
+
+    <MudItem xs="12" md="6">
+        <CascadingValue Value="1">
+        <PersonBasicInfoSection Person="Person"/>
+        </CascadingValue>
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <CascadingValue Value="1">
+        <PersonAddressSection Person="Person"/>
+        </CascadingValue>
+    </MudItem>
+    <MudItem xs="12" md="9">
+        <CascadingValue Value="2">
+            <PersonFinancialSection Person="Person" />
+        </CascadingValue>
+    </MudItem>
+    <MudItem xs="12" md="3">
+        <CascadingValue Value="2">
+            <PersonNoteSection Person="Person" />
+        </CascadingValue>
+    </MudItem>
+
+</MudGrid>

@@ -1,0 +1,16 @@
+﻿@using Invoices.Blazor.Components.Person.Detail
+@using Invoices.Blazor.Pages.Infrastructure.Localization
+@inherits LocalizationPageBase
+@page "/subjects/detail/{id:int}"
+
+@if (person is null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+    <PersonDetail Person="person" 
+        OnEdit="EditPerson"
+                  OnDelete="DeletePerson" />
+}
+

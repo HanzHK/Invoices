@@ -34,16 +34,15 @@ namespace Invoices.Blazor.Pages.Persons
             }
         }
 
-        private async Task DeletePerson(PersonDto person)
+        private Task DeletePerson(PersonDto person)
         {
-            await PersonService.DeleteAsync(person.PersonId);
-
             persons = persons!
                 .Where(p => p.PersonId != person.PersonId)
                 .ToList();
 
-            Snackbar.Add(T("PersonDeleted"), Severity.Success);
+            return Task.CompletedTask;
         }
+
 
         private void EditPerson(PersonDto person)
         {
@@ -52,7 +51,7 @@ namespace Invoices.Blazor.Pages.Persons
 
         private void ViewPersonDetails(PersonDto person)
         {
-            // Navigate to details page or open modal
+            Nav.NavigateTo($"subjects/detail/{person.PersonId}");
         }
     }
 }
