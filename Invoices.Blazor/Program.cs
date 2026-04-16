@@ -43,7 +43,7 @@ namespace Invoices.Blazor
             });
 
             // Register LanguageService
-            builder.Services.AddScoped<LanguageService>();
+            builder.Services.AddSingleton<LanguageService>();
 
             // Register FormFieldBlurTracker
             builder.Services.AddScoped<FormFieldBlurTracker>();
@@ -53,11 +53,6 @@ namespace Invoices.Blazor
 
             // Add localization services
             builder.Services.AddLocalization();
-
-            // Set default culture to Czech
-            var defaultCulture = new CultureInfo("cs"); 
-            CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
-            CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
 
             // Register Validators
             builder.Services.AddScoped<FormValidator>(sp =>
@@ -85,7 +80,14 @@ namespace Invoices.Blazor
             builder.Services.AddApiServices();
 
 
-            await builder.Build().RunAsync();
+            var host = builder.Build();
+
+            // Initialize language from localStorage
+            var lang = host.Services.GetRequiredService<LanguageService>();
+            await lang.InitializeAsync();
+
+            await host.RunAsync();
+
         }
     }
 }

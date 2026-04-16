@@ -1,18 +1,15 @@
-﻿using Invoices.Blazor.Services.Localization;
+﻿using Invoices.Blazor.Services;
+using Invoices.Blazor.Services.Localization;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
 namespace Invoices.Blazor.Components.Infrastructure.Localization
 {
     /// <summary>
-    /// Base class for components that require localized strings.
+    /// Base class for components that require localized strings
+    /// and automatic UI refresh when the application language changes.
     /// </summary>
-    /// <remarks>
-    /// Derives the RESX base name automatically from the component's
-    /// namespace + type name (e.g. Invoices.Blazor.Components.Person.List.PersonList).
-    /// Place a RESX named <TypeName>.resx next to the component to localize it.
-    /// </remarks>
-    public abstract class LocalizationComponentBase : ComponentBase
+    public abstract class LocalizationComponentBase : ComponentBase, IDisposable
     {
         private ILocalizationResolver? _resolver;
 
@@ -21,6 +18,37 @@ namespace Invoices.Blazor.Components.Infrastructure.Localization
         {
             get => _resolver!;
             set => _resolver = value;
+        }
+
+        /// <summary>
+        /// Provides access to the global LanguageService.
+        /// Used to refresh UI when culture changes.
+        /// </summary>
+        [Inject]
+        protected LanguageService Language { get; set; } = default!;
+
+        /// <summary>
+        /// Subscribe to language change notifications.
+        /// </summary>
+        protected override void OnInitialized()
+        {
+            Language.OnChange += OnLanguageChanged;
+        }
+
+        /// <summary>
+        /// Unsubscribe from language change notifications.
+        /// </summary>
+        public void Dispose()
+        {
+            Language.OnChange -= OnLanguageChanged;
+        }
+
+        /// <summary>
+        /// Trigger UI refresh when the language changes.
+        /// </summary>
+        private void OnLanguageChanged()
+        {
+            InvokeAsync(StateHasChanged);
         }
 
         /// <summary>
@@ -36,8 +64,7 @@ namespace Invoices.Blazor.Components.Infrastructure.Localization
         }
 
         /// <summary>
-        /// Builds RESX base name as: {Namespace}.{TypeName}
-        /// (e.g. Invoices.Blazor.Components.Person.List.PersonList for PersonList component).
+        /// Builds RESX base name as: {Namespace}.{TypeName}.
         /// Override to change convention.
         /// </summary>
         protected virtual string BuildResourceBaseName()
