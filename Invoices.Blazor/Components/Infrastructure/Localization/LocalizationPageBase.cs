@@ -1,4 +1,5 @@
-﻿using Invoices.Blazor.Services.Localization;
+﻿using Invoices.Blazor.Components.Infrastructure.Localization;
+using Invoices.Blazor.Services.Localization;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -21,7 +22,7 @@ namespace Invoices.Blazor.Pages.Infrastructure.Localization
     /// Example:
     ///   Invoices.Blazor.Pages.Persons.EditPersonPage.resx
     /// </remarks>
-    public abstract class LocalizationPageBase : ComponentBase
+    public abstract class LocalizationPageBase : LanguageReactiveBase
     {
         private ILocalizationResolver? _resolver;
 

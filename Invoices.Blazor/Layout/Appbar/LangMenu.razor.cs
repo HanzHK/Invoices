@@ -2,11 +2,12 @@
 
 namespace Invoices.Blazor.Layout.Appbar
 {
+
     public partial class LangMenu : LocalizationComponentBase
     {
-        private void ChangeLanguage(string culture)
+        private async Task ChangeLanguage(string culture)
         {
-
+            await Language.SetCultureAsync(culture);
         }
     }
 }

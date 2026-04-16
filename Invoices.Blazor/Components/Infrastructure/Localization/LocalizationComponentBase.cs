@@ -9,7 +9,7 @@ namespace Invoices.Blazor.Components.Infrastructure.Localization
     /// Base class for components that require localized strings
     /// and automatic UI refresh when the application language changes.
     /// </summary>
-    public abstract class LocalizationComponentBase : ComponentBase, IDisposable
+    public abstract class LocalizationComponentBase : LanguageReactiveBase
     {
         private ILocalizationResolver? _resolver;
 
@@ -19,38 +19,7 @@ namespace Invoices.Blazor.Components.Infrastructure.Localization
             get => _resolver!;
             set => _resolver = value;
         }
-
-        /// <summary>
-        /// Provides access to the global LanguageService.
-        /// Used to refresh UI when culture changes.
-        /// </summary>
-        [Inject]
-        protected LanguageService Language { get; set; } = default!;
-
-        /// <summary>
-        /// Subscribe to language change notifications.
-        /// </summary>
-        protected override void OnInitialized()
-        {
-            Language.OnChange += OnLanguageChanged;
-        }
-
-        /// <summary>
-        /// Unsubscribe from language change notifications.
-        /// </summary>
-        public void Dispose()
-        {
-            Language.OnChange -= OnLanguageChanged;
-        }
-
-        /// <summary>
-        /// Trigger UI refresh when the language changes.
-        /// </summary>
-        private void OnLanguageChanged()
-        {
-            InvokeAsync(StateHasChanged);
-        }
-
+    
         /// <summary>
         /// Resolve localized string for the current component using a derived RESX base name.
         /// </summary>

@@ -84,5 +84,24 @@ namespace Invoices.Blazor.Services
         {
             return _js.InvokeVoidAsync("localStorage.setItem", StorageKey, culture).AsTask();
         }
+
+        /// <summary>
+        /// Changes the current culture, persists it to localStorage,
+        /// applies it to .NET, and notifies subscribers.
+        /// </summary>
+        public async Task SetCultureAsync(string culture)
+        {
+            if (string.IsNullOrWhiteSpace(culture))
+                return;
+
+            CurrentCulture = culture;
+
+            ApplyCulture(culture);
+            await SaveToStorage(culture);
+
+            OnChange?.Invoke();
+
+
+        }
     }
 }
