@@ -117,10 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CreatePersonTitle" xml:space="preserve">
-    <value>Vytvořit nový subjekt</value>
+  <data name="AddInvoice" xml:space="preserve">
+    <value>Add invoice</value>
+    <comment>Link to create a new invoice</comment>
   </data>
-  <data name="PersonAdded" xml:space="preserve">
-    <value>Nový subjekt byl úspěšně vytvořen.</value>
+  <data name="AddSubject" xml:space="preserve">
+    <value>Add subject</value>
+    <comment>Link to create a new subject</comment>
+  </data>
+  <data name="InvoicesOverview" xml:space="preserve">
+    <value>Invoices overview</value>
+    <comment>Link to list of invoices</comment>
+  </data>
+  <data name="InvoicesTitle" xml:space="preserve">
+    <value>Invoices</value>
+    <comment>Title of the invoices navigation group</comment>
+  </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>Statistics</value>
+    <comment>Link to statistics page</comment>
+  </data>
+  <data name="SubjectsList" xml:space="preserve">
+    <value>Subjects list</value>
+    <comment>Link to list of subjects</comment>
+  </data>
+  <data name="SubjectsTitle" xml:space="preserve">
+    <value>Subjects</value>
+    <comment>Title of the subjects navigation group</comment>
   </data>
 </root>

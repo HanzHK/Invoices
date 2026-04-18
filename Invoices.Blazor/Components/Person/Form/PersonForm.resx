@@ -117,10 +117,103 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CreatePersonTitle" xml:space="preserve">
-    <value>Vytvořit nový subjekt</value>
+  <data name="AccountNumber" xml:space="preserve">
+    <value>Account number</value>
   </data>
-  <data name="PersonAdded" xml:space="preserve">
-    <value>Nový subjekt byl úspěšně vytvořen.</value>
+  <data name="BankCode" xml:space="preserve">
+    <value>Bank code</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Iban" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="IdentificationNumber" xml:space="preserve">
+    <value>Identification number</value>
+  </data>
+  <data name="Mail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Street</value>
+  </data>
+  <data name="Telephone" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="TaxNumber" xml:space="preserve">
+    <value>VAT ID</value>
+  </data>
+  <data name="Zip" xml:space="preserve">
+    <value>ZIP code</value>
+  </data>
+  <data name="Czechia" xml:space="preserve">
+    <value>Czechia</value>
+  </data>
+  <data name="Slovakia" xml:space="preserve">
+    <value>Slovakia</value>
+  </data>
+  <data name="ZipRequired" xml:space="preserve">
+    <value>Please enter the ZIP code</value>
+  </data>
+  <data name="TelephoneRequired" xml:space="preserve">
+    <value>Please enter the phone number</value>
+  </data>
+  <data name="TelephoneLength" xml:space="preserve">
+    <value>The phone number must have {0} characters</value>
+  </data>
+  <data name="TelephoneDigitsExactLength" xml:space="preserve">
+    <value>Please enter a phone number with a length of 9 digits</value>
+  </data>
+  <data name="TaxNumberRequired" xml:space="preserve">
+    <value>Please enter the VAT ID</value>
+  </data>
+  <data name="StreetRequired" xml:space="preserve">
+    <value>Please enter the street</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Please enter the name</value>
+  </data>
+  <data name="MailRequired" xml:space="preserve">
+    <value>Please enter the email address</value>
+  </data>
+  <data name="IdentificationNumberRequired" xml:space="preserve">
+    <value>Please enter the company ID</value>
+  </data>
+  <data name="IdentificationNumberLength" xml:space="preserve">
+    <value>The company ID must have {0} characters</value>
+  </data>
+  <data name="IbanRequired" xml:space="preserve">
+    <value>Please enter the IBAN</value>
+  </data>
+  <data name="CountryRequired" xml:space="preserve">
+    <value>Please select from the list of countries</value>
+  </data>
+  <data name="CityRequired" xml:space="preserve">
+    <value>Please enter the city/town</value>
+  </data>
+  <data name="BankCodeRequired" xml:space="preserve">
+    <value>Please enter the bank code</value>
+  </data>
+  <data name="AccountNumberRequired" xml:space="preserve">
+    <value>Please enter the account number</value>
+  </data>
+  <data name="AccountNumberInvalidModulo11" xml:space="preserve">
+    <value>The account number is not valid</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
   </data>
 </root>

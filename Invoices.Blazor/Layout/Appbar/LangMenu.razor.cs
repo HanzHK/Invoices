@@ -7,7 +7,7 @@ namespace Invoices.Blazor.Layout.Appbar
     {
         private async Task ChangeLanguage(string culture)
         {
-            await Language.SetCultureAsync(culture);
+            await LanguageService.SetCultureAsync(culture);
         }
     }
 }

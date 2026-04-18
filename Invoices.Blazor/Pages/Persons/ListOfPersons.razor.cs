@@ -1,4 +1,4 @@
-﻿using Invoices.Blazor.Pages.Infrastructure.Localization;
+﻿using Invoices.Blazor.Components.Infrastructure.Localization;
 using Invoices.Blazor.Services;
 using Invoices.Shared.Models.Person;
 using Microsoft.AspNetCore.Components;

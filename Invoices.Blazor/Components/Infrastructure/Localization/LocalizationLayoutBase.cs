@@ -5,17 +5,17 @@ using Invoices.Blazor.Services.Localization;
 namespace Invoices.Blazor.Components.Infrastructure.Localization
 {
     /// <summary>
-    /// Base class for all localized Blazor components.
+    /// Base class for all localized Blazor layouts.
     /// Implements ILanguageReactive to enable:
     /// - Automatic UI rerender on language change
     /// - Shared localization logic via extension methods
     /// - Centralized subscription management through LanguageReactiveHelper
     ///
-    /// Components inheriting from this class can directly call T("Key")
+    /// Layouts inheriting from this class can directly call T("Key")
     /// without any additional boilerplate.
     /// </summary>
-    public abstract class LocalizationComponentBase
-        : ComponentBase, ILanguageReactive
+    public abstract class LocalizationLayoutBase
+        : LayoutComponentBase, ILanguageReactive
     {
         /// <summary>
         /// Localization resolver injected by Blazor DI.
@@ -38,7 +38,7 @@ namespace Invoices.Blazor.Components.Infrastructure.Localization
         public LanguageReactiveHelper? ReactiveHelper { get; set; }
 
         /// <summary>
-        /// Connects Blazor lifecycle with language-change reactivity.
+        /// Connects Blazor layout lifecycle with language-change reactivity.
         /// </summary>
         protected override void OnInitialized()
         {

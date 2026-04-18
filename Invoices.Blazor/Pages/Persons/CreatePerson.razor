@@ -1,9 +1,9 @@
 ﻿@page "/subjects/add"
-@using Invoices.Blazor.Pages.Infrastructure.Localization
+@using Invoices.Blazor.Components.Infrastructure.Localization
 @inherits LocalizationPageBase
 
 <MudPaper Class="pa-16 ma-8">
-    <MudText Typo="Typo.h5">Vytvořit novou osobu</MudText>
+    <MudText Typo="Typo.h5">@T("CreatePersonTitle")</MudText>
 
     <PersonForm Person="person" IsEdit="false" OnSubmit="CreatePersonAsync" />
 

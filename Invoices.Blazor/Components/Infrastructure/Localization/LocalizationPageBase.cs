@@ -1,75 +1,81 @@
-﻿using Invoices.Blazor.Components.Infrastructure.Localization;
+﻿using Invoices.Blazor.Services;
 using Invoices.Blazor.Services.Localization;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace Invoices.Blazor.Pages.Infrastructure.Localization
+namespace Invoices.Blazor.Components.Infrastructure.Localization
 {
     /// <summary>
-    /// Base class for Blazor pages that require localized strings
-    /// and common UI services (snackbar, navigation).
-    /// </summary>
-    /// <remarks>
-    /// This class mirrors <see cref="LocalizationComponentBase"/> but is intended
-    /// specifically for Razor Pages (not components). It provides:
-    /// - Automatic RESX base name resolution based on namespace + type name
-    /// - T(key) helper for localized strings
-    /// - Injected ISnackbar for consistent UI notifications
-    /// - Injected NavigationManager for clean redirects
+    /// Base class for all localized Blazor pages.
+    /// Implements ILanguageReactive to enable:
+    /// - Automatic UI rerender on language change
+    /// - Shared localization logic via extension methods
+    /// - Centralized subscription management through LanguageReactiveHelper
     ///
-    /// Convention:
-    /// Place a RESX file named <TypeName>.resx next to the page class.
-    /// Example:
-    ///   Invoices.Blazor.Pages.Persons.EditPersonPage.resx
-    /// </remarks>
-    public abstract class LocalizationPageBase : LanguageReactiveBase
+    /// Pages inheriting from this class can directly call T("Key")
+    /// without any additional boilerplate.
+    /// </summary>
+    public abstract class LocalizationPageBase
+        : ComponentBase, ILanguageReactive
     {
-        private ILocalizationResolver? _resolver;
-
         [Inject]
-        protected ILocalizationResolver Resolver
-        {
-            get => _resolver!;
-            set => _resolver = value;
-        }
+        protected NavigationManager Nav { get; set; } = default!;
 
         [Inject]
         protected ISnackbar Snackbar { get; set; } = default!;
 
+        /// <summary>
+        /// Localization resolver injected by Blazor DI.
+        /// Used by extension methods to resolve resource keys.
+        /// </summary>
         [Inject]
-        protected NavigationManager Nav { get; set; } = default!;
+        public ILocalizationResolver Resolver { get; set; } = default!;
 
         /// <summary>
-        /// Resolve a localized string for this page using the derived RESX base name.
+        /// Language service injected by Blazor DI.
+        /// Raises events when the current language changes.
         /// </summary>
-        protected string T(string key)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-                return key;
+        [Inject]
+        public LanguageService LanguageService { get; set; } = default!;
 
-            var baseName = BuildResourceBaseName();
-            return Resolver.Resolve(key, baseName);
+        /// <summary>
+        /// Internal helper instance that manages subscriptions and
+        /// localization resolution. Assigned during initialization.
+        /// </summary>
+        public LanguageReactiveHelper? ReactiveHelper { get; set; }
+
+        /// <summary>
+        /// Connects Blazor page lifecycle with language-change reactivity.
+        /// </summary>
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            this.InitializeLanguageReactivity();
         }
 
         /// <summary>
-        /// Builds RESX base name as: {Namespace}.{TypeName}
-        /// Example:
-        ///   Invoices.Blazor.Pages.Persons.EditPersonPage
+        /// Triggers a UI rerender when the language changes.
         /// </summary>
-        protected virtual string BuildResourceBaseName()
-        {
-            var type = GetType();
-            var ns = type.Namespace ?? string.Empty;
-            var typeName = type.Name;
-
-            return string.IsNullOrEmpty(ns)
-                ? typeName
-                : $"{ns}.{typeName}";
-        }
+        public void TriggerRerender() => StateHasChanged();
 
         /// <summary>
-        /// Allows overriding the resolver manually (useful for unit tests).
+        /// Ensures proper cleanup of language-change subscriptions.
         /// </summary>
-        public void SetResolver(ILocalizationResolver resolver) => Resolver = resolver;
+        public void Dispose() => this.DisposeLanguageReactivity();
+        /// <summary>
+        /// Resolves a localized string for the specified key using the component's
+        /// own type to determine the RESX resource base name. This method delegates
+        /// the actual resolution to the underlying LanguageReactiveHelper.
+        /// </summary>
+        /// <param name="key">
+        /// The resource key to resolve. If the key is null, empty, or whitespace,
+        /// the original value is returned unchanged.
+        /// </param>
+        /// <returns>
+        /// The localized string if found; otherwise, the original key.
+        /// </returns>
+        protected string T(string key) =>
+            ReactiveHelper!.T(Resolver, GetType(), key);
+
     }
 }

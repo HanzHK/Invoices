@@ -1,24 +1,26 @@
-﻿@inject DarkModeSwitchService DarkModeService
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@inherits LocalizationComponentBase
+@inject DarkModeSwitchService DarkModeService
 
 <MudPaper Width="250px" Class="py-3" Elevation="0">
     <MudNavMenu>
 
         <MudDivider Class="my-2" />
-        <MudNavGroup Title="Faktury" Expanded="true">
+        <MudNavGroup Title="@T("InvoicesTitle")" Expanded="true">
             <MudNavLink Href="/faktury/prehled"
-                        Icon="@Icons.Material.Filled.Receipt">Přehled faktur</MudNavLink>
+                        Icon="@Icons.Material.Filled.Receipt">@T("InvoicesOverview")</MudNavLink>
             <MudNavLink Href="/faktury/pridat"
-                        Icon="@Icons.Material.Filled.AddCircle">Přidat fakturu</MudNavLink>
+                        Icon="@Icons.Material.Filled.AddCircle">@T("AddInvoice")</MudNavLink>
         </MudNavGroup>
 
-        <MudNavGroup Title="Odběratelé / Dodavatelé" Expanded="true">
+        <MudNavGroup Title="@T("SubjectsTitle")" Expanded="true">
             <MudNavLink Href="/subjects/add"
-                        Icon="@Icons.Material.Filled.PersonAdd">Přidat subjekt</MudNavLink>
+                        Icon="@Icons.Material.Filled.PersonAdd">@T("AddSubject")</MudNavLink>
             <MudNavLink Href="/subjects/list"
-                        Icon="@Icons.Material.Filled.People">Seznam subjektů</MudNavLink>
+                        Icon="@Icons.Material.Filled.People">@T("SubjectsList")</MudNavLink>
         </MudNavGroup>
 
         <MudNavLink Href="/statistiky"
-                    Icon="@Icons.Material.Filled.BarChart">Statistiky</MudNavLink>
+                    Icon="@Icons.Material.Filled.BarChart">@T("Statistics")</MudNavLink>
     </MudNavMenu>
 </MudPaper>

@@ -210,4 +210,10 @@
   <data name="AccountNumberInvalidModulo11" xml:space="preserve">
     <value>Číslo účtu není platné</value>
   </data>
+  <data name="Save" xml:space="preserve">
+    <value>Uložit změny</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Vytvořit subjekt</value>
+  </data>
 </root>

@@ -117,10 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CreatePersonTitle" xml:space="preserve">
-    <value>Vytvořit nový subjekt</value>
+  <data name="AddInvoice" xml:space="preserve">
+    <value>Přidat fakturu</value>
   </data>
-  <data name="PersonAdded" xml:space="preserve">
-    <value>Nový subjekt byl úspěšně vytvořen.</value>
+  <data name="AddSubject" xml:space="preserve">
+    <value>Přidat subjekt</value>
+  </data>
+  <data name="InvoicesOverview" xml:space="preserve">
+    <value>Přehled faktur</value>
+  </data>
+  <data name="InvoicesTitle" xml:space="preserve">
+    <value>Faktury</value>
+  </data>
+  <data name="Statistics" xml:space="preserve">
+    <value>Statistiky</value>
+  </data>
+  <data name="SubjectsList" xml:space="preserve">
+    <value>Seznam subjektů</value>
+  </data>
+  <data name="SubjectsTitle" xml:space="preserve">
+    <value>Subjekty</value>
   </data>
 </root>
