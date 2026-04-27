@@ -1,3 +1,5 @@
+using Invoices.Blazor.Configuration;
+using Invoices.Blazor.Infrastructure;
 using Invoices.Blazor.Services;
 using Invoices.Blazor.Services.CountryAlias;
 using Invoices.Blazor.Services.Localization;
@@ -79,6 +81,11 @@ namespace Invoices.Blazor
             // Register API services
             builder.Services.AddApiServices();
 
+            // Register ApiResultHandler (required for PersonService + InvoiceService)
+            builder.Services.AddScoped<ApiResultHandler>();
+
+            // Register shared JsonSerializerOptions (Country + DateOnly + DateOnly?)
+            builder.Services.AddSharedJsonOptions();
 
             var host = builder.Build();
 
