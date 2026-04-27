@@ -1,66 +1,61 @@
 ﻿using Invoices.Shared.Models.Person;
-using Invoices.Shared.Models.Common;
-using Invoices.Blazor.Utils.Converters;
-using System.Net.Http.Json;
-using System.Text.Json;
+using Invoices.Shared.Results;
+using Invoices.Blazor.Infrastructure;
 
 namespace Invoices.Blazor.Services
 {
+    /// <summary>
+    /// Service responsible for performing CRUD operations on Person resources
+    /// via the backend API. Uses <see cref="ApiResultHandler"/> to ensure
+    /// consistent error handling and unified response structure across the application.
+    /// </summary>
     public class PersonService
     {
-        private readonly HttpClient _http;
-        private readonly JsonSerializerOptions _jsonOptions;
+        private readonly ApiResultHandler _api;
 
-        public PersonService(HttpClient http)
+        /// <summary>
+        /// Initializes a new instance of <see cref="PersonService"/>.
+        /// The <see cref="ApiResultHandler"/> is injected via DI and provides
+        /// unified HTTP request execution and error handling.
+        /// </summary>
+        public PersonService(ApiResultHandler api)
         {
-            _http = http;
-            _jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                Converters = { new UpperCaseEnumConverter<Country>() }
-            };
+            _api = api;
         }
 
-        // GET /api/persons
-        public async Task<List<PersonDto>> GetAllAsync()
-        {
-            return await _http.GetFromJsonAsync<List<PersonDto>>("api/persons", _jsonOptions) 
-                   ?? new List<PersonDto>();
-        }
+        /// <summary>
+        /// Retrieves all persons from the API.
+        /// Returns an <see cref="OperationResult{T}"/> containing a list of persons.
+        /// </summary>
+        public Task<OperationResult<List<PersonDto>>> GetAllAsync()
+            => _api.GetAsync<List<PersonDto>>("api/persons");
 
-        // GET /api/persons/{id}
-        public async Task<PersonDto?> GetByIdAsync(int id)
-        {
-            return await _http.GetFromJsonAsync<PersonDto>($"api/persons/{id}", _jsonOptions); 
-        }
+        /// <summary>
+        /// Retrieves a single person by ID.
+        /// Returns an <see cref="OperationResult{T}"/> containing the person if found.
+        /// </summary>
+        public Task<OperationResult<PersonDto>> GetByIdAsync(int id)
+            => _api.GetAsync<PersonDto>($"api/persons/{id}");
 
-        // POST /api/persons
-        public async Task<PersonDto?> CreateAsync(PersonDto dto)
-        {
-            var response = await _http.PostAsJsonAsync("api/persons", dto, _jsonOptions); 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<PersonDto>(_jsonOptions); 
-            }
-            return null;
-        }
+        /// <summary>
+        /// Creates a new person using the provided DTO.
+        /// Returns an <see cref="OperationResult{T}"/> containing the created person.
+        /// </summary>
+        public Task<OperationResult<PersonDto>> CreateAsync(PersonDto dto)
+            => _api.PostAsync<PersonDto>("api/persons", dto);
 
-        // PUT /api/persons/{id}
-        public async Task<PersonDto?> ReplaceAsync(int id, PersonDto dto)
-        {
-            var response = await _http.PutAsJsonAsync($"api/persons/{id}", dto, _jsonOptions); 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<PersonDto>(_jsonOptions); 
-            }
-            return null;
-        }
+        /// <summary>
+        /// Replaces an existing person with the provided DTO.
+        /// Returns an <see cref="OperationResult{T}"/> containing the updated person.
+        /// </summary>
+        public Task<OperationResult<PersonDto>> ReplaceAsync(int id, PersonDto dto)
+            => _api.PutAsync<PersonDto>($"api/persons/{id}", dto);
 
-        // DELETE /api/persons/{id}
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var response = await _http.DeleteAsync($"api/persons/{id}");
-            return response.IsSuccessStatusCode;
-        }
+        /// <summary>
+        /// Deletes a person by ID.
+        /// Returns an <see cref="OperationResult"/> indicating success or failure.
+        /// </summary>
+        public Task<OperationResult> DeleteAsync(int id)
+            => _api.DeleteAsync($"api/persons/{id}");
     }
 }
