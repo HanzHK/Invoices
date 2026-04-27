@@ -21,26 +21,39 @@ namespace Invoices.Blazor.Pages.Persons
 
         private PersonDto? person;
 
+        /// <summary>
+        /// Loads the person to be edited.
+        /// If the person cannot be retrieved, the user is redirected back to the list.
+        /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            var dto = await PersonService.GetByIdAsync(Id);
+            var result = await PersonService.GetByIdAsync(Id);
 
-            if (dto is null)
+            if (!result.Success)
             {
                 Snackbar.Add(T("PersonNotFound"), Severity.Warning);
                 Nav.NavigateTo("/subjects/list");
                 return;
             }
 
-            person = dto;
+            person = result.Value!;
         }
 
+        /// <summary>
+        /// Saves the updated person.
+        /// Displays an error message if the update fails.
+        /// </summary>
         private async Task Save(PersonDto updated)
         {
-            await PersonService.ReplaceAsync(updated.PersonId, updated);
+            var result = await PersonService.ReplaceAsync(updated.PersonId, updated);
+
+            if (!result.Success)
+            {
+                Snackbar.Add(result.Error ?? T("PersonUpdateFailed"), Severity.Error);
+                return;
+            }
 
             Snackbar.Add(T("PersonUpdated"), Severity.Success);
-
             Nav.NavigateTo("/subjects/list");
         }
     }

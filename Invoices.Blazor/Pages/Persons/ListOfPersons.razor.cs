@@ -7,7 +7,7 @@ using MudBlazor;
 namespace Invoices.Blazor.Pages.Persons
 {
     /// <summary>
-    /// Page displaying a list of subjects (persons).
+    /// Page displaying a list of persons.
     /// Provides:
     /// - Localized UI strings via T()
     /// - Snackbar notifications
@@ -21,19 +21,28 @@ namespace Invoices.Blazor.Pages.Persons
 
         private List<PersonDto>? persons;
 
+        /// <summary>
+        /// Loads all persons from the API.
+        /// Displays an error message if loading fails.
+        /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            try
-            {
-                persons = await PersonService.GetAllAsync();
-            }
-            catch
+            var result = await PersonService.GetAllAsync();
+
+            if (!result.Success)
             {
                 Snackbar.Add(T("LoadFailed"), Severity.Error);
                 persons = new();
+                return;
             }
+
+            persons = result.Value!;
         }
 
+        /// <summary>
+        /// Removes a person from the local list after a delete action.
+        /// Actual deletion is handled elsewhere.
+        /// </summary>
         private Task DeletePerson(PersonDto person)
         {
             persons = persons!
@@ -43,12 +52,17 @@ namespace Invoices.Blazor.Pages.Persons
             return Task.CompletedTask;
         }
 
-
+        /// <summary>
+        /// Navigates to the edit page for the selected person.
+        /// </summary>
         private void EditPerson(PersonDto person)
         {
             Nav.NavigateTo($"/subjects/edit/{person.PersonId}");
         }
 
+        /// <summary>
+        /// Navigates to the detail page for the selected person.
+        /// </summary>
         private void ViewPersonDetails(PersonDto person)
         {
             Nav.NavigateTo($"subjects/detail/{person.PersonId}");
