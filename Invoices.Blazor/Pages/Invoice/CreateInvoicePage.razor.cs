@@ -15,13 +15,14 @@ namespace Invoices.Blazor.Pages.Invoice
 
         private async Task CreateInvoiceAsync(InvoicePostDto model)
         {
-            var created = await InvoiceService.CreateAsync(model);
-            if (created != null)
+            var result = await InvoiceService.CreateAsync(model);
+            if (!result.Success)
             {
-                Snackbar.Add(T("InvoiceAdded"), Severity.Success);
-                Nav.NavigateTo("/invoices/list");
+                Snackbar.Add(T("CreateFailed"), Severity.Error);
                 return;
             }
+            Snackbar.Add(T("InvoiceAdded"), Severity.Success);
+            Nav.NavigateTo("/invoices/list");
         }
     }
 }

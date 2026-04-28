@@ -14,14 +14,17 @@ namespace Invoices.Blazor.Pages.Persons
         {
 
 
-            var created = await PersonService.CreateAsync(model);
+            var result = await PersonService.CreateAsync(model);
 
-            if (created != null)
+            if (!result.Success)
             {
-                Snackbar.Add(T("PersonAdded"), Severity.Success);
-                Nav.NavigateTo("/subjects/list");
+                Snackbar.Add(T("CreateFailed"), Severity.Error);
                 return;
             }
+            Snackbar.Add(T("PersonAdded"), Severity.Success);
+            Nav.NavigateTo("/subjects/list");
+            return;
+            
         }
     }
 }
