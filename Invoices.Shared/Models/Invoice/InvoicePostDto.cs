@@ -78,7 +78,7 @@ namespace Invoices.Shared.Models.Invoice
         /// VAT rate (percentage).
         /// </summary>
         [Range(0, 100, ErrorMessage = "VAT must be between 0 and 100.")]
-        public int Vat { get; set; }
+        public decimal Vat { get; set; }
 
         /// <summary>
         /// Optional note attached to the invoice.
