@@ -117,7 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DueDate" xml:space="preserve">
+    <value>Datum splatnosti</value>
+  </data>
+  <data name="InvoiceNumber" xml:space="preserve">
+    <value>Číslo faktury</value>
+  </data>
+  <data name="IssuedDate" xml:space="preserve">
+    <value>Datum vystavení</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Poznámka</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Cena</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Produkt</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Uložit fakturu</value>
+  </data>
+  <data name="Vat" xml:space="preserve">
+    <value>DPH</value>
   </data>
 </root>

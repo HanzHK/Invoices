@@ -6,6 +6,7 @@ using Invoices.Shared.Models.Invoice;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
+using System.Globalization;
 namespace Invoices.Blazor.Components.Invoice.Form
 {
     public partial class InvoiceForm
@@ -19,6 +20,7 @@ namespace Invoices.Blazor.Components.Invoice.Form
         private MudForm? form;
         private FormValidator Validator = default!;
 
+        private static readonly CultureInfo CzechCulture = new CultureInfo("cs-CZ");
 
         protected override void OnInitialized()
         {

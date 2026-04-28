@@ -117,8 +117,36 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DueDate" xml:space="preserve">
+    <value>Due Date</value>
+    <comment>Payment due date</comment>
+  </data>
+  <data name="InvoiceNumber" xml:space="preserve">
+    <value>Invoice Number</value>
+    <comment>Sequential invoice identifier, numbers only, max 50 chars</comment>
+  </data>
+  <data name="IssuedDate" xml:space="preserve">
+    <value>Issue Date</value>
+    <comment>Date when the invoice was issued</comment>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Note</value>
+    <comment>Optional note attached to the invoice, max 500 chars</comment>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+    <comment>Invoice price excluding VAT, max 999999999</comment>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+    <comment>Name of the product or service, max 200 chars</comment>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
     <comment>Save label for button</comment>
+  </data>
+  <data name="Vat" xml:space="preserve">
+    <value>VAT</value>
+    <comment>VAT rate in percent, 0-100</comment>
   </data>
 </root>
