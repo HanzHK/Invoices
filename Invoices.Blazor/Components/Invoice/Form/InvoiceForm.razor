@@ -1,5 +1,6 @@
 ﻿@using Invoices.Blazor.Components.Infrastructure.Localization
 @using Invoices.Blazor.InputHandlers
+@using Invoices.Shared.Models.Person
 @inherits LocalizationComponentBase
 <MudForm @ref="form" Model="Invoice">
     <MudGrid Spacing="8">
@@ -17,6 +18,27 @@
                                           Validator.MaxLength("InvoiceNumber", 50)
                                     )" />
             </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudAutocomplete T="PersonDto"
+                             Label="@T("Seller")"
+                             Variant="Variant.Outlined"
+                             SearchFunc="SearchPersons"
+                             ToStringFunc="@(p => p == null ? "" : $"{p.Name} ({p.IdentificationNumber})")"
+                             ValueChanged="@((PersonDto p) => Invoice.Seller.Id = p.PersonId)"
+                             Required="true" />
+
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudAutocomplete T="PersonDto"
+                             Label="@T("Buyer")"
+                             Variant="Variant.Outlined"
+                             SearchFunc="SearchPersons"
+                             ToStringFunc="@(p => p == null ? "" : $"{p.Name} ({p.IdentificationNumber})")"
+                             ValueChanged="@((PersonDto p) => Invoice.Buyer.Id = p.PersonId)"
+                             Required="true" />
+        </MudItem>
 
         <MudItem xs="12" md="6">
 
