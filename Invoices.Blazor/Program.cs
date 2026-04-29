@@ -28,18 +28,10 @@ namespace Invoices.Blazor
             // Configure HttpClient with custom JsonSerializerOptions
             builder.Services.AddScoped(sp =>
             {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                options.Converters.Add(new JsonStringEnumConverter(namingPolicy: null, allowIntegerValues: false));
-
                 var client = new HttpClient
                 {
                     BaseAddress = new Uri("https://invoices-e9beeabjdgf5afcr.polandcentral-01.azurewebsites.net")
                 };
-
-                // attach options to client via extension
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 return client;
             });
@@ -81,11 +73,11 @@ namespace Invoices.Blazor
             // Register API services
             builder.Services.AddApiServices();
 
-            // Register ApiResultHandler (required for PersonService + InvoiceService)
-            builder.Services.AddScoped<ApiResultHandler>();
-
             // Register shared JsonSerializerOptions (Country + DateOnly + DateOnly?)
             builder.Services.AddSharedJsonOptions();
+
+            // Register ApiResultHandler (required for PersonService + InvoiceService)
+            builder.Services.AddScoped<ApiResultHandler>();
 
             var host = builder.Build();
 

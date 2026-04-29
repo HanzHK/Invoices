@@ -1,52 +1,28 @@
 ﻿using Invoices.Shared.Results;
-using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace Invoices.Blazor.Infrastructure
 {
     /// <summary>
-    /// Delegating handler that provides unified error handling for all HTTP requests.
-    /// Converts HTTP responses and exceptions into <see cref="OperationResult{T}"/>
-    /// to ensure consistent behavior across the Blazor application.
+    /// Centralized HTTP handler for all API communication.
+    /// Wraps HttpClient and converts all responses and exceptions
+    /// into <see cref="OperationResult{T}"/> for consistent error handling
+    /// across the entire Blazor application.
     /// </summary>
-    public class ApiResultHandler : DelegatingHandler
+    public class ApiResultHandler
     {
+        private readonly HttpClient _http;
         private readonly JsonSerializerOptions _json;
 
         /// <summary>
         /// Initializes a new instance of <see cref="ApiResultHandler"/>.
-        /// The handler uses shared <see cref="JsonSerializerOptions"/> to ensure
-        /// consistent serialization behavior across the application.
+        /// Both HttpClient and JsonSerializerOptions are injected via DI.
         /// </summary>
-        public ApiResultHandler(JsonSerializerOptions json)
+        public ApiResultHandler(HttpClient http, JsonSerializerOptions json)
         {
+            _http = http;
             _json = json;
-        }
-
-        /// <summary>
-        /// Sends an HTTP request and catches network-level exceptions.
-        /// If an exception occurs, a synthetic <see cref="HttpResponseMessage"/>
-        /// with status 503 (ServiceUnavailable) is returned.
-        /// </summary>
-        protected override async Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            try
-            {
-                return await base.SendAsync(request, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                var response = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
-                {
-                    ReasonPhrase = ex.Message
-                };
-
-                response.Headers.Add("X-Exception", ex.GetType().Name);
-                return response;
-            }
         }
 
         /// <summary>
@@ -59,7 +35,7 @@ namespace Invoices.Blazor.Infrastructure
 
             try
             {
-                response = await SendAsync(request, CancellationToken.None);
+                response = await _http.SendAsync(request);
             }
             catch (Exception ex)
             {
@@ -105,7 +81,6 @@ namespace Invoices.Blazor.Infrastructure
             {
                 Content = JsonContent.Create(body, options: _json)
             };
-
             return ExecuteAsync<T>(request);
         }
 
@@ -118,7 +93,6 @@ namespace Invoices.Blazor.Infrastructure
             {
                 Content = JsonContent.Create(body, options: _json)
             };
-
             return ExecuteAsync<T>(request);
         }
 
