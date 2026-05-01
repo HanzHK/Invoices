@@ -1,0 +1,45 @@
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@using Invoices.Shared.Models.Invoice
+@inherits LocalizationComponentBase
+
+<MudTable Items="@Items"
+          Hover="true"
+          Dense="false"
+          Bordered="true"
+          Striped="true"
+          Elevation="1"
+          FixedHeader="true">
+    <ColGroup>
+        <col style="width: 8%;" />
+        <col style="width: 12%;" />
+        <col style="width: 12%;" />
+        <col style="width: 10%;" />
+        <col style="width: 10%;" />
+        <col style="width: 18%;" />
+        <col style="width: 8%;" />
+        <col style="width: 6%;" />
+        <col style="width: 16%;" />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>@T("InvoiceNumber")</MudTh>
+        <MudTh>@T("Seller")</MudTh>
+        <MudTh>@T("Buyer")</MudTh>
+        <MudTh>@T("IssuedDate")</MudTh>
+        <MudTh>@T("DueDate")</MudTh>
+        <MudTh>@T("Product")</MudTh>
+        <MudTh>@T("Price")</MudTh>
+        <MudTh>@T("Vat")</MudTh>
+        <MudTh>@T("Actions")</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.InvoiceNumber</MudTd>
+        <MudTd>@context.Seller.Name</MudTd>
+        <MudTd>@context.Buyer.Name</MudTd>
+        <MudTd>@context.Issued.ToString("dd.MM.yyyy")</MudTd>
+        <MudTd>@context.DueDate.ToString("dd.MM.yyyy")</MudTd>
+        <MudTd>@context.Product</MudTd>
+        <MudTd>@context.Price.ToString("N2", CzechCulture) Kč</MudTd>
+        <MudTd>@context.Vat %</MudTd>
+        <MudTd></MudTd>
+    </RowTemplate>
+</MudTable>
