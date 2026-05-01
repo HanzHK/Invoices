@@ -7,15 +7,16 @@
             <MudItem xs="12" md="12">
         <MudTextField Value="@Invoice.InvoiceNumber"
                       ValueChanged="@((string v) =>
-                                          Invoice.InvoiceNumber = NumbersInputHandler.Handle(v, new[] { 50 }))"
+                                          Invoice.InvoiceNumber = NumbersInputHandler.Handle(v, new[] { 9 }))"
                       Label="@T("InvoiceNumber")"
                       Required="true"
                       Immediate="true"
+                          Disabled="IsEdit"
                           Variant="Variant.Outlined"
                       InputType="InputType.Number"
                       Validation="@Validator.ValidateAll(
                                           Validator.Required("InvoiceNumber"),
-                                          Validator.MaxLength("InvoiceNumber", 50)
+                                          Validator.MaxLength("InvoiceNumber", 9)
                                     )" />
             </MudItem>
 
@@ -25,7 +26,7 @@
                              Variant="Variant.Outlined"
                              SearchFunc="SearchPersons"
                              ToStringFunc="@(p => p == null ? "" : $"{p.Name} ({p.IdentificationNumber})")"
-                             ValueChanged="@((PersonDto p) => Invoice.Seller.Id = p.PersonId)"
+                             ValueChanged="@((PersonDto p) => { if (p != null) Invoice.Seller.Id = p.PersonId; })"
                              Required="true" />
 
         </MudItem>
@@ -36,7 +37,7 @@
                              Variant="Variant.Outlined"
                              SearchFunc="SearchPersons"
                              ToStringFunc="@(p => p == null ? "" : $"{p.Name} ({p.IdentificationNumber})")"
-                             ValueChanged="@((PersonDto p) => Invoice.Buyer.Id = p.PersonId)"
+                             ValueChanged="@((PersonDto p) => { if (p != null) Invoice.Buyer.Id = p.PersonId; })"
                              Required="true" />
         </MudItem>
 
@@ -108,6 +109,7 @@
                          Culture="@CzechCulture"
                          Adornment="Adornment.End"
                          AdornmentText="%"
+                             Step="1"
                          Variant="Variant.Outlined" />
         </MudItem>
 
@@ -134,12 +136,12 @@
 
         <MudItem xs="12" md="12">
 
-        <MudButton Color="Color.Primary"
-                   Variant="Variant.Filled"
-                           FullWidth="true"
-                   OnClick="Submit">
-            @T("Save")
-        </MudButton>
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       FullWidth="true"
+                       OnClick="Submit">
+                @(IsEdit? T("Update") : T("Save"))
+            </MudButton>
         </MudItem>
 
         </MudGrid>

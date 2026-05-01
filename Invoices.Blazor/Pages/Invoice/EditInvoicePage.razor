@@ -1,11 +1,9 @@
-﻿@page "/invoices/add"
+﻿@page "/invoices/edit/{Id:int}"
 @using Invoices.Blazor.Components.Infrastructure.Localization
 @using Invoices.Blazor.Components.Invoice.Form
 @inherits LocalizationPageBase
 
 <MudPaper Class="pa-16 ma-8">
-    <MudText Typo="Typo.h5">@T("CreateInvoiceTitle")</MudText>
-
-    <InvoiceForm Invoice="invoice" OnSubmit="CreateInvoiceAsync" IsEdit="false" />
-
+    <MudText Typo="Typo.h5">@T("EditInvoiceTitle")</MudText>
+    <InvoiceForm Invoice="invoice" OnSubmit="UpdateInvoiceAsync" IsEdit="true" />
 </MudPaper>

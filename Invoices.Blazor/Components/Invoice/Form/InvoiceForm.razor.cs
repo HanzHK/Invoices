@@ -19,6 +19,7 @@ namespace Invoices.Blazor.Components.Invoice.Form
         [Inject] public FormFieldBlurTracker BlurTracker { get; set; } = default!;
         [Inject] public IStringLocalizerFactory Factory { get; set; } = default!;
         [Inject] public PersonService PersonService { get; set; } = default!;
+        [Parameter] public bool IsEdit { get; set; }
 
         private MudForm? form;
         private FormValidator Validator = default!;

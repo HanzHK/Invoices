@@ -10,7 +10,11 @@ namespace Invoices.Blazor.Pages.Invoice
    
     public partial class CreateInvoicePage : LocalizationPageBase
     {
-        private InvoicePostDto invoice = new();
+        private InvoicePostDto invoice = new()
+        {
+            Issued = DateOnly.FromDateTime(DateTime.Today),
+            DueDate = DateOnly.FromDateTime(DateTime.Today)
+        };
         [Inject] public InvoiceService InvoiceService { get; set; } = default!;
 
         private async Task CreateInvoiceAsync(InvoicePostDto model)
@@ -24,5 +28,6 @@ namespace Invoices.Blazor.Pages.Invoice
             Snackbar.Add(T("InvoiceAdded"), Severity.Success);
             Nav.NavigateTo("/invoices/list");
         }
+
     }
 }
