@@ -8,6 +8,7 @@
           Bordered="true"
           Striped="true"
           Elevation="1"
+          T="InvoiceGetDto"
           FixedHeader="true">
     <ColGroup>
         <col style="width: 8%;" />
@@ -21,14 +22,14 @@
         <col style="width: 16%;" />
     </ColGroup>
     <HeaderContent>
-        <MudTh>@T("InvoiceNumber")</MudTh>
-        <MudTh>@T("Seller")</MudTh>
-        <MudTh>@T("Buyer")</MudTh>
-        <MudTh>@T("IssuedDate")</MudTh>
-        <MudTh>@T("DueDate")</MudTh>
-        <MudTh>@T("Product")</MudTh>
-        <MudTh>@T("Price")</MudTh>
-        <MudTh>@T("Vat")</MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.InvoiceNumber)">@T("InvoiceNumber")</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Seller.Name)">@T("Seller")</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Buyer.Name)">@T("Buyer")</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Issued)">@T("IssuedDate")</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.DueDate)">@T("DueDate")</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Product)">@T("Product")</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Price)">@T("Price")</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Vat)">@T("Vat")</MudTableSortLabel></MudTh>
         <MudTh>@T("Actions")</MudTh>
     </HeaderContent>
     <RowTemplate>
