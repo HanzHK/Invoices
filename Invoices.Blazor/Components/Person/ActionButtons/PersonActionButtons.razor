@@ -1,26 +1,13 @@
-﻿@using Invoices.Blazor.Components.Person.ActionButtons
-@inherits PersonActionButtonsBase
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@inherits LocalizationComponentBase
 
 <div class="d-flex gap-2">
-    @if (ShowDetail)
-    {
-        <ActionButton Icon="@Icons.Material.Filled.Visibility"
-                      Tooltip="@T("DetailTooltip")"
-                      OnClick="() => OnDetail.InvokeAsync(PersonModel)">
-            @T("Detail")
-        </ActionButton>
-    }
-
-    <ActionButton Icon="@Icons.Material.Filled.Edit"
-                  Tooltip="@T("EditTooltip")"
-                  OnClick="() => OnEdit.InvokeAsync(PersonModel)">
-        @T("Edit")
-    </ActionButton>
-
-    <ActionButton Icon="@Icons.Material.Filled.Delete"
-                  Color="Color.Error"
-                  Tooltip="@T("DeleteTooltip")"
-                  OnClick="() => OnDelete.InvokeAsync(PersonModel)">
-        @T("Delete")
-    </ActionButton>
+    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                   Color="Color.Primary"
+                   Title="@T("EditTooltip")"
+                   OnClick="@(() => Nav.NavigateTo($"/subjects/edit/{PersonModel.PersonId}"))" />
+    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                   Color="Color.Error"
+                   Title="@T("DeleteTooltip")"
+                   OnClick="Delete" />
 </div>

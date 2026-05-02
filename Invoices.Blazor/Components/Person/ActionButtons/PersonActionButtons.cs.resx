@@ -117,20 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Delete" xml:space="preserve">
-    <value>Smazat</value>
+  <data name="DeleteFailed" xml:space="preserve">
+    <value>Nepodařilo se smazat subjekt</value>
   </data>
   <data name="DeleteTooltip" xml:space="preserve">
     <value>Smazat subjekt</value>
-  </data>
-  <data name="Detail" xml:space="preserve">
-    <value>Detail</value>
-  </data>
-  <data name="DetailTooltip" xml:space="preserve">
-    <value>Zobrazit detail</value>
-  </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Upravit</value>
   </data>
   <data name="EditTooltip" xml:space="preserve">
     <value>Upravit subjekt</value>

@@ -34,23 +34,5 @@ namespace Invoices.Blazor.Pages.Persons
 
             person = result.Value!;
         }
-
-        /// <summary>
-        /// Navigates back to the list after a delete action.
-        /// Actual deletion is handled elsewhere.
-        /// </summary>
-        private Task DeletePerson(PersonDto person)
-        {
-            Nav.NavigateTo("/subjects/list");
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Navigates to the edit page for the selected person.
-        /// </summary>
-        private void EditPerson(PersonDto person)
-        {
-            Nav.NavigateTo($"/subjects/edit/{person.PersonId}");
-        }
     }
 }

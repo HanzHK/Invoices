@@ -6,8 +6,5 @@ namespace Invoices.Blazor.Components.Person.Detail
     public partial class PersonDetail
     {
         [Parameter] public PersonDto Person { get; set; } = default!;
-
-        [Parameter] public EventCallback<PersonDto> OnEdit { get; set; }
-        [Parameter] public EventCallback<PersonDto> OnDelete { get; set; }
     }
 }

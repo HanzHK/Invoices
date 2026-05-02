@@ -117,25 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-    <comment>Button label for deleting a subject</comment>
+  <data name="DeleteFailed" xml:space="preserve">
+    <value>Failed to delete person</value>
+    <comment>Snackbar error after failed deletion</comment>
   </data>
   <data name="DeleteTooltip" xml:space="preserve">
     <value>Delete subject</value>
     <comment>Tooltip shown when hovering the delete button</comment>
-  </data>
-  <data name="Detail" xml:space="preserve">
-    <value>Detail</value>
-    <comment>Button label for opening the detail view</comment>
-  </data>
-  <data name="DetailTooltip" xml:space="preserve">
-    <value>Show detail</value>
-    <comment>Tooltip shown when hovering the detail button</comment>
-  </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
-    <comment>Button label for editing a subject</comment>
   </data>
   <data name="EditTooltip" xml:space="preserve">
     <value>Edit subject</value>

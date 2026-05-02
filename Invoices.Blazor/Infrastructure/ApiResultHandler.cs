@@ -98,15 +98,34 @@ namespace Invoices.Blazor.Infrastructure
 
         /// <summary>
         /// Sends a DELETE request and returns the result as <see cref="OperationResult"/>.
+        /// Handles 204 No Content responses correctly without attempting JSON deserialization.
         /// </summary>
         public async Task<OperationResult> DeleteAsync(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Delete, url);
-            var result = await ExecuteAsync<object?>(request);
 
-            return result.Success
-                ? OperationResult.Ok()
-                : OperationResult.Fail(result.Error!, result.ErrorCode, result.StatusCode, result.Exception);
+            try
+            {
+                var response = await _http.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                    return OperationResult.Ok();
+
+                var errorText = await response.Content.ReadAsStringAsync();
+                return OperationResult.Fail(
+                    error: string.IsNullOrWhiteSpace(errorText) ? "API returned an error." : errorText,
+                    errorCode: "API_ERROR",
+                    statusCode: response.StatusCode
+                );
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.Fail(
+                    error: "Unexpected network error.",
+                    errorCode: "NETWORK_EXCEPTION",
+                    exception: ex
+                );
+            }
         }
     }
 }

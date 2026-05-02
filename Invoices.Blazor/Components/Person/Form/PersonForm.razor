@@ -1,6 +1,6 @@
 ﻿<MudForm @ref="form" Model="Person">
-    <MudStack Spacing="8">
-
+    <MudGrid Spacing="8">
+        <MudItem xs="12" md="12">
         <MudTextField Value="@Person.Name"
                       ValueChanged="@((string v) => 
                             Person.Name = TextInputHandler.Handle(v, new TextInputOptions {
@@ -12,17 +12,20 @@
                             }))"
                       Label="@L["Name"]"
                       Required="true"
+                      Variant="Variant.Outlined"
                       Immediate="true"
                       Validation="@Validator.ValidateAll(
                             Validator.Required("Name"),
                             Validator.MaxLength("Name", 50)
                       )" />
-
+</MudItem>
+                      <MudItem xs="12" md="6">
         <MudTextField Value="@Person.IdentificationNumber"
                       ValueChanged="@((string v) => 
                             Person.IdentificationNumber = NumbersInputHandler.Handle(v, new[] { 8 }))"
                       Label="@L["IdentificationNumber"]"
                       Required="true"
+                      Variant="Variant.Outlined"
                       Immediate="true"
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
@@ -34,7 +37,8 @@
                       OnFocus="@(() => BlurTracker.MarkFocused("IdentificationNumber"))"
                       OnBlur="@(() => BlurTracker.MarkBlurred("IdentificationNumber"))"
                       Disabled="IsEdit" />
-
+</MudItem>
+<MudItem xs="12" md="6">
         <MudTextField Value="@Person.TaxNumber"
                       ValueChanged="@((string v) =>
                             Person.TaxNumber = TextInputHandler.Handle(v, new TextInputOptions {
@@ -46,6 +50,7 @@
                             }))"
                       Label="@L["TaxNumber"]"
                       Required="true"
+                      Variant="Variant.Outlined"
                       Immediate="true"
                       Validation="@Validator.ValidateAll(
                             Validator.Required("TaxNumber"),
@@ -53,13 +58,15 @@
                       )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Receipt" />
-
+</MudItem>
+<MudItem xs="12" md="6">
         <MudTextField Value="@Person.AccountNumber"
                       ValueChanged="@((string v) =>
                             Person.AccountNumber = NumbersInputHandler.Handle(v, new[] { 10 }))"
                       Label="@L["AccountNumber"]"
                       Required="true"
                       Immediate="true"
+                      Variant="Variant.Outlined"
                       InputType="InputType.Text"
                         Validation="@Validator.ValidateAll(
                             Validator.Required("AccountNumber"),                       
@@ -71,13 +78,15 @@
                       AdornmentIcon="@Icons.Material.Filled.AccountBalance"
                       OnFocus="@(() => BlurTracker.MarkFocused("AccountNumber"))"
                       OnBlur="@(() => BlurTracker.MarkBlurred("AccountNumber"))" />
-
+</MudItem>
+<MudItem xs="12" md="6">
         <MudTextField Value="@Person.BankCode"
                       ValueChanged="@((string v) =>
                           Person.BankCode = NumbersInputHandler.DigitsOnly(v))"
                       Label="@L["BankCode"]"
                       Required="true"
                       Immediate="true"
+                      Variant="Variant.Outlined"
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
                           Validator.Required("BankCode"),
@@ -88,13 +97,15 @@
                       AdornmentIcon="@Icons.Material.Filled.Numbers"
                       OnFocus="@(() => BlurTracker.MarkFocused("BankCode"))"
                       OnBlur="@(() => BlurTracker.MarkBlurred("BankCode"))" />
-
+</MudItem>
+<MudItem xs="12" md="6">
         <MudTextField  Value="@Person.Iban"
                       ValueChanged="@((string v) => 
                       Person.Iban = NumbersInputHandler.Handle(v, new[] { 24 }))"
                       Label="@L["Iban"]"
                       Required="true"
                       Immediate="true"
+                      Variant="Variant.Outlined"
                       Validation="@Validator.ValidateAll(
                               Validator.Required("Iban"),
                               Validator.DigitsExactLength(() => Person.Iban, "Iban", 24)
@@ -103,12 +114,14 @@
                       AdornmentIcon="@Icons.Material.Filled.Language"
                       OnFocus="@(() => BlurTracker.MarkFocused("Iban"))"
                       OnBlur="@(() => BlurTracker.MarkBlurred("Iban"))" />
-
+</MudItem>
+<MudItem xs="12" md="6">
         <MudTextField Value="@Person.Telephone"
                       ValueChanged="@((string v) => Person.Telephone = NumbersInputHandler.Handle(v, new[] { 3, 3, 3 }))"
                       Label="@L["Telephone"]"
                       Required="true"
                       Immediate="true"
+                      Variant="Variant.Outlined"
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
                               Validator.Required("Telephone"),
@@ -118,16 +131,19 @@
                       AdornmentIcon="@Icons.Material.Filled.Phone"
                       OnFocus="@(() => BlurTracker.MarkFocused("Telephone"))"
                       OnBlur="@(() => BlurTracker.MarkBlurred("Telephone"))" />
-
+</MudItem>
+<MudItem xs="12" md="6">
         <MudTextField @bind-Value="Person.Mail"
                       Label="@L["Mail"]"
                       Required="true"
                       Immediate="true"
+                      Variant="Variant.Outlined"
                       InputType="InputType.Email"
                       Validation=@Validator.Required("Mail")
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Email" />
-
+</MudItem>
+<MudItem xs="12" md="6">
         <MudTextField Value="@Person.Street"
                       ValueChanged="@((string v) =>
                             Person.Street = TextInputHandler.Handle(v, new TextInputOptions {
@@ -140,19 +156,22 @@
                       Label="@L["Street"]"
                       Required="true"
                       Immediate="true"
+                      Variant="Variant.Outlined"
                       Validation="@Validator.ValidateAll(
                             Validator.Required("Street"),
                             Validator.MaxLength("Street", 80)
                       )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.Home" />
-
+</MudItem>
+<MudItem xs="12" md="6">
         <MudTextField Value="@Person.Zip"
                       ValueChanged="@((string v) =>
                             Person.Zip = NumbersInputHandler.Handle(v, new[] { 3, 2 }))"
                       Label="@L["Zip"]"
                       Required="true"
                       Immediate="true"
+                      Variant="Variant.Outlined"
                       InputType="InputType.Text"
                       Validation="@Validator.ValidateAll(
                             Validator.Required("Zip"),
@@ -160,8 +179,9 @@
                       )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.MarkunreadMailbox" />
+</MudItem>
 
-
+<MudItem xs="12" md="6">
         <MudTextField Value="@Person.City"
                       ValueChanged="@((string v) => 
                             Person.City = TextInputHandler.Handle(v, new TextInputOptions {
@@ -174,19 +194,22 @@
                       Label="@L["City"]"
                       Required="true"
                       Immediate="true"
+                      Variant="Variant.Outlined"
                       Validation="@Validator.ValidateAll(
                             Validator.Required("City"),
                             Validator.MaxLength("City", 50)
                       )"
                       Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Filled.LocationCity" />
-
+</MudItem>
+<MudItem xs="12" md="6">
 <MudSelect T="Country ?"
            @ref="countrySelect"
            Label="@L["Country"]"
            @bind-Value="Person.Country"
            Required="true"
            Immediate="true"
+           Variant="Variant.Outlined"
            Validation="@(Validator.Required<Country?>("Country"))"
            Adornment="Adornment.Start"
            AdornmentIcon="@Icons.Material.Filled.Public"
@@ -199,7 +222,8 @@
         <MudSelectItem T="Country ?" Value="country">@GetCountryAlias(country)</MudSelectItem>
     }
 </MudSelect>
-
+</MudItem>
+<MudItem xs="12" md="12">
  <MudTextField Value="@Person.Note"
               ValueChanged="@((string v) =>
                     Person.Note = TextInputHandler.Handle(v, new TextInputOptions {
@@ -211,18 +235,20 @@
                     }))"
               Label="@L["Note"]"
               Immediate="true"
+              Variant="Variant.Outlined"
               Validation="@Validator.ValidateAll(
                     Validator.MaxLength("Note", 500)
               )"
               Adornment="Adornment.Start"
               AdornmentIcon="@Icons.Material.Filled.Note" />
-
-
+</MudItem>
+<MudItem xs="12" md="12">
         <MudButton Color="Color.Primary"
+                   FullWidth="true"
                    Variant="Variant.Filled"
                    OnClick="SubmitInternal">
             @(IsEdit ? @L["Save"] : @L["Create"])
         </MudButton>
-
-    </MudStack>
+</MudItem>
+    </MudGrid>
 </MudForm>

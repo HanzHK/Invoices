@@ -4,13 +4,14 @@
 @page "/subjects/list"
 
 <MudPaper Class="pa-16 ma-8">
-
-    <MudText Typo="Typo.h5">@T("PersonListTitle")</MudText>
-
-    <PersonList Items="persons"
-                OnEdit="EditPerson"
-                OnDelete="DeletePerson"
-                OnDetail="ViewPersonDetails" />
-
-
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+        <MudText Typo="Typo.h5">@T("PersonListTitle")</MudText>
+        <MudButton Color="Color.Primary"
+                   Variant="Variant.Filled"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   Href="/subjects/add">
+            @T("AddPerson")
+        </MudButton>
+    </MudStack>
+    <PersonList Items="persons" />
 </MudPaper>

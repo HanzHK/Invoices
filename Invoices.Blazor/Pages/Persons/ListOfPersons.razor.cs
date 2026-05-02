@@ -39,33 +39,5 @@ namespace Invoices.Blazor.Pages.Persons
             persons = result.Value!;
         }
 
-        /// <summary>
-        /// Removes a person from the local list after a delete action.
-        /// Actual deletion is handled elsewhere.
-        /// </summary>
-        private Task DeletePerson(PersonDto person)
-        {
-            persons = persons!
-                .Where(p => p.PersonId != person.PersonId)
-                .ToList();
-
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Navigates to the edit page for the selected person.
-        /// </summary>
-        private void EditPerson(PersonDto person)
-        {
-            Nav.NavigateTo($"/subjects/edit/{person.PersonId}");
-        }
-
-        /// <summary>
-        /// Navigates to the detail page for the selected person.
-        /// </summary>
-        private void ViewPersonDetails(PersonDto person)
-        {
-            Nav.NavigateTo($"subjects/detail/{person.PersonId}");
-        }
     }
 }

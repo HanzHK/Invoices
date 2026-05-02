@@ -120,8 +120,14 @@
   <data name="Actions" xml:space="preserve">
     <value>Akce</value>
   </data>
+  <data name="City" xml:space="preserve">
+    <value>Město</value>
+  </data>
   <data name="Id" xml:space="preserve">
     <value>ID</value>
+  </data>
+  <data name="IdentificationNumber" xml:space="preserve">
+    <value>IČO</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Jméno</value>

@@ -4,38 +4,33 @@
 
 <MudTable Items="@Items"
           Hover="true"
+          OnRowClick="@((TableRowClickEventArgs<PersonDto> args) => Nav.NavigateTo($"/subjects/detail/{args.Item.PersonId}"))"
+          RowClass="cursor-pointer"
           Dense="false"
           Bordered="true"
           Striped="true"
           Elevation="1"
+          T="PersonDto"
           FixedHeader="true"
-          Class="person-table">
-<ColGroup>
-        <col style="width: 60px;" />
-        <col style="width: 60%;" />
-        <col style="width: 200px;" />
+          HeaderClass="mud-theme-primary">
+    <ColGroup>
+        <col style="width: 20%;" />
+        <col style="width: 30%;" />
+        <col style="width: 20%;" />
     </ColGroup>
     <HeaderContent>
-        <MudTh class="col-id">@T("Id")</MudTh>
-        <MudTh class="col-name">@T("Name")</MudTh>
-        <MudTh class="col-actions">@T("Actions")</MudTh>
+        <MudTh><MudTableSortLabel T="PersonDto" SortBy="new Func<PersonDto, object>(x => x.IdentificationNumber)"><strong>@T("IdentificationNumber")</strong></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="PersonDto" SortBy="new Func<PersonDto, object>(x => x.Name)"><strong>@T("Name")</strong></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="PersonDto" SortBy="new Func<PersonDto, object>(x => x.City)"><strong>@T("City")</strong></MudTableSortLabel></MudTh>
+        <MudTh><strong>@T("Actions")</strong></MudTh>
     </HeaderContent>
-
     <RowTemplate>
-        <MudTd class="col-id">@context.PersonId</MudTd>
-
-        <MudTd class="col-name">
-            @context.Name
-        </MudTd>
-
-        <MudTd class="col-actions">
+        <MudTd>@context.IdentificationNumber</MudTd>
+        <MudTd>@context.Name</MudTd>
+        <MudTd>@context.City</MudTd>
+        <MudTd>
             <PersonActionButtons PersonModel="@context"
-                                 OnEdit="OnEdit"
-                                 OnDelete="OnDelete"
-                                 OnDetail="OnDetail" />
-
+                                 OnDelete="HandleDelete" />
         </MudTd>
     </RowTemplate>
-
 </MudTable>
-
