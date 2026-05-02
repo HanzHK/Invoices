@@ -25,10 +25,12 @@ namespace Invoices.Blazor.Components.Invoice.Form
         private FormValidator Validator = default!;
         private static readonly CultureInfo CzechCulture = new CultureInfo("cs-CZ");
         private List<PersonDto> _persons = new();
+        private PersonDto? _seller;
+        private PersonDto? _buyer;
 
         protected override void OnInitialized()
         {
-            base.OnInitialized(); // zavolá InitializeLanguageReactivity z LocalizationComponentBase
+            base.OnInitialized(); 
             Validator = new FormValidator(Factory, BlurTracker, typeof(InvoiceForm));
         }
 
@@ -37,6 +39,12 @@ namespace Invoices.Blazor.Components.Invoice.Form
             var result = await PersonService.GetAllAsync();
             if (result.Success)
                 _persons = result.Value ?? new();
+
+            if (IsEdit)
+            {
+                _seller = _persons.FirstOrDefault(p => p.PersonId == Invoice.Seller.Id);
+                _buyer = _persons.FirstOrDefault(p => p.PersonId == Invoice.Buyer.Id);
+            }
         }
         private async Task Submit()
         {

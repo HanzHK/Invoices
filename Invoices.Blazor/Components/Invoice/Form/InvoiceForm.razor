@@ -26,6 +26,7 @@
                              Variant="Variant.Outlined"
                              SearchFunc="SearchPersons"
                              ToStringFunc="@(p => p == null ? "" : $"{p.Name} ({p.IdentificationNumber})")"
+                             Value="_seller"
                              ValueChanged="@((PersonDto p) => { if (p != null) Invoice.Seller.Id = p.PersonId; })"
                              Required="true" />
 
@@ -37,6 +38,7 @@
                              Variant="Variant.Outlined"
                              SearchFunc="SearchPersons"
                              ToStringFunc="@(p => p == null ? "" : $"{p.Name} ({p.IdentificationNumber})")"
+                                Value="_buyer"
                              ValueChanged="@((PersonDto p) => { if (p != null) Invoice.Buyer.Id = p.PersonId; })"
                              Required="true" />
         </MudItem>
