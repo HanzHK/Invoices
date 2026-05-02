@@ -1,0 +1,13 @@
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@inherits LocalizationComponentBase
+
+<div class="d-flex gap-2">
+    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                   Color="Color.Primary"
+                   Title="@T("EditTooltip")"
+                   OnClick="() => OnEdit.InvokeAsync(InvoiceModel)" />
+    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                   Color="Color.Error"
+                   Title="@T("DeleteTooltip")"
+                   OnClick="Delete" />
+</div>

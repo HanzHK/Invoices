@@ -1,15 +1,19 @@
 ﻿@using Invoices.Blazor.Components.Infrastructure.Localization
 @using Invoices.Shared.Models.Invoice
+@using Invoices.Blazor.Components.Invoice.ActionButtons
 @inherits LocalizationComponentBase
 
 <MudTable Items="@Items"
           Hover="true"
+          OnRowClick="@((TableRowClickEventArgs<InvoiceGetDto> args) => Nav.NavigateTo($"/invoices/detail/{args.Item.InvoiceId}"))"
+          RowClass="cursor-pointer"
           Dense="false"
           Bordered="true"
           Striped="true"
           Elevation="1"
           T="InvoiceGetDto"
-          FixedHeader="true">
+          FixedHeader="true"
+          HeaderClass="mud-theme-primary">
     <ColGroup>
         <col style="width: 8%;" />
         <col style="width: 12%;" />
@@ -22,15 +26,15 @@
         <col style="width: 16%;" />
     </ColGroup>
     <HeaderContent>
-        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.InvoiceNumber)">@T("InvoiceNumber")</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Seller.Name)">@T("Seller")</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Buyer.Name)">@T("Buyer")</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Issued)">@T("IssuedDate")</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.DueDate)">@T("DueDate")</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Product)">@T("Product")</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Price)">@T("Price")</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Vat)">@T("Vat")</MudTableSortLabel></MudTh>
-        <MudTh>@T("Actions")</MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.InvoiceNumber)"><strong>@T("InvoiceNumber")</strong></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Seller.Name)"><strong>@T("Seller")</strong></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Buyer.Name)"><strong>@T("Buyer")</strong></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Issued)"><strong>@T("IssuedDate")</strong></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.DueDate)"><strong>@T("DueDate")</strong></MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Product)"><strong>@T("Product")</strong></MudTableSortLabel></MudTh>
+        <MudTh Style="text-align: right"><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Price)"><strong>@T("Price")</strong></MudTableSortLabel></MudTh>
+        <MudTh Style="text-align: right"><MudTableSortLabel T="InvoiceGetDto" SortBy="new Func<InvoiceGetDto, object>(x => x.Vat)"><strong>@T("Vat")</strong></MudTableSortLabel></MudTh>
+        <MudTh><strong>@T("Actions")</strong></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd>@context.InvoiceNumber</MudTd>
@@ -39,8 +43,12 @@
         <MudTd>@context.Issued.ToString("dd.MM.yyyy")</MudTd>
         <MudTd>@context.DueDate.ToString("dd.MM.yyyy")</MudTd>
         <MudTd>@context.Product</MudTd>
-        <MudTd>@context.Price.ToString("N2", CzechCulture) Kč</MudTd>
-        <MudTd>@context.Vat %</MudTd>
-        <MudTd></MudTd>
+        <MudTd Style="text-align: right">@context.Price.ToString("N2", CzechCulture) Kč</MudTd>
+        <MudTd Style="text-align: right">@context.Vat %</MudTd>
+        <MudTd>
+            <InvoiceActionButtons InvoiceModel="context"
+                                  OnEdit="@((InvoiceGetDto i) => Nav.NavigateTo($"/invoices/edit/{i.InvoiceId}"))"
+                                  OnDelete="HandleDelete" />
+        </MudTd>
     </RowTemplate>
 </MudTable>
