@@ -1,0 +1,15 @@
+﻿@using Invoices.Blazor.Components.Invoice.Detail
+@using Invoices.Blazor.Components.Infrastructure.Localization
+@inherits LocalizationPageBase
+@page "/invoices/detail/{Id:int}"
+
+@if (invoice is null)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+    <MudPaper Class="pa-16 ma-8">
+        <InvoiceDetail Invoice="invoice" OnDelete="HandleDelete" />
+    </MudPaper>
+}
