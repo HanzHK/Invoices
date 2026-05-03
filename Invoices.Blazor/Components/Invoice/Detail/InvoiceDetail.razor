@@ -1,0 +1,70 @@
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@using Invoices.Blazor.Components.Invoice.ActionButtons
+@using Invoices.Blazor.Components.Person.SummaryCard
+@using Invoices.Shared.Models.Invoice
+@inherits LocalizationComponentBase
+
+<MudGrid Spacing="4">
+    <MudItem xs="12">
+        <MudPaper Class="pa-4" Elevation="1">
+            <MudGrid>
+                <MudItem xs="12" md="4">
+                    <MudText Typo="Typo.caption">@T("InvoiceNumber")</MudText>
+                    <MudText Typo="Typo.h6">@Invoice.InvoiceNumber</MudText>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudText Typo="Typo.caption">@T("IssuedDate")</MudText>
+                    <MudText Typo="Typo.h6">@Invoice.Issued.ToString("dd.MM.yyyy")</MudText>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudText Typo="Typo.caption">@T("DueDate")</MudText>
+                    <MudText Typo="Typo.h6">@Invoice.DueDate.ToString("dd.MM.yyyy")</MudText>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <PersonSummaryCard Title="@T("Seller")" Person="Invoice.Seller" />
+    </MudItem>
+
+    <MudItem xs="12" md="6">
+        <PersonSummaryCard Title="@T("Buyer")" Person="Invoice.Buyer" />
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudPaper Class="pa-4" Elevation="1">
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudText Typo="Typo.caption">@T("Product")</MudText>
+                    <MudText Typo="Typo.body1">@Invoice.Product</MudText>
+                </MudItem>
+                <MudItem xs="12" md="2">
+                    <MudText Typo="Typo.caption">@T("Price")</MudText>
+                    <MudText Typo="Typo.body1">@Invoice.Price.ToString("N2", CzechCulture) Kč</MudText>
+                </MudItem>
+                <MudItem xs="12" md="2">
+                    <MudText Typo="Typo.caption">@T("Vat")</MudText>
+                    <MudText Typo="Typo.body1">@Invoice.Vat %</MudText>
+                </MudItem>
+                <MudItem xs="12" md="2">
+                    <MudText Typo="Typo.caption">@T("Total")</MudText>
+                    <MudText Typo="Typo.body1">@((Invoice.Price * (1 + Invoice.Vat / 100m)).ToString("N2", CzechCulture)) Kč</MudText>
+                </MudItem>
+                @if (!string.IsNullOrWhiteSpace(Invoice.Note))
+                {
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.caption">@T("Note")</MudText>
+                        <MudText Typo="Typo.body1">@Invoice.Note</MudText>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" Class="d-flex justify-end gap-2">
+        <InvoiceActionButtons InvoiceModel="Invoice"
+                              OnEdit="@((InvoiceGetDto i) => Nav.NavigateTo($"/invoices/edit/{i.InvoiceId}"))"
+                              OnDelete="OnDelete" />
+    </MudItem>
+</MudGrid>
