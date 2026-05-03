@@ -1,0 +1,23 @@
+﻿@using Invoices.Blazor.Components.Infrastructure.Localization
+@inherits LocalizationComponentBase
+
+<MudCard Elevation="1">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Title</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText Typo="Typo.body1"><strong>@Person.Name</strong></MudText>
+        <MudText Typo="Typo.body2">@T("IdentificationNumber"): @Person.IdentificationNumber</MudText>
+        <MudText Typo="Typo.body2">@T("City"): @Person.City</MudText>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Text"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.OpenInNew"
+                   OnClick="@(() => Nav.NavigateTo($"/subjects/detail/{Person.PersonId}"))">
+            @T("ShowDetail")
+        </MudButton>
+    </MudCardActions>
+</MudCard>
