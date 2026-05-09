@@ -6,90 +6,76 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Invoices.Shared.Models;
 using Invoices.Shared.Models.Common;
-
 namespace Invoices.Shared.Models.Person
 {
     public class PersonDto
     {
         [JsonPropertyName("_id")]
         public int PersonId { get; set; }
-
         /// <summary>
-        /// Název společnosti nebo jméno fyzické osoby.
+        /// Company name or individual's full name.
         /// </summary>
-        [Required(ErrorMessage = "Jméno je povinné.")]
-        [StringLength(200, ErrorMessage = "Jméno nesmí být delší než 200 znaků.")]
+        [Required(ErrorMessage = "Name is required.")]
+        [StringLength(200, ErrorMessage = "Name must not exceed 200 characters.")]
         public string Name { get; set; } = "";
-
         /// <summary>
-        /// Identifikační číslo (IČO).
+        /// Business identification number (IČO).
         /// </summary>
-        [StringLength(8, MinimumLength = 8, ErrorMessage = "IČO musí mít 8 znaků.")]
-        [RegularExpression(@"^\d{8}$", ErrorMessage = "IČO musí být číslo o délce 8.")]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = "Identification number must be exactly 8 characters.")]
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "Identification number must be an 8-digit number.")]
         public string IdentificationNumber { get; set; } = "";
-
         /// <summary>
-        /// Daňové identifikační číslo (DIČ).
+        /// Tax identification number (DIČ).
         /// </summary>
-        [StringLength(12, ErrorMessage = "DIČ nesmí být delší než 12 znaků.")]
+        [StringLength(12, ErrorMessage = "Tax number must not exceed 12 characters.")]
         public string TaxNumber { get; set; } = "";
-
         /// <summary>
-        /// Číslo bankovního účtu.
+        /// Bank account number.
         /// </summary>
-        [RegularExpression(@"^\d{1,20}$", ErrorMessage = "Číslo účtu musí být číslo.")]
+        [RegularExpression(@"^\d{1,20}$", ErrorMessage = "Account number must be numeric.")]
         public string AccountNumber { get; set; } = "";
-
         /// <summary>
-        /// Kód banky.
+        /// Bank code.
         /// </summary>
-        [StringLength(4, ErrorMessage = "Kód banky má 4 znaky.")]
+        [StringLength(4, ErrorMessage = "Bank code must be 4 characters.")]
         public string BankCode { get; set; } = "";
-
         /// <summary>
-        /// IBAN - mezinárodní číslo účtu.
+        /// IBAN - International Bank Account Number.
         /// </summary>
-        [RegularExpression(@"^[A-Z0-9]{15,34}$", ErrorMessage = "IBAN musí být platný.")]
+        [RegularExpression(@"^[A-Z0-9]{15,34}$", ErrorMessage = "IBAN must be valid.")]
         public string Iban { get; set; } = "";
-
         /// <summary>
-        /// Telefonní číslo.
+        /// Phone number.
         /// </summary>
-        [Phone(ErrorMessage = "Telefonní číslo není platné.")]
+        [Phone(ErrorMessage = "Phone number is not valid.")]
         public string Telephone { get; set; } = "";
-
         /// <summary>
-        /// E-mailová adresa.
+        /// Email address.
         /// </summary>
-        [EmailAddress(ErrorMessage = "E-mail není platný.")]
+        [EmailAddress(ErrorMessage = "Email address is not valid.")]
         public string Mail { get; set; } = "";
-
         /// <summary>
-        /// Ulice a číslo popisné.
+        /// Street and house number.
         /// </summary>
         [StringLength(200)]
         public string Street { get; set; } = "";
-
         /// <summary>
-        /// PSČ - Poštovní Směrovací Číslo.
+        /// ZIP code.
         /// </summary>
-        [RegularExpression(@"^\d{3}\s?\d{2}$", ErrorMessage = "PSČ musí být ve formátu 12345 nebo 123 45.")]
+        [RegularExpression(@"^\d{3}\s?\d{2}$", ErrorMessage = "ZIP code must be in format 12345 or 123 45.")]
         public string Zip { get; set; } = "";
-
         /// <summary>
-        /// Město (nebo Obec).
+        /// City or municipality.
         /// </summary>
         [StringLength(100)]
         public string City { get; set; } = "";
-
         /// <summary>
-        /// Stát - v enum Country
+        /// Country - see Country enum.
         /// </summary>
-        [Required(ErrorMessage = "Stát je povinný.")]
+        [Required(ErrorMessage = "Country is required.")]
         public Country? Country { get; set; }
-
         /// <summary>
-        /// Volitelná poznámka.
+        /// Optional note.
         /// </summary>
         [StringLength(500)]
         public string Note { get; set; } = "";
