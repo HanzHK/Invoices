@@ -11,7 +11,7 @@ using System.Globalization;
 
 namespace Invoices.Blazor.Components.Invoice.Form
 {
-    public partial class InvoiceForm
+    public partial class InvoiceForm : LocalizationComponentBase
     {
         [Parameter] public InvoicePostDto Invoice { get; set; } = new();
         [Parameter] public EventCallback<InvoicePostDto> OnSubmit { get; set; }
