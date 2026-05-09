@@ -1,4 +1,6 @@
-﻿using Invoices.Blazor.Services;
+﻿using Invoices.Blazor.Components.Infrastructure.Localization;
+using Invoices.Blazor.Components.Invoice.Form;
+using Invoices.Blazor.Services;
 using Invoices.Blazor.Services.CountryAlias;
 using Invoices.Blazor.Validation;
 using Invoices.Blazor.Validation.Specific;
@@ -10,11 +12,9 @@ using MudBlazor;
 
 namespace Invoices.Blazor.Components.Person.Form
 {
-    public partial class PersonForm : IDisposable
+    public partial class PersonForm : LocalizationComponentBase
     {
         [Inject] public ICountryAliasService CountryAliasService { get; set; } = default!;
-        [Inject] public IStringLocalizer<PersonForm> L { get; set; } = default!;
-        [Inject] public LanguageService Lang { get; set; } = default!;
         [Inject] public IStringLocalizerFactory Factory { get; set; } = default!;
         [Inject] public FormFieldBlurTracker BlurTracker { get; set; } = default!;
 
@@ -28,13 +28,14 @@ namespace Invoices.Blazor.Components.Person.Form
 
         protected override void OnInitialized()
         {
+            base.OnInitialized();
             Validator = new FormValidator(Factory, BlurTracker, typeof(PersonForm));
             AccountValidator = new AccountNumberModulo11Validator(
                 Factory.Create(typeof(PersonForm)),
                 Factory.Create(typeof(FormValidator)),
                 BlurTracker
             );
-            Lang.OnChange += Refresh;
+    
         }
 
         private async Task SubmitInternal()
@@ -49,16 +50,6 @@ namespace Invoices.Blazor.Components.Person.Form
         private string GetCountryAlias(Country country)
         {
             return CountryAliasService.GetAlias(country);
-        }
-
-        private void Refresh()
-        {
-            InvokeAsync(StateHasChanged);
-        }
-
-        public void Dispose()
-        {
-            Lang.OnChange -= Refresh;
         }
 
         private MudSelect<Country?>? countrySelect;
